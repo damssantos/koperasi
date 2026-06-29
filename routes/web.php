@@ -14,3 +14,6 @@ Route::get('/anggota', function () {
     return view('anggota');
 });
 
+Route::get('/profile', function () {
+    return view('profile');
+});
