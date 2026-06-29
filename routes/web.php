@@ -15,6 +15,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 }); 
 
+// 3. Proteksi semua halaman dashboard, anggota, DAN profile baru milik mereka
 Route::middleware('auth')->group(function () {
     
     Route::get('/dashboard', function () {
@@ -23,6 +24,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/anggota', function () {
         return view('anggota');
+    });
+
+    Route::get('/profile', function () {
+        return view('profile');
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
