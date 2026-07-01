@@ -332,20 +332,23 @@
             </div>
         </div>
 
-        <!-- TOP NAVBAR -->
-        @include('partials.navbar')
+        <!-- MAIN APP CONTENT (Hidden during loader) -->
+        <div id="app-content" class="hidden opacity-0 transition-opacity duration-500 ease-in-out">
+            <!-- TOP NAVBAR -->
+            @include('partials.navbar')
 
-        <div class="flex h-full min-h-screen pt-16">
-            
-            <!-- SIDEBAR -->
-            @include('partials.sidebar')
+            <div class="flex h-full min-h-screen pt-16">
+                
+                <!-- SIDEBAR -->
+                @include('partials.sidebar')
 
-            <!-- MAIN CONTAINER -->
-            <div id="main-container" class="flex-grow flex flex-col min-w-0 lg:pl-64">
-                <!-- CONTENT WRAPPER -->
-                <main class="flex-1 p-6 lg:p-8 space-y-8 w-full">
-                    @yield('content')
-                </main>
+                <!-- MAIN CONTAINER -->
+                <div id="main-container" class="flex-grow flex flex-col min-w-0 lg:pl-64">
+                    <!-- CONTENT WRAPPER -->
+                    <main class="flex-1 p-6 lg:p-8 space-y-8 w-full">
+                        @yield('content')
+                    </main>
+                </div>
             </div>
         </div>
 
@@ -355,20 +358,33 @@
             let loaderTimer;
             function runLoader() {
                 const loader = document.getElementById('global-loader');
+                const appContent = document.getElementById('app-content');
                 if (!loader) return;
 
                 loader.classList.remove('hidden', 'opacity-0');
+                if (appContent) {
+                    appContent.classList.add('hidden', 'opacity-0');
+                }
 
                 // Clear any existing timers
                 if (loaderTimer) clearTimeout(loaderTimer);
 
-                // Run spinner for exactly 3 seconds
+                // Run spinner for exactly 2 seconds
                 loaderTimer = setTimeout(() => {
                     loader.classList.add('opacity-0');
+                    if (appContent) {
+                        appContent.classList.remove('hidden');
+                        // Small delay to allow display block to apply before transitioning opacity
+                        setTimeout(() => {
+                            appContent.classList.remove('opacity-0');
+                            // Notify scripts that the container is now visible and active
+                            window.dispatchEvent(new CustomEvent('page-loader-finished'));
+                        }, 50);
+                    }
                     setTimeout(() => {
                         loader.classList.add('hidden');
                     }, 300);
-                }, 3000); // 3 seconds
+                }, 2000); // 2 seconds
             }
 
             // Start loader on initial page load

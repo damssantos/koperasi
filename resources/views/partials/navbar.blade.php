@@ -3,9 +3,9 @@
     <!-- Left side: Brand Logo and Minimize Toggle Button -->
     <div class="flex items-center gap-4">
         <div class="flex items-center gap-3">
-            <!-- Circular Icon / Logo -->
-            <div class="w-8 h-8 rounded-full bg-[#2f54eb] flex items-center justify-center font-extrabold text-white text-xs shadow-md shadow-blue-500/25">
-                Y
+            <!-- Logo YPIK PAM JAYA -->
+            <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm">
+                <img src="{{ asset('images/logo-ypik.png') }}" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
             </div>
             <span class="text-sm font-bold tracking-wider text-white uppercase logo-full">SOY YPIK PAM JAYA</span>
             <span class="text-sm font-bold tracking-wider text-blue-500 uppercase logo-mini hidden">YPIK</span>
@@ -26,10 +26,10 @@
     <div class="flex items-center gap-3 relative">
         <!-- Profile Dropdown Toggle -->
         <button onclick="toggleProfileDropdown()" id="profileDropdownBtn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-[#16192b] transition-all duration-200 group">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#2f54eb] to-[#1d39c4] flex items-center justify-center text-white text-xs font-bold shadow-md shadow-blue-500/20">
-                A
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md shadow-blue-500/20" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
+                {{ strtoupper(substr(auth()->user()->nama_lengkap ?? 'A', 0, 1)) }}
             </div>
-            <span class="text-xs font-bold text-white hidden sm:block">Audy (IT Support)</span>
+            <span class="text-xs font-bold text-white hidden sm:block">{{ auth()->user()->nama_lengkap ?? 'User' }} (Anggota Koperasi)</span>
             <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[#8f9bb3] group-hover:text-white transition-transform duration-200" id="profileChevron"></i>
         </button>
 
@@ -38,12 +38,12 @@
             <!-- User Info Header -->
             <div class="px-4 py-3.5 border-b border-[#1f243d] bg-[#0d0f1a]">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#2f54eb] to-[#1d39c4] flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-blue-500/25">
-                        A
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-blue-500/25" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
+                        {{ strtoupper(substr(auth()->user()->nama_lengkap ?? 'A', 0, 1)) }}
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-white">Audy</p>
-                        <p class="text-[10px] text-[#8f9bb3] font-medium">IT Support</p>
+                        <p class="text-sm font-bold text-white">{{ auth()->user()->nama_lengkap ?? 'User' }}</p>
+                        <p class="text-[10px] text-[#8f9bb3] font-medium">Anggota Koperasi</p>
                     </div>
                 </div>
             </div>

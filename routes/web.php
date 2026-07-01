@@ -26,6 +26,10 @@ Route::middleware('auth')->group(function () {
         return view('anggota');
     });
 
+    Route::get('/simpanan', function () {
+        return view('simpanan');
+    })->name('simpanan');
+
     Route::get('/profile', function () {
         return view('profile');
     });

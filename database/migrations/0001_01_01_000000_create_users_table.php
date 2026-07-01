@@ -13,19 +13,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-<<<<<<< HEAD
             $table->string('nama_lengkap');
             $table->string('nik')->unique();
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->text('alamat');
             $table->string('no_hp');
-            $table->string('password'); 
-=======
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
->>>>>>> 815acd4e58dc0726bbd942149a6f6151b715c1f6
             $table->rememberToken();
             $table->timestamps();
         });
@@ -55,8 +49,4 @@ return new class extends Migration
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 815acd4e58dc0726bbd942149a6f6151b715c1f6

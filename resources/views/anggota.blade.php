@@ -13,7 +13,7 @@
         <!-- Action Buttons Group -->
         <div class="flex items-center gap-3">
             <button onclick="alert('Data anggota berhasil diunduh')" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
-                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
                 <span>Unduh Data</span>
             </button>
             <button onclick="openNewMemberModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
@@ -26,38 +26,41 @@
     <!-- Metrics Overview Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Metric Card 1: Total Members -->
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300">
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-colors"></div>
             <div>
                 <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Anggota Terdaftar</p>
                 <h3 class="text-xl font-extrabold text-white mt-1.5" id="metric-total-members">1.248 Orang</h3>
                 <p class="text-[9px] text-[#7c83a7] mt-1">Aktif berpartisipasi simpan pinjam</p>
             </div>
-            <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20 shadow-inner">
-                <i data-lucide="users" class="w-5 h-5"></i>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center shadow-inner" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">
+                <i data-lucide="users-2" class="w-5 h-5"></i>
             </div>
         </div>
 
         <!-- Metric Card 2: Total Simpanan Pokok -->
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300">
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors"></div>
             <div>
                 <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Simpanan Pokok</p>
                 <h3 class="text-xl font-extrabold text-white mt-1.5" id="metric-total-pokok">Rp 124.800.000,00</h3>
                 <p class="text-[9px] text-[#7c83a7] mt-1">Estimasi kas simpanan pokok awal</p>
             </div>
-            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 shadow-inner">
-                <i data-lucide="coins" class="w-5 h-5"></i>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center shadow-inner" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">
+                <i data-lucide="banknote" class="w-5 h-5"></i>
             </div>
         </div>
 
         <!-- Metric Card 3: Pokok Lunas Dibayar -->
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300">
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/10 transition-colors"></div>
             <div>
                 <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Pokok Lunas Dibayar</p>
                 <h3 class="text-xl font-extrabold text-white mt-1.5" id="metric-pokok-paid">Rp 120.000.000</h3>
                 <p class="text-[9px] text-[#7c83a7] mt-1">Jumlah kas masuk dari 1.200 anggota</p>
             </div>
-            <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 shadow-inner">
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center shadow-inner" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #a855f7;">
+                <i data-lucide="badge-check" class="w-5 h-5"></i>
             </div>
         </div>
     </div>
@@ -87,8 +90,8 @@
                         <th class="py-3.5 px-4 font-semibold w-[15%]">ID Anggota</th>
                         <th class="py-3.5 px-4 font-semibold w-[25%]">Nama Lengkap</th>
                         <th class="py-3.5 px-4 font-semibold w-[20%]">Nomor HP</th>
-                        <th class="py-3.5 px-4 font-semibold w-[20%]">Total Simpanan</th>
-                        <th class="py-3.5 px-4 font-semibold text-center w-[5%]">Aksi</th>
+                        <th class="py-3.5 px-4 font-semibold w-[15%]">Total Simpanan</th>
+                        <th class="py-3.5 px-4 font-semibold text-center w-[10%]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#1f243d]">
@@ -98,11 +101,16 @@
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">AGT-12093</td>
                         <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">Budi Santoso</td>
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">+62 812-3456-7890</td>
-                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[20%]">Rp 100.000,00</td>
-                        <td class="py-4 px-4 text-center w-[5%]">
-                            <button onclick="alert('Membuka profil detail Budi Santoso')" class="text-blue-400/80 hover:text-blue-300 transition-colors p-1" title="Lihat Detail">
-                                <i data-lucide="eye" class="w-4 h-4 mx-auto"></i>
-                            </button>
+                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">Rp 100.000,00</td>
+                        <td class="py-4 px-4 text-center w-[10%]">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="alert('Membuka profil detail Budi Santoso')" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="alert('Ubah data Budi Santoso')" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <!-- Row 2 -->
@@ -111,11 +119,16 @@
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">AGT-12092</td>
                         <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">Siti Aminah</td>
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">+62 878-7654-3210</td>
-                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[20%]">Rp 100.000,00</td>
-                        <td class="py-4 px-4 text-center w-[5%]">
-                            <button onclick="alert('Membuka profil detail Siti Aminah')" class="text-blue-400/80 hover:text-blue-300 transition-colors p-1" title="Lihat Detail">
-                                <i data-lucide="eye" class="w-4 h-4 mx-auto"></i>
-                            </button>
+                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">Rp 100.000,00</td>
+                        <td class="py-4 px-4 text-center w-[10%]">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="alert('Membuka profil detail Siti Aminah')" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="alert('Ubah data Siti Aminah')" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <!-- Row 3 -->
@@ -124,11 +137,16 @@
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">AGT-12091</td>
                         <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">Andi Wijaya</td>
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">+62 856-9876-5432</td>
-                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[20%]">Rp 100.000,00</td>
-                        <td class="py-4 px-4 text-center w-[5%]">
-                            <button onclick="alert('Membuka profil detail Andi Wijaya')" class="text-blue-400/80 hover:text-blue-300 transition-colors p-1" title="Lihat Detail">
-                                <i data-lucide="eye" class="w-4 h-4 mx-auto"></i>
-                            </button>
+                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">Rp 100.000,00</td>
+                        <td class="py-4 px-4 text-center w-[10%]">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="alert('Membuka profil detail Andi Wijaya')" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="alert('Ubah data Andi Wijaya')" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <!-- Row 4 -->
@@ -137,11 +155,16 @@
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">AGT-12090</td>
                         <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">Rian Hidayat</td>
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">+62 821-2233-4455</td>
-                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[20%]">Rp 100.000,00</td>
-                        <td class="py-4 px-4 text-center w-[5%]">
-                            <button onclick="alert('Membuka profil detail Rian Hidayat')" class="text-blue-400/80 hover:text-blue-300 transition-colors p-1" title="Lihat Detail">
-                                <i data-lucide="eye" class="w-4 h-4 mx-auto"></i>
-                            </button>
+                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">Rp 100.000,00</td>
+                        <td class="py-4 px-4 text-center w-[10%]">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="alert('Membuka profil detail Rian Hidayat')" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="alert('Ubah data Rian Hidayat')" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <!-- Row 5 -->
@@ -150,11 +173,16 @@
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">AGT-12089</td>
                         <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">Diana Putri</td>
                         <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">+62 838-5566-7788</td>
-                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[20%]">Rp 100.000,00</td>
-                        <td class="py-4 px-4 text-center w-[5%]">
-                            <button onclick="alert('Membuka profil detail Diana Putri')" class="text-blue-400/80 hover:text-blue-300 transition-colors p-1" title="Lihat Detail">
-                                <i data-lucide="eye" class="w-4 h-4 mx-auto"></i>
-                            </button>
+                        <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">Rp 100.000,00</td>
+                        <td class="py-4 px-4 text-center w-[10%]">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="alert('Membuka profil detail Diana Putri')" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="alert('Ubah data Diana Putri')" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -324,11 +352,16 @@
                 <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">${idVal}</td>
                 <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">${name}</td>
                 <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">${phone}</td>
-                <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[20%]">${formattedPokok},00</td>
-                <td class="py-4 px-4 text-center w-[5%]">
-                    <button onclick="alert('Membuka profil detail ${name}')" class="text-blue-400/80 hover:text-blue-300 transition-colors p-1" title="Lihat Detail">
-                        <i data-lucide="eye" class="w-4 h-4 mx-auto"></i>
-                    </button>
+                <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">${formattedPokok},00</td>
+                <td class="py-4 px-4 text-center w-[10%]">
+                    <div class="flex items-center justify-center gap-1.5">
+                        <button onclick="alert('Membuka profil detail ${name}')" class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <button onclick="alert('Ubah data ${name}')" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
                 </td>
             `;
 
