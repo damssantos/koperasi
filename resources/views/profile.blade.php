@@ -3,6 +3,12 @@
 @section('title', 'SOY YPIK PAM JAYA - Profil Saya')
 
 @section('content')
+    @php
+        $profileUser = auth()->user();
+        $profileAvatar = $profileUser->avatar;
+        $hasProfileAvatar = $profileAvatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($profileAvatar);
+        $profileInitial = strtoupper(substr(trim($profileUser->nama_lengkap ?: 'A'), 0, 1));
+    @endphp
     <!-- Page Header Title -->
     <div class="flex flex-col gap-1 pb-6 border-b border-[#1f243d]">
         <h2 class="text-2xl font-bold text-white tracking-tight">Pengaturan Profil</h2>
@@ -22,12 +28,20 @@
 
                 <!-- Avatar with edit indicator -->
                 <div class="relative mt-4">
-                    <div class="w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl shadow-blue-500/25 border-4 border-[#16192b]" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
-                        <span>{{ strtoupper(substr(trim(auth()->user()->nama_lengkap), 0, 1)) }}</span>
-                    </div>
-                    <button onclick="alert('Unggah foto profil baru')" class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#2f54eb] hover:bg-blue-600 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 border-2 border-[#16192b]" title="Ubah Foto">
+                    @if($hasProfileAvatar)
+                        <img src="{{ asset('storage/' . $profileAvatar) }}" alt="" class="w-24 h-24 rounded-full object-cover shadow-xl shadow-blue-500/25 border-4 border-[#16192b]">
+                    @else
+                        <div class="w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl shadow-blue-500/25 border-4 border-[#16192b]" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
+                            <span>{{ $profileInitial }}</span>
+                        </div>
+                    @endif
+                    <form id="avatarForm" action="{{ route('profile.avatar') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" id="avatarInput" name="avatar" accept="image/png,image/jpeg,image/jpg,image/webp" class="sr-only">
+                    </form>
+                    <label for="avatarInput" class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#2f54eb] hover:bg-blue-600 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 border-2 border-[#16192b] cursor-pointer" title="Ubah Foto">
                         <i data-lucide="camera" class="w-3.5 h-3.5"></i>
-                    </button>
+                    </label>
                 </div>
 
                 <div class="mt-5 space-y-1 z-10">
@@ -73,11 +87,13 @@
                     </div>
                 </div>
 
-                <form onsubmit="saveProfileInfo(event)" class="space-y-4">
+                <form action="{{ route('profile.update') }}" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider mb-2">Nama Lengkap</label>
-                            <input type="text" id="profileName" required value="{{ auth()->user()->nama_lengkap }}" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            <input type="text" id="profileName" name="nama_lengkap" required value="{{ old('nama_lengkap', auth()->user()->nama_lengkap) }}" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider mb-2">NIK (Nomor Induk Kependudukan)</label>
@@ -88,17 +104,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider mb-2">Alamat Email</label>
-                            <input type="email" id="profileEmail" required value="{{ auth()->user()->email }}" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            <input type="email" id="profileEmail" name="email" required value="{{ old('email', auth()->user()->email) }}" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider mb-2">Nomor HP</label>
-                            <input type="text" id="profilePhone" required value="{{ auth()->user()->no_hp }}" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                            <input type="text" id="profilePhone" name="no_hp" required value="{{ old('no_hp', auth()->user()->no_hp) }}" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider mb-2">Alamat Tinggal</label>
-                        <textarea id="profileAddress" rows="3" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 resize-none">{{ auth()->user()->alamat }}</textarea>
+                        <textarea id="profileAddress" name="alamat" rows="3" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 resize-none">{{ old('alamat', auth()->user()->alamat) }}</textarea>
                     </div>
 
                     <div class="flex items-center justify-end pt-2 border-t border-[#1f243d]">
@@ -111,35 +127,17 @@
 
     </div>
 @endsection
-
 @section('scripts')
     <script>
-        // Handle personal info saving
-        function saveProfileInfo(event) {
-            event.preventDefault();
-            const name = document.getElementById('profileName').value;
-            const email = document.getElementById('profileEmail').value;
-            
-            if(!name.trim() || !email.trim()) {
-                alert('Nama dan Email wajib diisi.');
-                return;
-            }
+        const avatarInput = document.getElementById('avatarInput');
+        const avatarForm = document.getElementById('avatarForm');
 
-            // Sync with navbar display
-            const nameLabels = document.querySelectorAll('header span.text-slate-100, header span.text-white');
-            nameLabels.forEach(label => {
-                if(label.textContent.includes('{{ auth()->user()->nama_lengkap }}')) {
-                    label.textContent = name + ' (Anggota Koperasi)';
+        if (avatarInput && avatarForm) {
+            avatarInput.addEventListener('change', function () {
+                if (this.files && this.files.length > 0) {
+                    avatarForm.submit();
                 }
             });
-
-            // Sync dropdown header name
-            const dropdownHeaderName = document.querySelector('#profileDropdown p.text-white');
-            if (dropdownHeaderName) {
-                dropdownHeaderName.textContent = name;
-            }
-
-            alert('Informasi profil berhasil diperbarui!');
         }
     </script>
 @endsection

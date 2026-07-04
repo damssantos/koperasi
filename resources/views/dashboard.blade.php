@@ -12,14 +12,14 @@
         
         <!-- Action Buttons Group -->
         <div class="flex items-center gap-3">
-            <button onclick="alert('Laporan berhasil diunduh')" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
+            <a href="{{ route('simpanan.print') }}" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
                 <span>Unduh Laporan</span>
-            </button>
-            <button onclick="openNewTransactionModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
+            </a>
+            <a href="{{ route('simpanan') }}" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Transaksi Baru</span>
-            </button>
+            </a>
         </div>
     </div>
 
@@ -49,7 +49,7 @@
                     <div>Wajib: <span class="text-white font-bold">1,50 Miliar</span></div>
                     <div>Sukarela: <span class="text-white font-bold">924 Juta</span></div>
                 </div>
-                <a href="#" onclick="alert('Simpanan')" class="text-xs font-bold text-[#2f54eb] hover:underline flex items-center gap-1 pt-1">
+                <a href="{{ route('simpanan') }}" class="text-xs font-bold text-[#2f54eb] hover:underline flex items-center gap-1 pt-1">
                     <span>Lihat Rincian Simpanan</span>
                     <i data-lucide="chevron-right" class="w-3 h-3"></i>
                 </a>
@@ -317,7 +317,7 @@
     <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-6">
         <div class="flex items-center justify-between pb-4 border-b border-[#1f243d]">
             <h3 class="text-xs font-bold text-white uppercase tracking-wider">Transaksi Terakhir</h3>
-            <a href="#" onclick="alert('Membuka riwayat transaksi')" class="text-xs font-semibold text-[#2f54eb] hover:underline">Lihat Semua</a>
+            <a href="{{ route('simpanan') }}" class="text-xs font-semibold text-[#2f54eb] hover:underline">Lihat Semua</a>
         </div>
         <div class="overflow-x-auto mt-4">
             <table class="w-full text-left border-collapse">

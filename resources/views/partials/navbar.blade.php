@@ -1,3 +1,9 @@
+@php
+    $navUser = auth()->user();
+    $navAvatar = $navUser?->avatar;
+    $hasNavAvatar = $navAvatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($navAvatar);
+    $navInitial = strtoupper(substr(trim($navUser?->nama_lengkap ?: 'A'), 0, 1));
+@endphp
 <!-- TOP NAVBAR (Matching the Mockup Header Bar) -->
 <header class="h-16 bg-[#07080f] border-b border-[#1f243d] flex items-center justify-between px-6 w-full fixed top-0 left-0 z-50">
     <!-- Left side: Brand Logo and Minimize Toggle Button -->
@@ -26,9 +32,13 @@
     <div class="flex items-center gap-3 relative">
         <!-- Profile Dropdown Toggle -->
         <button onclick="toggleProfileDropdown()" id="profileDropdownBtn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-[#16192b] transition-all duration-200 group">
-            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md shadow-blue-500/20" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
-                {{ strtoupper(substr(auth()->user()->nama_lengkap ?? 'A', 0, 1)) }}
-            </div>
+            @if($hasNavAvatar)
+                <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-8 h-8 rounded-full object-cover shadow-md shadow-blue-500/20 border border-[#1f243d]">
+            @else
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md shadow-blue-500/20" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
+                    {{ $navInitial }}
+                </div>
+            @endif
             <span class="text-xs font-bold text-white hidden sm:block">{{ auth()->user()->nama_lengkap ?? 'User' }} (Anggota Koperasi)</span>
             <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[#8f9bb3] group-hover:text-white transition-transform duration-200" id="profileChevron"></i>
         </button>
@@ -38,9 +48,13 @@
             <!-- User Info Header -->
             <div class="px-4 py-3.5 border-b border-[#1f243d] bg-[#0d0f1a]">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-blue-500/25" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
-                        {{ strtoupper(substr(auth()->user()->nama_lengkap ?? 'A', 0, 1)) }}
-                    </div>
+                    @if($hasNavAvatar)
+                        <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-10 h-10 rounded-full object-cover shadow-lg shadow-blue-500/25 border border-[#1f243d]">
+                    @else
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-blue-500/25" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
+                            {{ $navInitial }}
+                        </div>
+                    @endif
                     <div>
                         <p class="text-sm font-bold text-white">{{ auth()->user()->nama_lengkap ?? 'User' }}</p>
                         <p class="text-[10px] text-[#8f9bb3] font-medium">Anggota Koperasi</p>
@@ -103,12 +117,15 @@
                 <div class="border-t border-[#1f243d] my-1.5"></div>
 
                 <!-- Logout -->
-                <button onclick="alert('Keluar dari sistem')" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/5 transition-all duration-150 group">
-                    <div class="w-7 h-7 rounded-lg bg-[#1f243d] flex items-center justify-center group-hover:bg-rose-500/10 transition-colors">
-                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <span class="font-semibold">Keluar</span>
-                </button>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/5 transition-all duration-150 group">
+                        <div class="w-7 h-7 rounded-lg bg-[#1f243d] flex items-center justify-center group-hover:bg-rose-500/10 transition-colors">
+                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <span class="font-semibold">Keluar</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

@@ -346,6 +346,18 @@
                 <div id="main-container" class="flex-grow flex flex-col min-w-0 lg:pl-64">
                     <!-- CONTENT WRAPPER -->
                     <main class="flex-1 p-6 lg:p-8 space-y-8 w-full">
+                        @if (session('success'))
+                            <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs font-semibold text-emerald-300">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if ($errors->any())
+                            <div class="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs font-semibold text-rose-300">
+                                {{ $errors->first() }}
+                            </div>
+                        @endif
+
                         @yield('content')
                     </main>
                 </div>

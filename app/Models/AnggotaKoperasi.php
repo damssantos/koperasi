@@ -7,5 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class AnggotaKoperasi extends Model
 {
     protected $table = 'anggota_koperasi';
-    protected $fillable = ['nama', 'simpanan_pokok', 'simpanan_wajib', 'simpanan_sukarela', 'total_saldo'];
+    protected $fillable = [
+        'id_anggota',
+        'nama',
+        'no_hp',
+        'tanggal_join',
+        'simpanan_pokok',
+        'simpanan_wajib',
+        'simpanan_sukarela',
+        'total_saldo',
+    ];
+
+    protected $casts = [
+        'tanggal_join' => 'date',
+    ];
 }

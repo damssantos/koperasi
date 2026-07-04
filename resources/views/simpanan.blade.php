@@ -12,10 +12,10 @@
         
         <!-- Action Buttons Group -->
         <div class="flex items-center gap-3">
-            <button onclick="alert('Data simpanan berhasil diekspor')" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
+            <a href="{{ route('simpanan.print') }}" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
                 <span>Ekspor Laporan</span>
-            </button>
+            </a>
             <button onclick="openNewTransactionModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Tambah Simpanan</span>
@@ -35,7 +35,7 @@
                 <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Total Simpanan</p>
             </div>
             <div class="flex items-baseline gap-2">
-                <h3 class="text-xl font-extrabold text-white" id="metric-total">Rp 2.450.000.000</h3>
+                <h3 class="text-xl font-extrabold text-white" id="metric-total">Rp {{ number_format((int) $totalSimpanan, 0, ',', '.') }}</h3>
                 <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background-color: rgba(16, 185, 129, 0.1); color: #34d399;">+12.5%</span>
             </div>
         </div>
@@ -49,7 +49,7 @@
                 </div>
                 <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Simpanan Pokok</p>
             </div>
-            <h3 class="text-xl font-extrabold text-white" id="metric-pokok">Rp 450.000.000</h3>
+            <h3 class="text-xl font-extrabold text-white" id="metric-pokok">Rp {{ number_format((int) $totalPokok, 0, ',', '.') }}</h3>
         </div>
 
         <!-- Card 3: Simpanan Wajib -->
@@ -61,7 +61,7 @@
                 </div>
                 <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Simpanan Wajib</p>
             </div>
-            <h3 class="text-xl font-extrabold text-white" id="metric-wajib">Rp 800.000.000</h3>
+            <h3 class="text-xl font-extrabold text-white" id="metric-wajib">Rp {{ number_format((int) $totalWajib, 0, ',', '.') }}</h3>
         </div>
 
         <!-- Card 4: Simpanan Sukarela -->
@@ -73,7 +73,7 @@
                 </div>
                 <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Simpanan Sukarela</p>
             </div>
-            <h3 class="text-xl font-extrabold text-white" id="metric-sukarela">Rp 1.200.000.000</h3>
+            <h3 class="text-xl font-extrabold text-white" id="metric-sukarela">Rp {{ number_format((int) $totalSukarela, 0, ',', '.') }}</h3>
         </div>
     </div>
 
@@ -208,29 +208,25 @@
             </div>
             
             <!-- Form Inputs -->
-            <form id="transactionForm" onsubmit="submitNewTransaction(event)" class="space-y-4">
+            <form id="transactionForm" action="{{ route('simpanan.store') }}" method="POST" class="space-y-4">
+                @csrf
                 <!-- ID/Nama Anggota * -->
                 <div>
                     <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Anggota *</label>
-                    <select id="txMemberSelect" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                    <select id="txMemberSelect" name="anggota_id" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
                         <option value="" disabled selected>Pilih Anggota</option>
-                        <option value="KSP-0021|Budi Satria">KSP-0021 - Budi Satria</option>
-                        <option value="KSP-0145|Siti Rahma">KSP-0145 - Siti Rahma</option>
-                        <option value="KSP-0098|Andi Wijaya">KSP-0098 - Andi Wijaya</option>
-                        <option value="KSP-0040|Maya Indah">KSP-0040 - Maya Indah</option>
-                        <option value="KSP-0041|Rizky Ramadhan">KSP-0041 - Rizky Ramadhan</option>
-                        <option value="KSP-0042|Dewi Lestari">KSP-0042 - Dewi Lestari</option>
-                        <option value="KSP-0043|Eko Prasetyo">KSP-0043 - Eko Prasetyo</option>
-                        <option value="KSP-0044|Nina Kartika">KSP-0044 - Nina Kartika</option>
-                        <option value="KSP-0045|Fajar Nugraha">KSP-0045 - Fajar Nugraha</option>
-                        <option value="KSP-0046|Santi Wijaya">KSP-0046 - Santi Wijaya</option>
+                        @forelse($anggota as $member)
+                            <option value="{{ $member->id }}">{{ $member->id_anggota ?? 'AGT-' . str_pad($member->id, 5, '0', STR_PAD_LEFT) }} - {{ $member->nama }}</option>
+                        @empty
+                            <option value="" disabled>Belum ada anggota di database</option>
+                        @endforelse
                     </select>
                 </div>
 
                 <!-- Jenis Simpanan * -->
                 <div>
                     <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Jenis Simpanan *</label>
-                    <select id="txTypeSelect" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                    <select id="txTypeSelect" name="jenis_simpanan" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
                         <option value="Pokok">Pokok</option>
                         <option value="Wajib">Wajib</option>
                         <option value="Sukarela">Sukarela</option>
@@ -242,20 +238,20 @@
                     <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Nominal (Rupiah) *</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8f9bb3] text-xs font-bold">Rp</span>
-                        <input type="number" id="txAmount" required placeholder="Contoh: 500000" min="1000" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500">
+                        <input type="number" id="txAmount" name="nominal" required placeholder="Contoh: 500000" min="1000" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500">
                     </div>
                 </div>
 
                 <!-- Tanggal Transaksi * -->
                 <div>
                     <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Tanggal Transaksi *</label>
-                    <input type="date" id="txDate" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                    <input type="date" id="txDate" name="tanggal_transaksi" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
                 </div>
 
                 <!-- Status * -->
                 <div>
                     <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Status *</label>
-                    <select id="txStatus" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                    <select id="txStatus" name="status" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
                         <option value="Aktif">Aktif</option>
                         <option value="Lunas">Lunas</option>
                     </select>
@@ -273,21 +269,7 @@
 
 @section('scripts')
     <script>
-        // Real-feeling transaction database mock
-        let originalTransactions = [
-            { id: 1, date: "24 Mei 2024", rawDate: "2024-05-24", memberId: "KSP-0021", name: "Budi Satria", type: "Wajib", amount: 500000, status: "Aktif" },
-            { id: 2, date: "23 Mei 2024", rawDate: "2024-05-23", memberId: "KSP-0145", name: "Siti Rahma", type: "Sukarela", amount: 2500000, status: "Lunas" },
-            { id: 3, date: "22 Mei 2024", rawDate: "2024-05-22", memberId: "KSP-0098", name: "Andi Wijaya", type: "Pokok", amount: 1000000, status: "Aktif" },
-            { id: 4, date: "21 Mei 2024", rawDate: "2024-05-21", memberId: "KSP-0040", name: "Maya Indah", type: "Wajib", amount: 100000, status: "Aktif" },
-            { id: 5, date: "20 Mei 2024", rawDate: "2024-05-20", memberId: "KSP-0041", name: "Rizky Ramadhan", type: "Sukarela", amount: 150000, status: "Lunas" },
-            { id: 6, date: "19 Mei 2024", rawDate: "2024-05-19", memberId: "KSP-0042", name: "Dewi Lestari", type: "Wajib", amount: 200000, status: "Aktif" },
-            { id: 7, date: "18 Mei 2024", rawDate: "2024-05-18", memberId: "KSP-0043", name: "Eko Prasetyo", type: "Pokok", amount: 250000, status: "Aktif" },
-            { id: 8, date: "17 Mei 2024", rawDate: "2024-05-17", memberId: "KSP-0044", name: "Nina Kartika", type: "Wajib", amount: 300000, status: "Aktif" },
-            { id: 9, date: "16 Mei 2024", rawDate: "2024-05-16", memberId: "KSP-0045", name: "Fajar Nugraha", type: "Sukarela", amount: 350000, status: "Lunas" },
-            { id: 10, date: "15 Mei 2024", rawDate: "2024-05-15", memberId: "KSP-0046", name: "Santi Wijaya", type: "Wajib", amount: 400000, status: "Aktif" },
-            { id: 11, date: "12 Mei 2024", rawDate: "2024-05-12", memberId: "KSP-0021", name: "Budi Satria", type: "Pokok", amount: 150000, status: "Aktif" },
-            { id: 12, date: "10 Mei 2024", rawDate: "2024-05-10", memberId: "KSP-0145", name: "Siti Rahma", type: "Wajib", amount: 350000, status: "Aktif" }
-        ];
+        const originalTransactions = @json($transactions);
 
         // Active State
         let currentTransactions = [...originalTransactions];
@@ -503,10 +485,10 @@
                     <td class="py-4 px-4 text-xs w-[10%]">${statusBadge}</td>
                     <td class="py-4 px-4 text-center w-[10%]">
                         <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="alert('Membuka detail transaksi ID ${tx.id}')" class="w-7 h-7 rounded-lg text-blue-400 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);" title="Detail">
+                            <button onclick="window.location.href='{{ url('/anggota') }}/' + tx.memberDbId" class="w-7 h-7 rounded-lg text-blue-400 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);" title="Detail">
                                 <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                             </button>
-                            <button onclick="alert('Edit transaksi ID ${tx.id}')" class="w-7 h-7 rounded-lg text-slate-400 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" style="background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);" title="Edit">
+                            <button onclick="window.location.href='{{ url('/anggota') }}?edit=' + tx.memberDbId" class="w-7 h-7 rounded-lg text-slate-400 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" style="background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);" title="Edit">
                                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                             </button>
                         </div>

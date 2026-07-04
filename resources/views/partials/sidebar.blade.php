@@ -32,7 +32,7 @@
             <span class="font-bold text-xs uppercase tracking-wider">Pembukuan</span>
         </a>
 
-        <a href="#" onclick="showNotImplementedAlert('Laporan')" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-[#8f9bb3] hover:text-white hover:bg-[#16192b] transition-all duration-150">
+        <a href="{{ route('simpanan.print') }}" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-[#8f9bb3] hover:text-white hover:bg-[#16192b] transition-all duration-150">
             <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
             <span class="font-bold text-xs uppercase tracking-wider">Laporan</span>
         </a>
