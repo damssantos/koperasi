@@ -362,15 +362,15 @@
                     <!-- CONTENT WRAPPER -->
                     <main class="flex-1 p-6 lg:p-8 space-y-8 w-full">
                         @if (session('success'))
-                            <div class="rounded-xl border border-emerald-500/15 bg-emerald-500/5 px-4 py-3.5 text-xs font-semibold text-emerald-400 flex items-center gap-2.5 shadow-sm shadow-emerald-500/5 animate-fade-in">
-                                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+                            <div class="rounded-xl px-4 py-3.5 text-xs font-semibold flex items-center gap-2.5 shadow-sm shadow-emerald-500/5 animate-fade-in" style="border: 1px solid rgba(16, 185, 129, 0.15); background-color: rgba(16, 185, 129, 0.05); color: #34d399;">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 flex-shrink-0" style="color: #34d399;"></i>
                                 <span>{{ session('success') }}</span>
                             </div>
                         @endif
 
                         @if ($errors->any())
-                            <div class="rounded-xl border border-rose-500/15 bg-rose-500/5 px-4 py-3.5 text-xs font-semibold text-rose-400 flex items-center gap-2.5 shadow-sm shadow-rose-500/5 animate-fade-in">
-                                <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 flex-shrink-0"></i>
+                            <div class="rounded-xl px-4 py-3.5 text-xs font-semibold flex items-center gap-2.5 shadow-sm shadow-rose-500/5 animate-fade-in" style="border: 1px solid rgba(244, 63, 94, 0.15); background-color: rgba(244, 63, 94, 0.05); color: #fb7185;">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 flex-shrink-0" style="color: #fb7185;"></i>
                                 <span>{{ $errors->first() }}</span>
                             </div>
                         @endif
