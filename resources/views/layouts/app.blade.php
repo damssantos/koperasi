@@ -355,12 +355,10 @@
             <div class="flex h-full min-h-screen pt-16">
                 
                 <!-- SIDEBAR -->
-                @if(!Request::routeIs('anggota.show'))
-                    @include('partials.sidebar')
-                @endif
+                @include('partials.sidebar')
 
                 <!-- MAIN CONTAINER -->
-                <div id="main-container" class="flex-grow flex flex-col min-w-0 {{ Request::routeIs('anggota.show') ? 'lg:pl-0' : 'lg:pl-64' }}">
+                <div id="main-container" class="flex-grow flex flex-col min-w-0 lg:pl-64">
                     <!-- CONTENT WRAPPER -->
                     <main class="flex-1 p-6 lg:p-8 space-y-8 w-full">
                         @if (session('success'))
