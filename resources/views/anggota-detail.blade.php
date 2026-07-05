@@ -176,14 +176,47 @@
             </div>
         </div>
         
-        <!-- Tab Content: Pinjaman (Empty state) -->
-        <div id="tab-content-pinjaman" class="hidden py-12 flex flex-col items-center justify-center text-center space-y-3">
-            <div class="w-10 h-10 rounded-full bg-slate-800/40 border border-slate-700/20 text-slate-400 flex items-center justify-center">
-                <i data-lucide="info" class="w-5 h-5"></i>
-            </div>
-            <div>
-                <p class="text-xs font-semibold text-white">Tidak ada data pinjaman</p>
-                <p class="text-[10px] text-[#8f9bb3]">Anggota ini tidak memiliki pinjaman aktif.</p>
+        <!-- Tab Content: Pinjaman -->
+        <div id="tab-content-pinjaman" class="hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse table-fixed">
+                    <thead>
+                        <tr class="border-b border-[#1f243d] text-slate-100 text-[10px] font-bold uppercase tracking-wider">
+                            <th class="py-3.5 px-4 font-semibold w-[25%]">Tanggal</th>
+                            <th class="py-3.5 px-4 font-semibold w-[20%]">Nominal</th>
+                            <th class="py-3.5 px-4 font-semibold w-[15%]">Tenor</th>
+                            <th class="py-3.5 px-4 font-semibold w-[25%]">Sisa Pinjaman</th>
+                            <th class="py-3.5 px-4 font-semibold text-center w-[15%]">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#1f243d]/60 text-xs text-white">
+                        @forelse($anggota->pinjaman as $loan)
+                            @php
+                                $statusClass = '';
+                                if ($loan->status === 'Lunas') {
+                                    $statusClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                                } elseif ($loan->status === 'Menunggak') {
+                                    $statusClass = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+                                } else {
+                                    $statusClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                                }
+                            @endphp
+                            <tr class="hover:bg-[#0d0f1d]/40 transition duration-150">
+                                <td class="py-3 px-4 text-[#8f9bb3]">{{ $loan->tanggal_pengajuan->format('d M Y') }}</td>
+                                <td class="py-3 px-4 font-bold">Rp {{ number_format($loan->nominal_pinjaman, 0, ',', '.') }}</td>
+                                <td class="py-3 px-4 text-[#8f9bb3]">{{ $loan->tenor }} Bln ({{ $loan->jumlah_cicilan_dibayar }}/{{ $loan->tenor }})</td>
+                                <td class="py-3 px-4 font-bold text-blue-400">Rp {{ number_format($loan->sisa_pinjaman, 0, ',', '.') }}</td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase border {{ $statusClass }}">{{ $loan->status }}</span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="py-8 text-center text-xs text-slate-500">Belum ada transaksi pinjaman.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
         

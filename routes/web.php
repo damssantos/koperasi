@@ -24,14 +24,97 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $totalPokok = (int) App\Models\AnggotaKoperasi::sum('simpanan_pokok');
+        $totalWajib = (int) App\Models\AnggotaKoperasi::sum('simpanan_wajib');
+        $totalSukarela = (int) App\Models\AnggotaKoperasi::sum('simpanan_sukarela');
+        $totalSimpanan = $totalPokok + $totalWajib + $totalSukarela;
+
+        $totalPlafond = (int) App\Models\Pinjaman::sum('nominal_pinjaman');
+        $totalPinjamanBerjalan = (int) App\Models\Pinjaman::whereIn('status', ['Aktif', 'Menunggak'])->sum('sisa_pinjaman');
+        $totalPinjamanPaid = $totalPlafond - (int) App\Models\Pinjaman::sum('sisa_pinjaman');
+
+        $totalKas = max(0, $totalSimpanan - $totalPinjamanBerjalan);
+        $kasBank = round($totalKas * 0.9);
+        $kasTunai = $totalKas - $kasBank;
+
+        $pinjamanMenunggak = App\Models\Pinjaman::with('anggota')
+            ->where('status', 'Menunggak')
+            ->orderBy('tanggal_pengajuan', 'desc')
+            ->take(5)
+            ->get();
+
+        $cicilanJatuhTempo = App\Models\Pinjaman::with('anggota')
+            ->where('status', 'Aktif')
+            ->orderBy('tanggal_pengajuan', 'desc')
+            ->take(5)
+            ->get();
+
+        $dbTransactions = App\Models\TransaksiSimpanan::with('anggota')
+            ->orderBy('tanggal_transaksi', 'desc')
+            ->orderBy('id', 'desc')
+            ->take(5)
+            ->get();
+
+        // 6 months chart data
+        $months = [];
+        $pemasukanData = [];
+        $pengeluaranData = [];
+        $saldoData = [];
+        $runningSaldo = 100000000; // Base Rp 100M
+
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $monthName = $date->translatedFormat('M');
+            $months[] = $monthName;
+
+            $simpananInMonth = App\Models\TransaksiSimpanan::whereYear('tanggal_transaksi', $date->year)
+                ->whereMonth('tanggal_transaksi', $date->month)
+                ->sum('nominal');
+
+            $loansCreatedInMonth = App\Models\Pinjaman::whereYear('tanggal_pengajuan', $date->year)
+                ->whereMonth('tanggal_pengajuan', $date->month)
+                ->sum('nominal_pinjaman');
+
+            $income = $simpananInMonth;
+            $expense = $loansCreatedInMonth;
+            
+            $pemasukanData[] = (int) $income;
+            $pengeluaranData[] = (int) $expense;
+            
+            $runningSaldo += ($income - $expense);
+            $saldoData[] = (int) max(0, $runningSaldo);
+        }
+
+        $chartData = [
+            'labels' => $months,
+            'pemasukan' => $pemasukanData,
+            'pengeluaran' => $pengeluaranData,
+            'saldo' => $saldoData
+        ];
+
+        return view('dashboard', compact(
+            'totalPokok',
+            'totalWajib',
+            'totalSukarela',
+            'totalSimpanan',
+            'totalPlafond',
+            'totalPinjamanBerjalan',
+            'totalPinjamanPaid',
+            'totalKas',
+            'kasBank',
+            'kasTunai',
+            'pinjamanMenunggak',
+            'cicilanJatuhTempo',
+            'dbTransactions',
+            'chartData'
+        ));
     })->name('dashboard');
 
     Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
     Route::post('/anggota', [AnggotaController::class, 'store'])->name('anggota.store');
     Route::get('/anggota/print', [AnggotaController::class, 'print'])->name('anggota.print');
     Route::get('/anggota/download-pdf', function () {
-        $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
+        $anggota = App\Models\AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
         $rows = $anggota->map(fn ($item, $index) => [
             $index + 1,
             optional($item->tanggal_join ?? $item->created_at)->format('d M Y'),
@@ -56,7 +139,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/anggota/{anggota}', [AnggotaController::class, 'destroy'])->name('anggota.destroy');
 
     Route::get('/simpanan', function () {
-        $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
+        $anggota = AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
         
         $dbTransactions = App\Models\TransaksiSimpanan::with('anggota')
             ->orderBy('tanggal_transaksi', 'desc')
@@ -252,7 +335,7 @@ Route::middleware('auth')->group(function () {
     })->name('simpanan.print');
 
     Route::get('/simpanan/download-pdf', function () {
-        $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
+        $anggota = AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
         $rows = $anggota->map(fn ($item, $index) => [
             $index + 1,
             $item->id_anggota ?? 'AGT-' . str_pad($item->id, 5, '0', STR_PAD_LEFT),
@@ -273,6 +356,115 @@ Route::middleware('auth')->group(function () {
             'Content-Disposition' => 'attachment; filename="laporan-simpanan.pdf"',
         ]);
     })->name('simpanan.downloadPdf');
+
+    Route::get('/pinjaman', function () {
+        $loans = App\Models\Pinjaman::with('anggota')->orderBy('tanggal_pengajuan', 'desc')->orderBy('id', 'desc')->get()->map(function ($loan) {
+            return [
+                'id' => $loan->id,
+                'formattedId' => 'PJ-' . str_pad($loan->id, 5, '0', STR_PAD_LEFT),
+                'memberId' => $loan->anggota->id_anggota ?? 'AGT-' . str_pad($loan->anggota->id, 3, '0', STR_PAD_LEFT),
+                'name' => $loan->anggota->nama,
+                'date' => $loan->tanggal_pengajuan->format('Y-m-d'),
+                'formattedDate' => $loan->tanggal_pengajuan->format('d M Y'),
+                'amount' => (int) $loan->nominal_pinjaman,
+                'tenor' => $loan->tenor,
+                'paid' => $loan->jumlah_cicilan_dibayar,
+                'remaining' => (int) $loan->sisa_pinjaman,
+                'status' => $loan->status,
+            ];
+        });
+
+        $anggota = App\Models\AnggotaKoperasi::orderBy('nama', 'asc')->get();
+
+        $totalPinjaman = (int) App\Models\Pinjaman::sum('nominal_pinjaman');
+        $pinjamanAktifCount = App\Models\Pinjaman::where('status', 'Aktif')->count();
+        $pinjamanMenunggakCount = App\Models\Pinjaman::where('status', 'Menunggak')->count();
+        $pinjamanLunasCount = App\Models\Pinjaman::where('status', 'Lunas')->count();
+
+        return view('pinjaman', compact('loans', 'anggota', 'totalPinjaman', 'pinjamanAktifCount', 'pinjamanMenunggakCount', 'pinjamanLunasCount'));
+    })->name('pinjaman');
+
+    Route::post('/pinjaman', function (Request $request) {
+        $data = $request->validate([
+            'anggota_id' => 'required|exists:anggota_koperasi,id',
+            'nominal_pinjaman' => 'required|integer|min:1000',
+            'tenor' => 'required|integer|min:1',
+            'tanggal_pengajuan' => 'required|date',
+            'status' => 'nullable|in:Aktif,Menunggak,Lunas',
+            'jumlah_cicilan_dibayar' => 'nullable|integer|min:0',
+        ]);
+
+        $status = $data['status'] ?? 'Aktif';
+        $tenor = (int) $data['tenor'];
+        $dibayar = isset($data['jumlah_cicilan_dibayar']) ? (int) $data['jumlah_cicilan_dibayar'] : 0;
+        if ($status === 'Lunas') {
+            $dibayar = $tenor;
+        }
+
+        if ($dibayar > $tenor) {
+            $dibayar = $tenor;
+        }
+
+        $sisa = ($status === 'Lunas') ? 0 : round($data['nominal_pinjaman'] * (($tenor - $dibayar) / $tenor));
+
+        App\Models\Pinjaman::create([
+            'anggota_id' => $data['anggota_id'],
+            'nominal_pinjaman' => $data['nominal_pinjaman'],
+            'tenor' => $tenor,
+            'jumlah_cicilan_dibayar' => $dibayar,
+            'sisa_pinjaman' => $sisa,
+            'tanggal_pengajuan' => $data['tanggal_pengajuan'],
+            'status' => $status,
+        ]);
+
+        return redirect()->route('pinjaman')->with('success', 'Pengajuan pinjaman berhasil disimpan ke database.');
+    })->name('pinjaman.store');
+
+    Route::get('/pinjaman/{pinjaman}', function (App\Models\Pinjaman $pinjaman) {
+        return response()->json([
+            'id' => $pinjaman->id,
+            'formattedId' => 'PJ-' . str_pad($pinjaman->id, 5, '0', STR_PAD_LEFT),
+            'memberId' => $pinjaman->anggota->id_anggota ?? 'AGT-' . str_pad($pinjaman->anggota->id, 3, '0', STR_PAD_LEFT),
+            'name' => $pinjaman->anggota->nama,
+            'date' => $pinjaman->tanggal_pengajuan->format('d M Y'),
+            'amount' => (int) $pinjaman->nominal_pinjaman,
+            'tenor' => $pinjaman->tenor,
+            'paid' => $pinjaman->jumlah_cicilan_dibayar,
+            'remaining' => (int) $pinjaman->sisa_pinjaman,
+            'status' => $pinjaman->status,
+        ]);
+    })->name('pinjaman.show');
+
+    Route::post('/pinjaman/{pinjaman}/bayar', function (Request $request, App\Models\Pinjaman $pinjaman) {
+        $data = $request->validate([
+            'tanggal_pembayaran' => 'required|date',
+        ]);
+
+        if ($pinjaman->status === 'Lunas') {
+            return redirect()->back()->with('error', 'Pinjaman ini sudah lunas.');
+        }
+
+        $remainingMonths = $pinjaman->tenor - $pinjaman->jumlah_cicilan_dibayar;
+        if ($remainingMonths <= 0) {
+            return redirect()->back()->with('error', 'Semua cicilan sudah dibayar.');
+        }
+
+        // Calculate nominal per installment
+        $nominalCicilan = round($pinjaman->sisa_pinjaman / $remainingMonths);
+
+        // Update loan progress
+        $newDibayar = $pinjaman->jumlah_cicilan_dibayar + 1;
+        $newSisa = max(0, $pinjaman->sisa_pinjaman - $nominalCicilan);
+        $newStatus = ($newDibayar >= $pinjaman->tenor || $newSisa <= 0) ? 'Lunas' : $pinjaman->status;
+
+        $pinjaman->update([
+            'jumlah_cicilan_dibayar' => $newDibayar,
+            'sisa_pinjaman' => $newSisa,
+            'status' => $newStatus,
+        ]);
+
+        return redirect()->back()->with('success', 'Pembayaran cicilan berhasil dikonfirmasi.');
+    })->name('pinjaman.bayar');
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

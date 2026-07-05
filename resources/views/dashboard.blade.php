@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Page Header Title and Action buttons -->
-    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
+    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 pb-6 border-b border-[#1f243d]">
         <div>
             <h2 class="text-2xl font-bold text-white tracking-tight">Dashboard</h2>
             <p class="text-xs text-[#8f9bb3] mt-0.5">Sistem Operasional Yayasan YPIK - Ringkasan & Monitoring</p>
@@ -16,7 +16,7 @@
                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
                 <span>Unduh Laporan</span>
             </a>
-            <a href="{{ route('simpanan') }}" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
+            <a href="{{ route('simpanan') }}?action=new" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Transaksi Baru</span>
             </a>
@@ -24,61 +24,66 @@
     </div>
 
     <!-- Top Layout Row: Left (1/3) Invoice Card, Right (2/3) Welcome Card -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
         
         <!-- Card 1: Total Simpanan Anggota -->
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden group hover:border-[#8f9bb3]/30 transition-all duration-300">
-            <div>
-                <div class="w-9 h-9 rounded-lg bg-blue-500/10 text-[#2f54eb] flex items-center justify-center mb-4 border border-blue-500/25">
-                    <i data-lucide="wallet" class="w-4 h-4"></i>
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-4 flex flex-col justify-between min-h-[220px] relative overflow-hidden group hover:border-[#8f9bb3]/20 transition duration-300">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-colors"></div>
+            <div class="relative z-10 flex-grow flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">
+                            <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Total Simpanan Anggota</p>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-white">Rp {{ number_format($totalSimpanan, 0, ',', '.') }}</h3>
+                    <div class="flex items-center gap-1 text-[10px] text-[#7c83a7] mt-1.5">
+                        <i data-lucide="clock" class="w-3 h-3"></i>
+                        <span>Update WIB: <span id="current-time-label"></span></span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-                    <span class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Simpanan Anggota</span>
-                </div>
-                <h3 class="text-2xl lg:text-3xl font-extrabold text-white mt-2 tracking-tight">Rp 4.524.850.000,00</h3>
-                <div class="flex items-center gap-1 text-[10px] text-[#7c83a7] mt-1.5">
-                    <i data-lucide="clock" class="w-3 h-3"></i>
-                    <span>Update WIB: <span id="current-time-label">24/05/2026 19:59:18</span></span>
-                </div>
-            </div>
 
-            <div class="mt-4 pt-4 border-t border-[#1f243d] space-y-2">
-                <div class="flex items-center justify-between text-[10px] text-[#8f9bb3]">
-                    <div>Pokok: <span class="text-white font-bold">2,10 Miliar</span></div>
-                    <div>Wajib: <span class="text-white font-bold">1,50 Miliar</span></div>
-                    <div>Sukarela: <span class="text-white font-bold">924 Juta</span></div>
+                <div class="mt-4 pt-4 border-t border-[#1f243d] space-y-2">
+                    <div class="flex items-center justify-between text-[10px] text-[#8f9bb3]">
+                        <div>Pokok: <span class="text-white font-bold">Rp {{ number_format($totalPokok, 0, ',', '.') }}</span></div>
+                        <div>Wajib: <span class="text-white font-bold">Rp {{ number_format($totalWajib, 0, ',', '.') }}</span></div>
+                        <div>Sukarela: <span class="text-white font-bold">Rp {{ number_format($totalSukarela, 0, ',', '.') }}</span></div>
+                    </div>
+                    <a href="{{ route('simpanan') }}" class="text-xs font-bold text-[#2f54eb] hover:underline flex items-center gap-1 pt-1">
+                        <span>Lihat Rincian Simpanan</span>
+                        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    </a>
                 </div>
-                <a href="{{ route('simpanan') }}" class="text-xs font-bold text-[#2f54eb] hover:underline flex items-center gap-1 pt-1">
-                    <span>Lihat Rincian Simpanan</span>
-                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                </a>
             </div>
         </div>
 
         <!-- Card 2: Welcome Banner Card -->
-        <div class="xl:col-span-2 bg-gradient-to-r from-[#2f54eb]/95 to-[#1d39c4]/90 border border-blue-500/20 rounded-xl p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden text-white shadow-xl shadow-blue-500/5">
-            <div>
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 rounded-full border border-white/20 text-[10px] font-bold tracking-wide">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Sistem Aktif</span>
+        <div class="xl:col-span-2 bg-[#16192b] border border-[#1f243d] rounded-xl p-4 flex flex-col justify-between min-h-[220px] relative overflow-hidden group hover:border-[#8f9bb3]/20 transition duration-300">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-colors"></div>
+            <div class="relative z-10 flex-grow flex flex-col justify-between">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] font-bold tracking-wide">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-white">Sistem Aktif</span>
+                    </div>
+                    <h3 class="text-lg lg:text-xl font-bold text-white mt-3 tracking-tight">Selamat Datang di Aplikasi Sistem Operasional Koperasi YPIK</h3>
+                    <p class="text-[#8f9bb3] text-xs mt-1 max-w-2xl leading-relaxed">Pantau data tabungan, pinjaman berjalan, dan laporan keuangan kas secara real-time dari satu dashboard terpadu.</p>
                 </div>
-                <h3 class="text-lg lg:text-xl font-bold text-white mt-4 tracking-tight">Selamat Datang di Aplikasi Sistem Operasional Koperasi YPIK</h3>
-                <p class="text-blue-100 text-xs mt-1.5 max-w-2xl leading-relaxed">Pantau data tabungan, pinjaman berjalan, dan laporan keuangan kas secara real-time dari satu dashboard terpadu.</p>
-            </div>
 
-            <div class="grid grid-cols-3 gap-4 mt-6 pt-4 border-t border-white/10">
-                <div class="bg-white/5 border border-white/10 rounded-lg p-3">
-                    <span class="text-[9px] font-bold text-blue-200 uppercase tracking-widest block">Modul Aktif</span>
-                    <span class="text-sm lg:text-base font-extrabold text-white mt-1 block">4 Modul</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 rounded-lg p-3">
-                    <span class="text-[9px] font-bold text-blue-200 uppercase tracking-widest block">Data Diperbarui</span>
-                    <span class="text-sm lg:text-base font-extrabold text-white mt-1 block">Otomatis</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 rounded-lg p-3">
-                    <span class="text-[9px] font-bold text-blue-200 uppercase tracking-widest block">Status</span>
-                    <span class="text-sm lg:text-base font-extrabold text-emerald-400 mt-1 block">Online</span>
+                <div class="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-[#1f243d]">
+                    <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-lg p-3">
+                        <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-widest block">Modul Aktif</span>
+                        <span class="text-xs lg:text-sm font-extrabold text-white mt-1 block">4 Modul</span>
+                    </div>
+                    <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-lg p-3">
+                        <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-widest block">Data Diperbarui</span>
+                        <span class="text-xs lg:text-sm font-extrabold text-white mt-1 block">Otomatis</span>
+                    </div>
+                    <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-lg p-3">
+                        <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-widest block">Status</span>
+                        <span class="text-xs lg:text-sm font-bold text-emerald-400 mt-1 block">Online</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,34 +101,44 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             <!-- Card 3: Pinjaman Berjalan -->
-            <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-6 flex flex-col justify-between min-h-[170px] relative overflow-hidden group hover:border-[#8f9bb3]/30 transition-all duration-300">
-                <div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-                        <span class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Pinjaman Berjalan</span>
+            <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-4 flex flex-col justify-between min-h-[170px] relative overflow-hidden group hover:border-[#8f9bb3]/20 transition duration-300">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/10 transition-colors"></div>
+                <div class="relative z-10 flex-grow flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">
+                                <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Total Pinjaman Berjalan</p>
+                        </div>
+                        <h3 class="text-xl font-extrabold text-white">Rp {{ number_format($totalPinjamanBerjalan, 0, ',', '.') }}</h3>
+                        <div class="text-[10px] text-[#7c83a7] mt-1.5">Sisa Tagihan Anggota dari Plafond Rp {{ number_format($totalPlafond, 0, ',', '.') }}</div>
                     </div>
-                    <h3 class="text-2xl font-extrabold text-white mt-2 tracking-tight">Rp 2.842.150.000,00</h3>
-                    <div class="text-[10px] text-[#7c83a7] mt-1.5">Sisa Tagihan Anggota dari Plafond Rp 3,20 Miliar</div>
-                </div>
-                <div class="mt-4 pt-3 border-t border-[#1f243d] flex items-center justify-between text-[10px] text-[#8f9bb3]">
-                    <div>Sudah Dibayar: <span class="text-white font-bold">Rp 400 Juta</span></div>
-                    <a href="#" onclick="alert('Pinjaman')" class="text-[#2f54eb] hover:underline font-bold">Rincian Pinjaman</a>
+                    <div class="mt-4 pt-3 border-t border-[#1f243d] flex items-center justify-between text-[10px] text-[#8f9bb3]">
+                        <div>Sudah Dibayar: <span class="text-white font-bold">Rp {{ number_format($totalPinjamanPaid, 0, ',', '.') }}</span></div>
+                        <a href="{{ url('/pinjaman') }}" class="text-[#2f54eb] hover:underline font-bold">Rincian Pinjaman</a>
+                    </div>
                 </div>
             </div>
 
             <!-- Card 4: Saldo Kas Koperasi -->
-            <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-6 flex flex-col justify-between min-h-[170px] relative overflow-hidden group hover:border-[#8f9bb3]/30 transition-all duration-300">
-                <div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                        <span class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Saldo Kas Koperasi</span>
+            <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-4 flex flex-col justify-between min-h-[170px] relative overflow-hidden group hover:border-[#8f9bb3]/20 transition duration-300">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors"></div>
+                <div class="relative z-10 flex-grow flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">
+                                <i data-lucide="landmark" class="w-3.5 h-3.5"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Total Saldo Kas Koperasi</p>
+                        </div>
+                        <h3 class="text-xl font-extrabold text-white">Rp {{ number_format($totalKas, 0, ',', '.') }}</h3>
+                        <div class="text-[10px] text-[#7c83a7] mt-1.5">Total likuiditas kas gabungan (Bank &amp; Kas Tunai)</div>
                     </div>
-                    <h3 class="text-2xl font-extrabold text-white mt-2 tracking-tight">Rp 1.250.000.000,00</h3>
-                    <div class="text-[10px] text-[#7c83a7] mt-1.5">Total likuiditas kas gabungan (Bank &amp; Kas Tunai)</div>
-                </div>
-                <div class="mt-4 pt-3 border-t border-[#1f243d] flex items-center justify-between text-[10px] text-[#8f9bb3]">
-                    <div>Di Rekening Bank: <span class="text-white font-bold">Rp 1,20 Miliar</span></div>
-                    <div>Tunai Pegangan: <span class="text-white font-bold">Rp 50 Juta</span></div>
+                    <div class="mt-4 pt-3 border-t border-[#1f243d] flex items-center justify-between text-[10px] text-[#8f9bb3]">
+                        <div>Di Rekening Bank: <span class="text-white font-bold">Rp {{ number_format($kasBank, 0, ',', '.') }}</span></div>
+                        <div>Tunai Pegangan: <span class="text-white font-bold">Rp {{ number_format($kasTunai, 0, ',', '.') }}</span></div>
+                    </div>
                 </div>
             </div>
 
@@ -209,45 +224,27 @@
             <div>
                 <div class="flex items-center justify-between pb-4 border-b border-[#1f243d]">
                     <h3 class="text-xs font-bold text-white uppercase tracking-wider">Pinjaman Telat Bayar</h3>
-                    <a href="#" onclick="alert('Membuka seluruh daftar pinjaman')" class="text-xs font-semibold text-[#2f54eb] hover:underline">Lihat Semua</a>
+                    <a href="{{ url('/pinjaman') }}" class="text-xs font-semibold text-[#2f54eb] hover:underline">Lihat Semua</a>
                 </div>
                 <div class="divide-y divide-[#1f243d]">
+                    @forelse ($pinjamanMenunggak as $loan)
                     <div class="py-4 flex items-center justify-between hover:bg-[#07080f]/30 px-2 rounded-lg transition-colors gap-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center font-bold text-xs shrink-0">BS</div>
+                            <div class="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center font-bold text-xs shrink-0">
+                                {{ strtoupper(substr($loan->anggota->nama ?? 'A', 0, 2)) }}
+                            </div>
                             <div>
-                                <p class="font-bold text-white text-sm">Budi Santoso</p>
-                                <p class="text-[11px] text-[#8f9bb3] mt-0.5">Kontrak: PJ-2024-089 • Sisa Pinjaman: Rp 2.500.000</p>
+                                <p class="font-bold text-white text-sm">{{ $loan->anggota->nama ?? 'N/A' }}</p>
+                                <p class="text-[11px] text-[#8f9bb3] mt-0.5">Kontrak: PJ-{{ str_pad($loan->id, 5, '0', STR_PAD_LEFT) }} • Sisa Pinjaman: Rp {{ number_format($loan->sisa_pinjaman, 0, ',', '.') }}</p>
                             </div>
                         </div>
                         <div class="text-right shrink-0">
-                            <span class="inline-block text-[10px] font-bold text-orange-400 bg-orange-400/10 px-2.5 py-1 rounded-lg">Terlambat 15 Hari</span>
+                            <span class="inline-block text-[10px] font-bold text-rose-400 bg-rose-400/10 px-2.5 py-1 rounded-lg">Menunggak</span>
                         </div>
                     </div>
-                    <div class="py-4 flex items-center justify-between hover:bg-[#07080f]/30 px-2 rounded-lg transition-colors gap-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center font-bold text-xs shrink-0">SA</div>
-                            <div>
-                                <p class="font-bold text-white text-sm">Siti Aminah</p>
-                                <p class="text-[11px] text-[#8f9bb3] mt-0.5">Kontrak: PJ-2024-102 • Sisa Pinjaman: Rp 1.200.000</p>
-                            </div>
-                        </div>
-                        <div class="text-right shrink-0">
-                            <span class="inline-block text-[10px] font-bold text-orange-400 bg-orange-400/10 px-2.5 py-1 rounded-lg">Terlambat 8 Hari</span>
-                        </div>
-                    </div>
-                    <div class="py-4 flex items-center justify-between hover:bg-[#07080f]/30 px-2 rounded-lg transition-colors gap-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center font-bold text-xs shrink-0">AW</div>
-                            <div>
-                                <p class="font-bold text-white text-sm">Andi Wijaya</p>
-                                <p class="text-[11px] text-[#8f9bb3] mt-0.5">Kontrak: PJ-2024-054 • Sisa Pinjaman: Rp 4.750.000</p>
-                            </div>
-                        </div>
-                        <div class="text-right shrink-0">
-                            <span class="inline-block text-[10px] font-bold text-rose-400 bg-rose-400/10 px-2.5 py-1 rounded-lg">Terlambat 22 Hari</span>
-                        </div>
-                    </div>
+                    @empty
+                    <div class="py-8 text-center text-xs text-[#8f9bb3]">Tidak ada pinjaman menunggak saat ini.</div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -257,57 +254,34 @@
             <div>
                 <div class="flex items-center justify-between pb-4 border-b border-[#1f243d]">
                     <h3 class="text-xs font-bold text-white uppercase tracking-wider">Cicilan Jatuh Tempo</h3>
-                    <a href="#" onclick="alert('Membuka detail cicilan')" class="text-xs font-semibold text-[#2f54eb] hover:underline">Lihat Semua</a>
+                    <a href="{{ url('/pinjaman') }}" class="text-xs font-semibold text-[#2f54eb] hover:underline">Lihat Semua</a>
                 </div>
                 <div class="divide-y divide-[#1f243d]">
+                    @forelse ($cicilanJatuhTempo as $loan)
+                    @php
+                        $remainingMonths = $loan->tenor - $loan->jumlah_cicilan_dibayar;
+                        $nominalCicilan = $remainingMonths > 0 ? round($loan->sisa_pinjaman / $remainingMonths) : 0;
+                        $cicilanKe = $loan->jumlah_cicilan_dibayar + 1;
+                    @endphp
                     <div class="py-3.5 flex items-center justify-between hover:bg-[#07080f]/30 px-2 rounded-lg transition-colors gap-4">
                         <div class="flex items-center gap-3.5">
                             <div class="bg-rose-950/40 border border-rose-500/20 text-rose-400 rounded-lg p-2 text-center w-12 shrink-0">
-                                <p class="text-[9px] uppercase font-bold tracking-wider">Mar</p>
-                                <p class="text-base font-extrabold leading-none mt-0.5">12</p>
+                                <p class="text-[9px] uppercase font-bold tracking-wider">{{ $loan->tanggal_pengajuan->translatedFormat('M') }}</p>
+                                <p class="text-base font-extrabold leading-none mt-0.5">{{ $loan->tanggal_pengajuan->format('d') }}</p>
                             </div>
                             <div>
-                                <p class="font-bold text-white text-sm">Rian Hidayat</p>
-                                <p class="text-[10px] text-[#8f9bb3] mt-0.5">Kontrak: LN-2024-042 • Angsuran ke-12 dari 24</p>
+                                <p class="font-bold text-white text-sm">{{ $loan->anggota->nama ?? 'N/A' }}</p>
+                                <p class="text-[10px] text-[#8f9bb3] mt-0.5">Kontrak: PJ-{{ str_pad($loan->id, 5, '0', STR_PAD_LEFT) }} • Angsuran ke-{{ $cicilanKe }} dari {{ $loan->tenor }}</p>
                             </div>
                         </div>
                         <div class="text-right shrink-0">
-                            <p class="font-bold text-white text-sm">Rp 1.250.000</p>
+                            <p class="font-bold text-white text-sm">Rp {{ number_format($nominalCicilan, 0, ',', '.') }}</p>
                             <p class="text-[9px] font-bold text-orange-400 mt-0.5 uppercase tracking-wide">Hari Ini</p>
                         </div>
                     </div>
-                    <div class="py-3.5 flex items-center justify-between hover:bg-[#07080f]/30 px-2 rounded-lg transition-colors gap-4">
-                        <div class="flex items-center gap-3.5">
-                            <div class="bg-rose-950/40 border border-rose-500/20 text-rose-400 rounded-lg p-2 text-center w-12 shrink-0">
-                                <p class="text-[9px] uppercase font-bold tracking-wider">Mar</p>
-                                <p class="text-base font-extrabold leading-none mt-0.5">12</p>
-                            </div>
-                            <div>
-                                <p class="font-bold text-white text-sm">Diana Putri</p>
-                                <p class="text-[10px] text-[#8f9bb3] mt-0.5">Kontrak: LN-2024-118 • Angsuran ke-5 dari 12</p>
-                            </div>
-                        </div>
-                        <div class="text-right shrink-0">
-                            <p class="font-bold text-white text-sm">Rp 840.000</p>
-                            <p class="text-[9px] font-bold text-orange-400 mt-0.5 uppercase tracking-wide">Hari Ini</p>
-                        </div>
-                    </div>
-                    <div class="py-3.5 flex items-center justify-between hover:bg-[#07080f]/30 px-2 rounded-lg transition-colors gap-4">
-                        <div class="flex items-center gap-3.5">
-                            <div class="bg-slate-800/40 border border-slate-700/20 text-slate-400 rounded-lg p-2 text-center w-12 shrink-0">
-                                <p class="text-[9px] uppercase font-bold tracking-wider">Mar</p>
-                                <p class="text-base font-extrabold leading-none mt-0.5">13</p>
-                            </div>
-                            <div>
-                                <p class="font-bold text-white text-sm">Ahmad Faisal</p>
-                                <p class="text-[10px] text-[#8f9bb3] mt-0.5">Kontrak: LN-2024-009 • Angsuran ke-20 dari 36</p>
-                            </div>
-                        </div>
-                        <div class="text-right shrink-0">
-                            <p class="font-bold text-white text-sm">Rp 2.100.000</p>
-                            <p class="text-[10px] text-[#8f9bb3] mt-0.5">Besok</p>
-                        </div>
-                    </div>
+                    @empty
+                    <div class="py-8 text-center text-xs text-[#8f9bb3]">Tidak ada cicilan jatuh tempo saat ini.</div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -332,117 +306,34 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#1f243d]">
+                    @forelse ($dbTransactions as $tx)
+                    @php
+                        $isIncome = in_array($tx->jenis_simpanan, ['Pokok', 'Wajib', 'Sukarela']);
+                        $dotColor = $isIncome ? 'bg-emerald-500' : 'bg-rose-500';
+                        $pulseClass = $isIncome ? 'animate-pulse' : '';
+                        $textClass = $isIncome ? 'text-emerald-400' : 'text-rose-400';
+                        $sign = $isIncome ? '+' : '-';
+                    @endphp
                     <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-400">12 Mar 2024, 09:45 WIB</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-120301</td>
+                        <td class="py-4 px-4 text-sm text-slate-400">{{ $tx->tanggal_transaksi->format('d M Y, H:i') }} WIB</td>
+                        <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-{{ str_pad($tx->id, 5, '0', STR_PAD_LEFT) }}</td>
                         <td class="py-4 px-4 text-sm">
                             <div class="flex items-center gap-2 text-slate-400">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 animate-pulse"></span>
-                                <span>Tabungan Sukarela</span>
+                                <span class="w-2 h-2 rounded-full {{ $dotColor }} {{ $pulseClass }} shadow-sm shadow-emerald-500/50"></span>
+                                <span>Simpanan {{ $tx->jenis_simpanan }}</span>
                             </div>
                         </td>
                         <td class="py-4 px-4 text-sm text-[#8f9bb3]">Transfer Bank</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Audy (IT Support)</td>
-                        <td class="py-4 px-4 text-sm font-bold text-emerald-400 text-right">+ Rp 500.000</td>
+                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Admin Koperasi</td>
+                        <td class="py-4 px-4 text-sm font-bold {{ $textClass }} text-right">{{ $sign }} Rp {{ number_format($tx->nominal, 0, ',', '.') }}</td>
                     </tr>
-                    <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-400">12 Mar 2024, 08:30 WIB</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-120302</td>
-                        <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-400">
-                                <span class="w-2 h-2 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
-                                <span>Pinjaman Keluar</span>
-                            </div>
-                        </td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Transfer Bank</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Audy (IT Support)</td>
-                        <td class="py-4 px-4 text-sm font-bold text-rose-400 text-right">- Rp 15.000.000</td>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="py-8 text-center text-xs text-[#8f9bb3]">Belum ada transaksi simpanan tercatat.</td>
                     </tr>
-                    <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-400">11 Mar 2024, 16:20 WIB</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-110304</td>
-                        <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-400">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 animate-pulse"></span>
-                                <span>Bayar Cicilan</span>
-                            </div>
-                        </td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Tunai</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Admin Siti</td>
-                        <td class="py-4 px-4 text-sm font-bold text-emerald-400 text-right">+ Rp 1.250.000</td>
-                    </tr>
-                    <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-400">11 Mar 2024, 14:15 WIB</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-110303</td>
-                        <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-400">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 animate-pulse"></span>
-                                <span>Tabungan Pokok</span>
-                            </div>
-                        </td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Transfer Bank</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Admin Siti</td>
-                        <td class="py-4 px-4 text-sm font-bold text-emerald-400 text-right">+ Rp 100.000</td>
-                    </tr>
-                    <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-400">11 Mar 2024, 10:05 WIB</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-110301</td>
-                        <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-400">
-                                <span class="w-2 h-2 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
-                                <span>Biaya Operasional</span>
-                            </div>
-                        </td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Tunai</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Audy (IT Support)</td>
-                        <td class="py-4 px-4 text-sm font-bold text-rose-400 text-right">- Rp 250.000</td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
-        </div>
-    </div>
-
-    <!-- NEW TRANSACTION MODAL -->
-    <div id="transactionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-sm hidden transition-opacity">
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-[#1f243d] pb-3">
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Input Transaksi Baru</h3>
-                <button onclick="closeNewTransactionModal()" class="text-slate-400 hover:text-white transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            
-            <form id="transactionForm" onsubmit="submitTransaction(event)" class="space-y-4">
-                <div>
-                    <label class="block text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider mb-2">Jenis Transaksi</label>
-                    <select id="txType" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
-                        <option value="Tabungan Sukarela">Tabungan Sukarela (+)</option>
-                        <option value="Tabungan Pokok">Tabungan Pokok (+)</option>
-                        <option value="Bayar Cicilan">Bayar Cicilan (+)</option>
-                        <option value="Pinjaman Keluar">Pinjaman Keluar (-)</option>
-                        <option value="Biaya Operasional">Biaya Operasional (-)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider mb-2">Cara Bayar</label>
-                    <select id="txMethod" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
-                        <option value="Transfer Bank">Transfer Bank</option>
-                        <option value="VA (Virtual Account)">VA (Virtual Account)</option>
-                        <option value="Tunai">Tunai</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider mb-2">Jumlah Uang (Rp)</label>
-                    <input type="number" id="txAmount" required placeholder="Contoh: 500000" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500">
-                </div>
-                
-                <div class="flex items-center gap-3 pt-4 border-t border-[#1f243d] justify-end">
-                    <button type="button" onclick="closeNewTransactionModal()" class="px-4 py-2 border border-[#1f243d] rounded-lg bg-[#07080f] text-[#8f9bb3] hover:text-white text-sm font-semibold transition-colors">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg text-sm font-bold transition-all shadow-lg shadow-blue-500/10">Simpan Transaksi</button>
-                </div>
-            </form>
         </div>
     </div>
 @endsection
@@ -469,16 +360,16 @@
                 saldo: [400000, 800000, 2600000, 4000000, 4900000, 7500000, 10700000]
             },
             bulanan: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
-                pemasukan: [250000000, 200000000, 450000000, 600000000, 520000000, 700000000],
-                pengeluaran: [110000000, 80000000, 150000000, 280000000, 140000000, 190000000],
-                saldo: [140000000, 260000000, 560000000, 880000000, 1260000000, 1770000000]
+                labels: {!! json_encode($chartData['labels']) !!},
+                pemasukan: {!! json_encode($chartData['pemasukan']) !!},
+                pengeluaran: {!! json_encode($chartData['pengeluaran']) !!},
+                saldo: {!! json_encode($chartData['saldo']) !!}
             },
             tahunan: {
-                labels: ['2021', '2022', '2023', '2024', '2025', '2026'],
-                pemasukan: [1800000000, 2400000000, 3200000000, 4500000000, 5100000000, 6500000000],
-                pengeluaran: [1200000000, 1500000000, 1900000000, 2800000000, 3100000000, 3900000000],
-                saldo: [600000000, 1500000000, 2800000000, 4500000000, 6500000000, 9100000000]
+                labels: ['2023', '2024', '2025', '2026'],
+                pemasukan: [1800000000, 2400000000, 3200000000, {!! array_sum($chartData['pemasukan']) * 2 !!}],
+                pengeluaran: [1200000000, 1500000000, 1900000000, {!! array_sum($chartData['pengeluaran']) * 2 !!}],
+                saldo: [600000000, 1500000000, 2800000000, {!! end($chartData['saldo']) !!}]
             }
         };
 
@@ -602,69 +493,6 @@
             cashFlowChart.data.datasets[1].data = chartData[period].pengeluaran;
             cashFlowChart.data.datasets[2].data = chartData[period].saldo;
             cashFlowChart.update();
-        }
-
-        function openNewTransactionModal() {
-            document.getElementById('transactionModal').classList.remove('hidden');
-        }
-
-        function closeNewTransactionModal() {
-            document.getElementById('transactionModal').classList.add('hidden');
-            document.getElementById('transactionForm').reset();
-        }
-
-        function submitTransaction(event) {
-            event.preventDefault();
-            const type = document.getElementById('txType').value;
-            const method = document.getElementById('txMethod').value;
-            const amount = parseInt(document.getElementById('txAmount').value);
-
-            if (isNaN(amount) || amount <= 0) {
-                alert('Nominal transaksi harus valid.');
-                return;
-            }
-
-            const tbody = document.querySelector('table tbody');
-            const now = new Date();
-            const timeString = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + `, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
-            const formattedAmount = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount).replace('Rp', '');
-            const randomId = 'TX-' + Math.floor(100000 + Math.random() * 900000);
-
-            const isIncome = ['Tabungan Sukarela', 'Tabungan Pokok', 'Bayar Cicilan'].includes(type);
-            const dotColor = isIncome ? 'bg-emerald-500' : 'bg-rose-500';
-            const pulseClass = isIncome ? 'animate-pulse' : '';
-            const textClass = isIncome ? 'text-emerald-400' : 'text-rose-400';
-            const sign = isIncome ? '+' : '-';
-
-            const newRow = document.createElement('tr');
-            newRow.className = 'hover:bg-[#07080f]/30 transition duration-150';
-            newRow.innerHTML = `
-                <td class="py-4 px-4 text-sm text-slate-400">${timeString}</td>
-                <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">${randomId}</td>
-                <td class="py-4 px-4 text-sm">
-                    <div class="flex items-center gap-2 text-slate-400">
-                        <span class="w-2 h-2 rounded-full ${dotColor} ${pulseClass} shadow-sm"></span>
-                        <span>${type}</span>
-                    </div>
-                </td>
-                <td class="py-4 px-4 text-sm text-[#8f9bb3]">${method}</td>
-                <td class="py-4 px-4 text-sm text-[#8f9bb3]">Audy (IT Support)</td>
-                <td class="py-4 px-4 text-sm font-bold ${textClass} text-right">${sign} Rp ${formattedAmount.trim()}</td>
-            `;
-
-            tbody.insertBefore(newRow, tbody.firstChild);
-            
-            if (isIncome) {
-                chartData.bulanan.pemasukan[5] += amount;
-                chartData.bulanan.saldo[5] += amount;
-            } else {
-                chartData.bulanan.pengeluaran[5] += amount;
-                chartData.bulanan.saldo[5] -= amount;
-            }
-            cashFlowChart.update();
-
-            closeNewTransactionModal();
-            alert('Transaksi berhasil ditambahkan!');
         }
     </script>
 @endsection

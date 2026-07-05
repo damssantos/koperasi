@@ -17,7 +17,7 @@
             <span class="font-bold text-xs uppercase tracking-wider">Simpanan</span>
         </a>
 
-        <a href="#" onclick="showNotImplementedAlert('Pinjaman')" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-[#8f9bb3] hover:text-white hover:bg-[#16192b] transition-all duration-150">
+        <a href="{{ url('/pinjaman') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->is('pinjaman') ? 'bg-[#2f54eb] text-white shadow-md shadow-blue-500/10' : 'text-[#8f9bb3] hover:text-white hover:bg-[#16192b]' }} transition-all duration-150">
             <i data-lucide="hand-coins" class="w-4 h-4"></i>
             <span class="font-bold text-xs uppercase tracking-wider">Pinjaman</span>
         </a>

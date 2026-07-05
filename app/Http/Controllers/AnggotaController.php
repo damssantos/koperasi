@@ -9,7 +9,7 @@ class AnggotaController extends Controller
 {
     public function index()
     {
-        $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
+        $anggota = AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
         $totalAnggota = $anggota->count();
         $totalPokok = $anggota->sum('simpanan_pokok');
         $totalSaldo = $anggota->sum('total_saldo');
@@ -60,9 +60,14 @@ class AnggotaController extends Controller
 
     public function show(AnggotaKoperasi $anggota)
     {
-        $anggota->load(['transactions' => function ($query) {
-            $query->orderBy('tanggal_transaksi', 'desc')->orderBy('id', 'desc');
-        }]);
+        $anggota->load([
+            'transactions' => function ($query) {
+                $query->orderBy('tanggal_transaksi', 'desc')->orderBy('id', 'desc');
+            },
+            'pinjaman' => function ($query) {
+                $query->orderBy('tanggal_pengajuan', 'desc')->orderBy('id', 'desc');
+            }
+        ]);
         return view('anggota-detail', compact('anggota'));
     }
 
@@ -126,7 +131,7 @@ class AnggotaController extends Controller
 
     public function print()
     {
-        $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
+        $anggota = AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
         return view('exports.anggota-print', compact('anggota'));
     }
 

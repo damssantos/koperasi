@@ -461,6 +461,10 @@
         // Initialize Page
         document.addEventListener('DOMContentLoaded', () => {
             renderTable();
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('action') === 'new') {
+                openNewTransactionModal();
+            }
         });
 
         // Initialize Chart when loader finishes (so parent container has correct layout size)
