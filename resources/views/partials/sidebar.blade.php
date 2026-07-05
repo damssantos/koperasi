@@ -38,26 +38,38 @@
         </a>
     </nav>
 
-    <!-- Sidebar Footer logos (Pradita University / SI / Version Web) -->
-    <div class="p-4 border-t border-[#1f243d] space-y-3">
-    <div class="footer-full flex items-center justify-between pt-1 w-full">
-        <span class="text-[10px] font-semibold text-[#8f9bb3] tracking-widest uppercase">VERSI WEB 1.1</span>
-        
-        <form action="{{ route('logout') }}" method="POST" class="m-0">
-            @csrf
-            <button type="submit" class="text-xs text-rose-400 hover:text-rose-300 font-semibold cursor-pointer">
-                Keluar
+    <!-- Sidebar Footer: Logout + Version -->
+    <div class="p-4 space-y-0">
+        <!-- Logout Button (Full) -->
+        <div class="footer-full">
+            <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-[#8f9bb3] hover:text-rose-400 hover:bg-rose-500/5 transition-all duration-150 group">
+                <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.15); color: #fb7185;">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-150"></i>
+                </div>
+                <span class="font-bold text-xs uppercase tracking-wider">Keluar</span>
             </button>
-        </form>
-    </div>
-    
-    <div class="footer-mini hidden text-center">
-        <form action="{{ route('logout') }}" method="POST" class="m-0">
-            @csrf
-            <button type="submit" class="text-rose-400 hover:text-rose-300 w-full flex justify-center cursor-pointer">
-                <i data-lucide="log-out" class="w-4 h-4 mx-auto"></i>
+
+            <!-- Divider -->
+            <div class="border-t border-[#1f243d] my-2 mx-2"></div>
+
+            <!-- Version Info -->
+            <div class="flex items-center justify-center px-4 py-1.5">
+                <span class="text-[10px] font-semibold text-[#8f9bb3]/50 tracking-widest uppercase">Versi Web 1.1</span>
+            </div>
+        </div>
+
+        <!-- Logout Button (Mini / Collapsed) -->
+        <div class="footer-mini hidden">
+            <button type="button" onclick="confirmLogout()" class="w-full flex justify-center py-2.5 rounded-lg text-[#8f9bb3] hover:text-rose-400 hover:bg-rose-500/5 transition-all duration-150 group">
+                <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.15); color: #fb7185;">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                </div>
             </button>
-        </form>
+        </div>
     </div>
-</div>
+
+    <!-- Hidden Logout Form -->
+    <form id="sidebar-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+        @csrf
+    </form>
 </aside>

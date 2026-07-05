@@ -34,6 +34,8 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <!-- Lucide Icons CDN -->
         <script src="https://unpkg.com/lucide@latest"></script>
+        <!-- SweetAlert2 CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <style>
             body {
@@ -347,6 +349,29 @@
             body.light #detailTransactionModal label {
                 color: #64748b !important;
             }
+
+            /* SweetAlert2 Compact Overrides */
+            .swal2-popup.border {
+                padding: 1.5rem 1.25rem !important;
+            }
+            .swal2-popup .swal2-icon {
+                width: 48px !important;
+                height: 48px !important;
+                margin: 0 auto 0.75rem !important;
+                border-width: 3px !important;
+            }
+            .swal2-popup .swal2-icon .swal2-icon-content {
+                font-size: 24px !important;
+            }
+            .swal2-popup .swal2-title {
+                padding: 0 0 0.25rem !important;
+            }
+            .swal2-popup .swal2-html-container {
+                margin: 0 0 0.75rem !important;
+            }
+            .swal2-popup .swal2-actions {
+                margin-top: 0.5rem !important;
+            }
         </style>
         @yield('styles')
     </head>
@@ -554,7 +579,48 @@
 
             // Alert for unimplemented menu items
             function showNotImplementedAlert(menuName) {
-                alert(`Halaman untuk menu "${menuName}" sedang dalam tahap pengembangan dan belum tersedia.`);
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Dalam Pengembangan',
+                    text: `Halaman untuk menu "${menuName}" sedang dalam tahap pengembangan dan belum tersedia.`,
+                    confirmButtonColor: '#2f54eb',
+                    background: '#16192b',
+                    color: '#e2e8f0',
+                    customClass: {
+                        popup: 'border border-[#1f243d] rounded-2xl',
+                    }
+                });
+            }
+
+            // Logout confirmation with SweetAlert2
+            function confirmLogout() {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '<span style="font-size:16px">Konfirmasi Keluar</span>',
+                    html: '<span style="font-size:12px;color:#8f9bb3">Apakah Anda yakin ingin keluar dari sistem?<br>Sesi Anda akan diakhiri.</span>',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Keluar',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#f43f5e',
+                    cancelButtonColor: '#334155',
+                    background: '#16192b',
+                    color: '#e2e8f0',
+                    width: '340px',
+                    customClass: {
+                        popup: 'border border-[#1f243d] rounded-2xl',
+                        icon: 'swal2-icon-small',
+                        confirmButton: 'rounded-lg font-semibold text-xs px-4 py-2',
+                        cancelButton: 'rounded-lg font-semibold text-xs px-4 py-2',
+                    },
+                    reverseButtons: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const form = document.getElementById('sidebar-logout-form');
+                        if (form) {
+                            form.submit();
+                        }
+                    }
+                });
             }
 
             // Initialize Lucide Icons

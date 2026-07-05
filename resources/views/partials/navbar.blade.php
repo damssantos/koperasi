@@ -117,15 +117,12 @@
                 <div class="border-t border-[#1f243d] my-1.5"></div>
 
                 <!-- Logout -->
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/5 transition-all duration-150 group">
-                        <div class="w-7 h-7 rounded-lg bg-[#1f243d] flex items-center justify-center group-hover:bg-rose-500/10 transition-colors">
-                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                        </div>
-                        <span class="font-semibold">Keluar</span>
-                    </button>
-                </form>
+                <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-[#8f9bb3] hover:text-rose-400 hover:bg-rose-500/5 transition-all duration-150 group rounded-lg">
+                    <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.15); color: #fb7185;">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <span class="font-semibold">Keluar</span>
+                </button>
             </div>
         </div>
     </div>
