@@ -322,7 +322,7 @@
         <div class="overflow-x-auto mt-4">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b border-[#1f243d] text-[#8f9bb3] text-[10px] font-bold uppercase tracking-wider">
+                    <tr class="border-b border-[#1f243d] text-slate-100 text-[10px] font-bold uppercase tracking-wider">
                         <th class="py-3.5 px-4 font-semibold">Waktu</th>
                         <th class="py-3.5 px-4 font-semibold">ID Transaksi</th>
                         <th class="py-3.5 px-4 font-semibold">Jenis Transaksi</th>
@@ -333,10 +333,10 @@
                 </thead>
                 <tbody class="divide-y divide-[#1f243d]">
                     <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-300">12 Mar 2024, 09:45 WIB</td>
+                        <td class="py-4 px-4 text-sm text-slate-400">12 Mar 2024, 09:45 WIB</td>
                         <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-120301</td>
                         <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-300">
+                            <div class="flex items-center gap-2 text-slate-400">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 animate-pulse"></span>
                                 <span>Tabungan Sukarela</span>
                             </div>
@@ -346,10 +346,10 @@
                         <td class="py-4 px-4 text-sm font-bold text-emerald-400 text-right">+ Rp 500.000</td>
                     </tr>
                     <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-300">12 Mar 2024, 08:30 WIB</td>
+                        <td class="py-4 px-4 text-sm text-slate-400">12 Mar 2024, 08:30 WIB</td>
                         <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-120302</td>
                         <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-300">
+                            <div class="flex items-center gap-2 text-slate-400">
                                 <span class="w-2 h-2 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
                                 <span>Pinjaman Keluar</span>
                             </div>
@@ -359,10 +359,10 @@
                         <td class="py-4 px-4 text-sm font-bold text-rose-400 text-right">- Rp 15.000.000</td>
                     </tr>
                     <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-300">11 Mar 2024, 16:20 WIB</td>
+                        <td class="py-4 px-4 text-sm text-slate-400">11 Mar 2024, 16:20 WIB</td>
                         <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-110304</td>
                         <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-300">
+                            <div class="flex items-center gap-2 text-slate-400">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 animate-pulse"></span>
                                 <span>Bayar Cicilan</span>
                             </div>
@@ -372,10 +372,10 @@
                         <td class="py-4 px-4 text-sm font-bold text-emerald-400 text-right">+ Rp 1.250.000</td>
                     </tr>
                     <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-300">11 Mar 2024, 14:15 WIB</td>
+                        <td class="py-4 px-4 text-sm text-slate-400">11 Mar 2024, 14:15 WIB</td>
                         <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-110303</td>
                         <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-300">
+                            <div class="flex items-center gap-2 text-slate-400">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 animate-pulse"></span>
                                 <span>Tabungan Pokok</span>
                             </div>
@@ -385,10 +385,10 @@
                         <td class="py-4 px-4 text-sm font-bold text-emerald-400 text-right">+ Rp 100.000</td>
                     </tr>
                     <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-300">11 Mar 2024, 10:05 WIB</td>
+                        <td class="py-4 px-4 text-sm text-slate-400">11 Mar 2024, 10:05 WIB</td>
                         <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-110301</td>
                         <td class="py-4 px-4 text-sm">
-                            <div class="flex items-center gap-2 text-slate-300">
+                            <div class="flex items-center gap-2 text-slate-400">
                                 <span class="w-2 h-2 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
                                 <span>Biaya Operasional</span>
                             </div>
@@ -639,10 +639,10 @@
             const newRow = document.createElement('tr');
             newRow.className = 'hover:bg-[#07080f]/30 transition duration-150';
             newRow.innerHTML = `
-                <td class="py-4 px-4 text-sm text-slate-300">${timeString}</td>
+                <td class="py-4 px-4 text-sm text-slate-400">${timeString}</td>
                 <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">${randomId}</td>
                 <td class="py-4 px-4 text-sm">
-                    <div class="flex items-center gap-2 text-slate-300">
+                    <div class="flex items-center gap-2 text-slate-400">
                         <span class="w-2 h-2 rounded-full ${dotColor} ${pulseClass} shadow-sm"></span>
                         <span>${type}</span>
                     </div>

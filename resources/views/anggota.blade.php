@@ -36,7 +36,7 @@
         <div class="overflow-x-auto">
             <table id="membersTable" class="w-full text-left border-collapse table-fixed">
                 <thead>
-                    <tr class="border-b border-[#1f243d] text-[#8f9bb3] text-[10px] font-bold uppercase tracking-wider">
+                    <tr class="border-b border-[#1f243d] text-slate-100 text-[10px] font-bold uppercase tracking-wider">
                         <th class="py-3.5 px-4 font-semibold w-[20%]">ID Anggota</th>
                         <th class="py-3.5 px-4 font-semibold w-[25%]">Nama Anggota</th>
                         <th class="py-3.5 px-4 font-semibold w-[25%]">Nomor HP</th>
@@ -48,9 +48,9 @@
                     @forelse($anggota as $item)
                         <tr class="member-row hover:bg-[#07080f]/30 transition duration-150">
                             <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[20%]">{{ $item->id_anggota ?? 'AGT-' . str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
-                            <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">{{ $item->nama }}</td>
+                            <td class="py-4 px-4 text-xs font-bold text-slate-300 member-name w-[25%]">{{ $item->nama }}</td>
                             <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[25%]">{{ $item->no_hp ?? '-' }}</td>
-                            <td class="py-4 px-4 text-xs text-slate-300 w-[20%]">{{ optional($item->tanggal_join ?? $item->created_at)->format('d M Y') }}</td>
+                            <td class="py-4 px-4 text-xs text-slate-400 w-[20%]">{{ optional($item->tanggal_join ?? $item->created_at)->format('d M Y') }}</td>
                             <td class="py-4 px-4 text-center w-[10%]">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <a href="{{ route('anggota.show', $item) }}" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">

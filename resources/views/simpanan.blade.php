@@ -42,9 +42,9 @@
 
         <!-- Card 2: Simpanan Pokok -->
         <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-4 flex-1 min-w-[220px] hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
-            <div class="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl group-hover:bg-indigo-500/10 transition-colors"></div>
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-colors"></div>
             <div class="flex items-center gap-2 mb-2">
-                <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); color: #818cf8;">
+                <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">
                     <i data-lucide="landmark" class="w-3.5 h-3.5"></i>
                 </div>
                 <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Simpanan Pokok</p>
@@ -54,9 +54,9 @@
 
         <!-- Card 3: Simpanan Wajib -->
         <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-4 flex-1 min-w-[220px] hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
-            <div class="absolute -top-10 -right-10 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors"></div>
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/10 transition-colors"></div>
             <div class="flex items-center gap-2 mb-2">
-                <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">
+                <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">
                     <i data-lucide="coins" class="w-3.5 h-3.5"></i>
                 </div>
                 <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Simpanan Wajib</p>
@@ -66,9 +66,9 @@
 
         <!-- Card 4: Simpanan Sukarela -->
         <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-4 flex-1 min-w-[220px] hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
-            <div class="absolute -top-10 -right-10 w-24 h-24 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/10 transition-colors"></div>
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors"></div>
             <div class="flex items-center gap-2 mb-2">
-                <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #a855f7;">
+                <div class="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">
                     <i data-lucide="piggy-bank" class="w-3.5 h-3.5"></i>
                 </div>
                 <p class="text-xs font-semibold text-[#8f9bb3] whitespace-nowrap">Simpanan Sukarela</p>
@@ -151,7 +151,7 @@
         <div class="overflow-x-auto">
             <table id="transactionsTable" class="w-full text-left border-collapse table-fixed">
                 <thead>
-                    <tr class="border-b border-[#1f243d] text-[#8f9bb3] text-[10px] font-bold uppercase tracking-wider">
+                    <tr class="border-b border-[#1f243d] text-slate-100 text-[10px] font-bold uppercase tracking-wider">
                         <th class="py-3.5 px-4 font-semibold w-[15%]">Tanggal</th>
                         <th class="py-3.5 px-4 font-semibold w-[15%]">ID Anggota</th>
                         <th class="py-3.5 px-4 font-semibold w-[25%]">Nama Anggota</th>
@@ -462,11 +462,11 @@
                 // Badges configurations
                 let typeBadge = '';
                 if(tx.type === 'Pokok') {
-                    typeBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); color: #818cf8;">Pokok</span>`;
+                    typeBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Pokok</span>`;
                 } else if(tx.type === 'Wajib') {
-                    typeBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Wajib</span>`;
+                    typeBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Wajib</span>`;
                 } else {
-                    typeBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Sukarela</span>`;
+                    typeBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Sukarela</span>`;
                 }
 
                 let statusBadge = '';
@@ -477,11 +477,11 @@
                 }
 
                 tr.innerHTML = `
-                    <td class="py-4 px-4 text-xs text-slate-300 w-[15%]">${tx.date}</td>
+                    <td class="py-4 px-4 text-xs text-slate-400 w-[15%]">${tx.date}</td>
                     <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium w-[15%]">${tx.memberId}</td>
-                    <td class="py-4 px-4 text-xs font-bold text-white w-[25%]">${tx.name}</td>
+                    <td class="py-4 px-4 text-xs font-bold text-slate-300 w-[25%]">${tx.name}</td>
                     <td class="py-4 px-4 text-xs w-[15%]">${typeBadge}</td>
-                    <td class="py-4 px-4 text-xs font-bold text-white w-[10%]">Rp ${tx.amount.toLocaleString('id-ID')}</td>
+                    <td class="py-4 px-4 text-xs font-bold text-slate-300 w-[10%]">Rp ${tx.amount.toLocaleString('id-ID')}</td>
                     <td class="py-4 px-4 text-xs w-[10%]">${statusBadge}</td>
                     <td class="py-4 px-4 text-center w-[10%]">
                         <div class="flex items-center justify-center gap-1.5">
