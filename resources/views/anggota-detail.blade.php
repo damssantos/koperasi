@@ -59,8 +59,19 @@
         $totalRiwayat = count($riwayatItems);
     @endphp
 
-    <!-- Main Member Header Area (No duplicate top subheader, matches mockup perfectly) -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-2">
+    <!-- Top Navigation / Sub-Header (Matches Mockup's clean left arrow and text placement) -->
+    <div class="flex items-center gap-4 pb-5 border-b border-[#1f243d]">
+        <a href="{{ route('anggota.index') }}" class="text-[#8f9bb3] hover:text-white transition-colors">
+            <i data-lucide="arrow-left" class="w-6 h-6"></i>
+        </a>
+        <div>
+            <h1 class="text-lg font-bold text-white leading-none">Koperasi Simpan Pinjam</h1>
+            <span class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-widest block mt-1.5" style="color: #8f9bb3;">DETAIL ANGGOTA</span>
+        </div>
+    </div>
+
+    <!-- Main Member Header Area -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-6">
         <div>
             <h2 class="text-3xl font-extrabold text-white tracking-tight">{{ $anggota->nama }}</h2>
             <div class="inline-flex items-center mt-2 px-3 py-1 bg-[#1e2238] border border-[#2a2f4c] text-xs font-semibold text-[#8f9bb3] rounded-lg">
