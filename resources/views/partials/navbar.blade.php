@@ -39,7 +39,7 @@
                     {{ $navInitial }}
                 </div>
             @endif
-            <span class="text-xs font-bold text-white hidden sm:block">{{ auth()->user()->nama_lengkap ?? 'User' }} (Anggota Koperasi)</span>
+            <span class="text-xs font-bold text-white hidden sm:block">{{ auth()->user()->nama_lengkap ?? 'User' }}</span>
             <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[#8f9bb3] group-hover:text-white transition-transform duration-200" id="profileChevron"></i>
         </button>
 
