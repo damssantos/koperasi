@@ -16,10 +16,6 @@
         </div>
         
         <div class="flex items-center gap-3">
-            <a href="{{ route('anggota.print') }}" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
-                <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
-                <span>Unduh Data</span>
-            </a>
             <button onclick="openNewMemberModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
                 <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
                 <span>+ Tambah Anggota</span>
@@ -41,43 +37,37 @@
             <table id="membersTable" class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="border-b border-[#1f243d] text-[#8f9bb3] text-[10px] font-bold uppercase tracking-wider">
-                        <th class="py-3.5 px-4 font-semibold w-[15%]">Tanggal Join</th>
-                        <th class="py-3.5 px-4 font-semibold w-[15%]">ID Anggota</th>
-                        <th class="py-3.5 px-4 font-semibold w-[25%]">Nama Lengkap</th>
-                        <th class="py-3.5 px-4 font-semibold w-[20%]">Nomor HP</th>
-                        <th class="py-3.5 px-4 font-semibold w-[13%]">Total Simpanan</th>
-                        <th class="py-3.5 px-4 font-semibold text-center w-[12%]">Aksi</th>
+                        <th class="py-3.5 px-4 font-semibold w-[20%]">ID Anggota</th>
+                        <th class="py-3.5 px-4 font-semibold w-[25%]">Nama Anggota</th>
+                        <th class="py-3.5 px-4 font-semibold w-[25%]">Nomor HP</th>
+                        <th class="py-3.5 px-4 font-semibold w-[20%]">Tanggal Bergabung</th>
+                        <th class="py-3.5 px-4 font-semibold text-center w-[10%]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#1f243d]">
                     @forelse($anggota as $item)
                         <tr class="member-row hover:bg-[#07080f]/30 transition duration-150">
-                            <td class="py-4 px-4 text-xs text-slate-300 w-[15%]">{{ optional($item->tanggal_join ?? $item->created_at)->format('d M Y') }}</td>
-                            <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">{{ $item->id_anggota ?? 'AGT-' . str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
+                            <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[20%]">{{ $item->id_anggota ?? 'AGT-' . str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
                             <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">{{ $item->nama }}</td>
-                            <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">{{ $item->no_hp ?? '-' }}</td>
-                            <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[13%]">{{ $formatRupiah($item->total_saldo ?: $item->simpanan_pokok) }}</td>
-                            <td class="py-4 px-4 text-center w-[12%]">
+                            <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[25%]">{{ $item->no_hp ?? '-' }}</td>
+                            <td class="py-4 px-4 text-xs text-slate-300 w-[20%]">{{ optional($item->tanggal_join ?? $item->created_at)->format('d M Y') }}</td>
+                            <td class="py-4 px-4 text-center w-[10%]">
                                 <div class="flex items-center justify-center gap-1.5">
-                                    <a href="{{ route('anggota.show', $item) }}" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                                    <a href="{{ route('anggota.show', $item) }}" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
                                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                     </a>
-                                    <button onclick='openEditMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
+                                    <button onclick='openEditMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
                                         <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                     </button>
-                                    <form action="{{ route('anggota.destroy', $item) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini?')" class="inline m-0">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="w-7 h-7 rounded-lg bg-slate-800/40 text-rose-500 hover:text-white border border-slate-700/20 flex items-center justify-center hover:bg-rose-600 hover:border-transparent transition-all duration-200 cursor-pointer" title="Hapus Anggota">
-                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" onclick="openDeleteModal({{ $item->id }}, '{{ addslashes($item->nama) }}')" class="w-7 h-7 rounded-lg bg-slate-800/40 text-rose-500 hover:text-white border border-slate-700/20 flex items-center justify-center hover:bg-rose-600 hover:border-transparent transition-all duration-200 cursor-pointer" title="Hapus Anggota">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr class="member-row">
-                            <td colspan="6" class="py-10 px-4 text-center text-xs text-[#8f9bb3]">Belum ada data anggota di database.</td>
+                            <td colspan="5" class="py-10 px-4 text-center text-xs text-[#8f9bb3]">Belum ada data anggota di database.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -102,7 +92,7 @@
         </div>
     </div>
 
-    <div id="memberModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-sm hidden transition-opacity">
+    <div id="memberModal" class="fixed inset-0 z-[99] flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-lg hidden transition-opacity">
         <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center pb-2">
                 <h3 class="text-base font-bold text-white">Tambah Anggota</h3>
@@ -141,14 +131,14 @@
                 <input type="hidden" name="simpanan_pokok" value="100000">
                 
                 <div class="flex items-center gap-3 pt-4 justify-end">
-                    <button type="button" onclick="closeMemberModal('memberModal')" class="px-5 py-2.5 border border-[#1f243d] rounded-lg bg-transparent text-white text-xs font-semibold hover:bg-[#16192b] transition-colors">Batal</button>
-                    <button type="submit" class="px-5 py-2.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-blue-500/10">Simpan</button>
+                    <button type="button" onclick="closeMemberModal('memberModal')" class="btn-edit-cancel px-5 py-2.5 rounded-lg text-xs font-semibold cursor-pointer">Batal</button>
+                    <button type="submit" class="btn-edit-save px-5 py-2.5 rounded-lg text-xs font-bold cursor-pointer">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="editMemberModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-sm hidden transition-opacity">
+    <div id="editMemberModal" class="fixed inset-0 z-[99] flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-lg hidden transition-opacity">
         <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center pb-2">
                 <h3 class="text-base font-bold text-white">Ubah Anggota</h3>
@@ -194,8 +184,90 @@
                 </div>
                 
                 <div class="flex items-center gap-3 pt-4 justify-end">
-                    <button type="button" onclick="closeMemberModal('editMemberModal')" class="px-5 py-2.5 border border-[#1f243d] rounded-lg bg-transparent text-white text-xs font-semibold hover:bg-[#16192b] transition-colors">Batal</button>
-                    <button type="submit" class="px-5 py-2.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-blue-500/10">Simpan Perubahan</button>
+                    <button type="button" onclick="closeMemberModal('editMemberModal')" class="btn-edit-cancel px-5 py-2.5 rounded-lg text-xs font-semibold cursor-pointer">Batal</button>
+                    <button type="submit" class="btn-edit-save px-5 py-2.5 rounded-lg text-xs font-bold cursor-pointer">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Style for Modal Buttons to avoid JIT Compiler limitations -->
+    <style>
+        .btn-delete-cancel, .btn-edit-cancel {
+            background-color: #334155 !important; /* slate-700 */
+            color: #f1f5f9 !important; /* slate-100 */
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .btn-delete-cancel:hover, .btn-edit-cancel:hover {
+            background-color: #475569 !important; /* slate-600 */
+            color: #ffffff !important;
+            transform: scale(1.03) !important;
+        }
+        .btn-delete-cancel:active, .btn-edit-cancel:active {
+            transform: scale(0.97) !important;
+        }
+        
+        .btn-delete-confirm {
+            background-color: #dc2626 !important; /* red-600 */
+            color: #ffffff !important;
+            border: none !important;
+            transition: all 0.2s ease-in-out !important;
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.3) !important;
+        }
+        .btn-delete-confirm:hover {
+            background-color: #ef4444 !important; /* red-500 */
+            transform: scale(1.03) !important;
+        }
+        .btn-delete-confirm:active {
+            transform: scale(0.97) !important;
+        }
+
+        .btn-edit-save {
+            background-color: #2f54eb !important; /* blue-600 */
+            color: #ffffff !important;
+            border: none !important;
+            transition: all 0.2s ease-in-out !important;
+            box-shadow: 0 10px 15px -3px rgba(47, 84, 235, 0.3) !important;
+        }
+        .btn-edit-save:hover {
+            background-color: #3b5bdb !important; /* brighter blue */
+            transform: scale(1.03) !important;
+        }
+        .btn-edit-save:active {
+            transform: scale(0.97) !important;
+        }
+    </style>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="fixed inset-0 z-[99] flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-lg hidden transition-opacity">
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5" style="max-width: 448px; width: 100%;">
+            <!-- Header -->
+            <div class="text-center pb-2 relative">
+                <h3 class="text-base font-bold text-white text-center">Hapus Anggota</h3>
+                <button onclick="closeDeleteModal()" class="absolute right-0 top-0 text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <form id="deleteMemberForm" method="POST" class="space-y-5 m-0 text-center flex flex-col items-center justify-center">
+                @csrf
+                @method('DELETE')
+                
+                <!-- Warning Icon & Text (Rata Tengah) -->
+                <div class="flex flex-col items-center justify-center text-center space-y-4">
+                    <i data-lucide="alert-triangle" class="w-20 h-20" style="color: #ef4444; stroke-width: 1.2;"></i>
+                    
+                    <div class="space-y-2">
+                        <p class="text-xs text-[#8f9bb3] leading-relaxed">Apakah Anda yakin ingin menghapus anggota <span id="deleteMemberNameText" class="text-white font-bold"></span>?</p>
+                        <p class="text-xs text-rose-400/90 font-medium leading-relaxed">Tindakan ini tidak dapat dibatalkan dan semua data transaksi terkait akan dihapus secara permanen.</p>
+                    </div>
+                </div>
+                
+                <!-- Buttons (Rata Tengah) -->
+                <div class="flex items-center gap-3 pt-2 justify-center w-full">
+                    <button type="button" onclick="closeDeleteModal()" class="btn-delete-cancel px-6 py-2.5 rounded-lg text-xs font-semibold cursor-pointer">Batal</button>
+                    <button type="submit" class="btn-delete-confirm px-6 py-2.5 rounded-lg text-xs font-bold cursor-pointer">Hapus</button>
                 </div>
             </form>
         </div>
@@ -204,6 +276,17 @@
 
 @section('scripts')
     <script>
+        function openDeleteModal(id, name) {
+            const form = document.getElementById('deleteMemberForm');
+            form.action = `{{ url('/anggota') }}/${id}`;
+            document.getElementById('deleteMemberNameText').textContent = name;
+            document.getElementById('deleteConfirmModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteConfirmModal').classList.add('hidden');
+        }
+
         function openNewMemberModal() {
             document.getElementById('memberModal').classList.remove('hidden');
         }

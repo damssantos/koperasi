@@ -154,7 +154,7 @@
                                 <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
                             </td>
                             <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_pokok) }}</td>
-                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-blue-400 cursor-pointer w-[15%]">Detail</td>
+                            <td class="py-4 px-4 text-center text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors duration-150 cursor-pointer w-[15%]">Detail</td>
                         </tr>
                         <!-- Simpanan Wajib -->
                         <tr class="hover:bg-[#07080f]/30 transition duration-150">
@@ -163,7 +163,7 @@
                                 <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
                             </td>
                             <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_wajib) }}</td>
-                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-blue-400 cursor-pointer w-[15%]">Detail</td>
+                            <td class="py-4 px-4 text-center text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors duration-150 cursor-pointer w-[15%]">Detail</td>
                         </tr>
                         <!-- Simpanan Sukarela -->
                         <tr class="hover:bg-[#07080f]/30 transition duration-150">
@@ -172,7 +172,7 @@
                                 <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>
                             </td>
                             <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_sukarela) }}</td>
-                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-blue-400 cursor-pointer w-[15%]">Detail</td>
+                            <td class="py-4 px-4 text-center text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors duration-150 cursor-pointer w-[15%]">Detail</td>
                         </tr>
                     </tbody>
                 </table>
@@ -255,10 +255,10 @@
             <div class="flex justify-between items-center mt-5 pt-4 border-t border-[#1f243d]" style="text-align: left;">
                 <span class="text-[10px] font-semibold text-[#8f9bb3]">Menampilkan 4 dari 4 transaksi</span>
                 <div class="flex gap-1">
-                    <button class="w-6 h-6 rounded bg-[#1c1f36] border border-[#2a2f4c] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#2f54eb] transition-all cursor-pointer">
+                    <button class="w-6 h-6 rounded bg-[#16192b] border border-[#1f243d] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#1f243d] transition-all cursor-pointer">
                         <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
                     </button>
-                    <button class="w-6 h-6 rounded bg-[#1c1f36] border border-[#2a2f4c] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#2f54eb] transition-all cursor-pointer">
+                    <button class="w-6 h-6 rounded bg-[#16192b] border border-[#1f243d] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#1f243d] transition-all cursor-pointer">
                         <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                     </button>
                 </div>
