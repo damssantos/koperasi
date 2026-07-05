@@ -1,7 +1,5 @@
 <?php
 
-namespace Database\Seeders;
-
 use App\Models\AnggotaKoperasi;
 use Illuminate\Database\Seeder;
 
@@ -32,7 +30,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($dataAnggota as $index => $anggota) {
             AnggotaKoperasi::updateOrCreate(
-                ['id_anggota' => 'AGT-' . str_pad((string) (12089 + $index), 5, '0', STR_PAD_LEFT)],
+                ['id_anggota' => 'AGT-' . str_pad((string) (1 + $index), 3, '0', STR_PAD_LEFT)],
                 array_merge($anggota, [
                     'no_hp' => '+62 8' . str_pad((string) ($index + 1), 10, '0', STR_PAD_LEFT),
                     'tanggal_join' => now()->subDays($index)->toDateString(),

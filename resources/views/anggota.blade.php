@@ -6,7 +6,7 @@
     @php
         $formatRupiah = fn ($value) => 'Rp ' . number_format((int) $value, 0, ',', '.');
         $nextNumber = (int) ($anggota->map(fn ($item) => (int) preg_replace('/\D/', '', (string) $item->id_anggota))->max() ?? 0);
-        $nextId = 'AGT-' . str_pad((string) max($nextNumber + 1, 12089), 5, '0', STR_PAD_LEFT);
+        $nextId = 'AGT-' . str_pad((string) ($nextNumber + 1), 3, '0', STR_PAD_LEFT);
     @endphp
 
     <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 pb-6 border-b border-[#1f243d]">
@@ -93,7 +93,7 @@
                     @forelse($anggota as $item)
                         <tr class="member-row hover:bg-[#07080f]/30 transition duration-150">
                             <td class="py-4 px-4 text-xs text-slate-300 w-[15%]">{{ optional($item->tanggal_join ?? $item->created_at)->format('d M Y') }}</td>
-                            <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">{{ $item->id_anggota ?? 'AGT-' . str_pad($item->id, 5, '0', STR_PAD_LEFT) }}</td>
+                            <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">{{ $item->id_anggota ?? 'AGT-' . str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
                             <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">{{ $item->nama }}</td>
                             <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">{{ $item->no_hp ?? '-' }}</td>
                             <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">{{ $formatRupiah($item->total_saldo ?: $item->simpanan_pokok) }}</td>
@@ -241,7 +241,7 @@
         function openEditMemberModal(member) {
             const form = document.getElementById('editMemberForm');
             form.action = `{{ url('/anggota') }}/${member.id}`;
-            document.getElementById('edit_id_anggota').value = member.id_anggota ?? `AGT-${String(member.id).padStart(5, '0')}`;
+            document.getElementById('edit_id_anggota').value = member.id_anggota ?? `AGT-${String(member.id).padStart(3, '0')}`;
             document.getElementById('edit_nama').value = member.nama ?? '';
             document.getElementById('edit_no_hp').value = member.no_hp ?? '';
             document.getElementById('edit_tanggal_join').value = member.tanggal_join ? member.tanggal_join.substring(0, 10) : new Date().toISOString().split('T')[0];
