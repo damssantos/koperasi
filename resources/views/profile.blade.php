@@ -10,6 +10,7 @@
         gap: 30px !important;
         margin-top: 24px;
         width: 100%;
+        align-items: stretch;
     }
 
     @media (min-width: 1024px) {
@@ -22,15 +23,17 @@
         background-color: #16192b;
         border: 1px solid #1f243d;
         border-radius: 16px;
-        padding: 32px 24px;
+        padding: 32px 28px;
         position: relative;
         overflow: hidden;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        transition: border-color 0.3s ease;
     }
 
     .profile-card:hover {
-        border-color: rgba(47, 84, 237, 0.3);
-        box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
+        border-color: rgba(143, 155, 179, 0.2);
     }
 
     .profile-avatar-circle {
@@ -42,16 +45,11 @@
         align-items: center;
         justify-content: center;
         margin: 0 auto;
-        border: 4px solid #1f243d;
-        box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
+        border: 4px solid #16192b;
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25);
+        background: linear-gradient(135deg, #2563eb, #4338ca);
         z-index: 10;
         position: relative;
-        transition: transform 0.3s ease, border-color 0.3s ease;
-    }
-
-    .profile-card:hover .profile-avatar-circle {
-        transform: scale(1.03);
-        border-color: #2f54eb;
     }
 
     .profile-avatar-img {
@@ -74,110 +72,57 @@
         }
     }
 
-    .info-item {
-        background-color: rgba(7, 8, 15, 0.4);
-        border: 1px solid #1f243d;
-        border-radius: 12px;
-        padding: 16px 20px;
+    .form-group {
         display: flex;
         flex-direction: column;
-        gap: 8px !important;
-        transition: border-color 0.3s ease;
+        gap: 8px;
     }
 
-    .info-item:hover {
-        border-color: rgba(143, 155, 179, 0.15);
-    }
-
-    .info-item-full {
+    .form-group-full {
         grid-column: 1 / -1;
     }
 
-    .info-header-container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .info-icon-container {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background-color: rgba(47, 84, 237, 0.1);
-        border: 1px solid rgba(47, 84, 237, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .info-icon {
-        color: #2f54eb;
-        width: 16px;
-        height: 16px;
-    }
-
-    .info-label {
-        font-size: 10px;
-        font-weight: 700;
+    .form-label {
+        font-size: 11px;
+        font-weight: 600;
         color: #8f9bb3;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 
-    .input-wrapper {
-        position: relative;
-        width: 100%;
-    }
-
-    .info-input {
+    .form-input {
         width: 100%;
         background-color: #07080f;
         border: 1px solid #1f243d;
-        border-radius: 8px;
-        padding: 10px 14px;
+        border-radius: 10px;
+        padding: 12px 16px;
         color: #ffffff;
         font-size: 13px;
-        font-weight: 600;
-        transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+        font-weight: 500;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     }
 
-    .info-input:focus {
+    .form-input:focus {
         outline: none;
         border-color: #2f54eb;
-        box-shadow: 0 0 12px rgba(47, 84, 237, 0.25);
-        background-color: rgba(7, 8, 15, 0.6);
+        box-shadow: 0 0 0 2px rgba(47, 84, 237, 0.15);
+        background-color: #0d0f1a;
     }
 
-    .info-input[readonly],
-    .info-input[disabled] {
-        background-color: rgba(7, 8, 15, 0.25);
+    .form-input[readonly],
+    .form-input[disabled] {
+        background-color: rgba(7, 8, 15, 0.4);
         color: #64748b;
         cursor: not-allowed;
         border-color: #1f243d;
-        padding-right: 38px; /* Extra space for the lock icon */
+        opacity: 0.7;
     }
 
-    .info-input[readonly]:focus,
-    .info-input[disabled]:focus {
-        border-color: #1f243d;
-        box-shadow: none;
-    }
-
-    .lock-icon {
-        position: absolute;
-        right: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 14px;
-        height: 14px;
-        color: #475569;
-        pointer-events: none;
-    }
-
-    .info-textarea {
-        min-height: 100px;
-        max-height: 180px;
+    .form-textarea {
+        min-height: 120px;
         resize: vertical;
     }
 
@@ -189,47 +134,29 @@
     }
 
     body.light .profile-avatar-circle {
-        border-color: #e2e8f0;
-        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.15);
+        border-color: #ffffff;
     }
 
-    body.light .info-item {
+    body.light .form-input {
         background-color: #f8fafc;
-        border-color: #e2e8f0;
-    }
-
-    body.light .info-icon-container {
-        background-color: rgba(37, 99, 235, 0.05);
-        border-color: rgba(37, 99, 235, 0.15);
-    }
-
-    body.light .info-icon {
-        color: #2563eb;
-    }
-
-    body.light .info-input {
-        background-color: #ffffff;
         border-color: #cbd5e1;
         color: #1e293b;
     }
 
-    body.light .info-input:focus {
+    body.light .form-input:focus {
         border-color: #2563eb;
         box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+        background-color: #ffffff;
     }
 
-    body.light .info-input[readonly],
-    body.light .info-input[disabled] {
+    body.light .form-input[readonly],
+    body.light .form-input[disabled] {
         background-color: #f1f5f9;
         color: #94a3b8;
         border-color: #cbd5e1;
     }
 
-    body.light .lock-icon {
-        color: #94a3b8;
-    }
-
-    body.light .info-label {
+    body.light .form-label {
         color: #64748b;
     }
 </style>
@@ -253,40 +180,39 @@
     <div class="profile-container">
         
         <!-- Left Side: Profile Card & Quick Stats -->
-        <div class="profile-card flex flex-col items-center text-center">
-            <!-- Decorative Blur Background -->
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
-            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
+        <div>
+            <div class="profile-card flex flex-col items-center text-center">
+                <!-- Decorative Blur Background -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
 
-            <!-- Avatar Display -->
-            <div class="profile-avatar-circle mt-4">
-                @if($hasProfileAvatar)
-                    <img src="{{ asset('storage/' . $profileAvatar) }}" alt="Avatar" class="profile-avatar-img">
-                @else
-                    <!-- Premium Styled Letter Avatar -->
-                    <div class="w-full h-full flex items-center justify-center" style="background: radial-gradient(circle, #2f54eb 0%, #07080f 100%);">
-                        <span class="text-white text-4xl font-extrabold tracking-tight" style="text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); font-family: 'Plus Jakarta Sans', sans-serif;">{{ $profileInitial }}</span>
+                <!-- Avatar Display -->
+                <div class="profile-avatar-circle mt-4">
+                    @if($hasProfileAvatar)
+                        <img src="{{ asset('storage/' . $profileAvatar) }}" alt="Avatar" class="profile-avatar-img">
+                    @else
+                        <span class="text-white text-4xl font-bold">{{ $profileInitial }}</span>
+                    @endif
+                </div>
+
+                <div class="mt-6 space-y-1 z-10">
+                    <h3 class="text-lg font-bold text-white tracking-tight leading-tight">{{ $profileUser->nama_lengkap }}</h3>
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 text-emerald-400 text-[10px] font-bold tracking-wide rounded-full mt-3" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Status Anggota Aktif</span>
                     </div>
-                @endif
-            </div>
-
-            <div class="mt-6 space-y-1 z-10">
-                <h3 class="text-lg font-bold text-white tracking-tight leading-tight">{{ $profileUser->nama_lengkap }}</h3>
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 text-emerald-400 text-[10px] font-bold tracking-wide rounded-full mt-3" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Status Anggota Aktif</span>
                 </div>
-            </div>
 
-            <!-- Profile quick specs list -->
-            <div class="w-full mt-8 pt-6 border-t border-[#1f243d] space-y-4 text-left text-xs z-10" style="border-top: 1px solid #1f243d;">
-                <div class="flex items-center justify-between" style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                    <span style="color: #8f9bb3;">NIK Anggota:</span>
-                    <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->nik }}</span>
-                </div>
-                <div class="flex items-center justify-between" style="display: flex; justify-content: space-between;">
-                    <span style="color: #8f9bb3;">Bergabung Sejak:</span>
-                    <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->created_at->format('d M Y') }}</span>
+                <!-- Profile quick specs list (pushed to bottom using margin-top: auto) -->
+                <div class="w-full mt-auto pt-6 border-t border-[#1f243d] space-y-4 text-left text-xs z-10" style="border-top: 1px solid #1f243d; margin-top: auto; padding-top: 24px;">
+                    <div class="flex items-center justify-between" style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="color: #8f9bb3;">NIK Anggota:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->nik }}</span>
+                    </div>
+                    <div class="flex items-center justify-between" style="display: flex; justify-content: space-between;">
+                        <span style="color: #8f9bb3;">Bergabung Sejak:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->created_at->format('d M Y') }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -303,83 +229,65 @@
                 </div>
             </div>
 
-            <form action="{{ route('profile.update') }}" method="POST">
+            <form action="{{ route('profile.update') }}" method="POST" style="flex-grow: 1; display: flex; flex-direction: column;">
                 @csrf
                 @method('PUT')
 
                 <!-- Info Grid -->
                 <div class="info-grid">
-                    <!-- Nama Lengkap (READ-ONLY WITH LOCK) -->
-                    <div class="info-item">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="user-check" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">Nama Lengkap</label>
-                        </div>
-                        <div class="input-wrapper">
-                            <input type="text" class="info-input" value="{{ $profileUser->nama_lengkap }}" readonly disabled>
-                            <i data-lucide="lock" class="lock-icon"></i>
-                        </div>
+                    <!-- Nama Lengkap (READ-ONLY) -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i data-lucide="user-check" class="w-3.5 h-3.5 text-[#8f9bb3]"></i>
+                            <span>Nama Lengkap</span>
+                            <i data-lucide="lock" class="w-3 h-3 text-[#8f9bb3]" title="Data ini terkunci"></i>
+                        </label>
+                        <input type="text" class="form-input" value="{{ $profileUser->nama_lengkap }}" readonly disabled>
                     </div>
 
-                    <!-- NIK (READ-ONLY WITH LOCK) -->
-                    <div class="info-item">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="credit-card" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">NIK (Nomor Induk Kependudukan)</label>
-                        </div>
-                        <div class="input-wrapper">
-                            <input type="text" class="info-input" value="{{ $profileUser->nik }}" readonly disabled>
-                            <i data-lucide="lock" class="lock-icon"></i>
-                        </div>
+                    <!-- NIK (READ-ONLY) -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i data-lucide="credit-card" class="w-3.5 h-3.5 text-[#8f9bb3]"></i>
+                            <span>NIK (Nomor Induk Kependudukan)</span>
+                            <i data-lucide="lock" class="w-3 h-3 text-[#8f9bb3]" title="Data ini terkunci"></i>
+                        </label>
+                        <input type="text" class="form-input" value="{{ $profileUser->nik }}" readonly disabled>
                     </div>
 
-                    <!-- Email (READ-ONLY WITH LOCK) -->
-                    <div class="info-item">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="mail" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">Alamat Email</label>
-                        </div>
-                        <div class="input-wrapper">
-                            <input type="text" class="info-input" value="{{ $profileUser->email }}" readonly disabled>
-                            <i data-lucide="lock" class="lock-icon"></i>
-                        </div>
+                    <!-- Email (READ-ONLY) -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i data-lucide="mail" class="w-3.5 h-3.5 text-[#8f9bb3]"></i>
+                            <span>Alamat Email</span>
+                            <i data-lucide="lock" class="w-3 h-3 text-[#8f9bb3]" title="Data ini terkunci"></i>
+                        </label>
+                        <input type="text" class="form-input" value="{{ $profileUser->email }}" readonly disabled>
                     </div>
 
                     <!-- No HP (EDITABLE) -->
-                    <div class="info-item">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="phone" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">Nomor HP <span class="text-blue-500 font-bold">*</span></label>
-                        </div>
-                        <div class="input-wrapper">
-                            <input type="text" name="no_hp" class="info-input" value="{{ old('no_hp', $profileUser->no_hp) }}" required>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i data-lucide="phone" class="w-3.5 h-3.5 text-blue-500"></i>
+                            <span>Nomor HP</span>
+                            <i data-lucide="edit-2" class="w-3 h-3 text-blue-400" title="Bisa diubah"></i>
+                        </label>
+                        <input type="text" name="no_hp" class="form-input" value="{{ old('no_hp', $profileUser->no_hp) }}" required placeholder="Masukkan nomor handphone aktif">
                     </div>
 
                     <!-- Alamat Tinggal (EDITABLE, Full Width) -->
-                    <div class="info-item info-item-full">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="map-pin" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">Alamat Tinggal <span class="text-blue-500 font-bold">*</span></label>
-                        </div>
-                        <div class="input-wrapper">
-                            <textarea name="alamat" class="info-input info-textarea" required>{{ old('alamat', $profileUser->alamat) }}</textarea>
-                        </div>
+                    <div class="form-group form-group-full">
+                        <label class="form-label">
+                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-500"></i>
+                            <span>Alamat Tinggal</span>
+                            <i data-lucide="edit-2" class="w-3 h-3 text-blue-400" title="Bisa diubah"></i>
+                        </label>
+                        <textarea name="alamat" class="form-input form-textarea" required placeholder="Masukkan alamat tinggal lengkap Anda">{{ old('alamat', $profileUser->alamat) }}</textarea>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
-                <div class="flex justify-end mt-8">
+                <!-- Submit Button (pushed to bottom using margin-top: auto) -->
+                <div class="flex justify-end mt-auto pt-8">
                     <button type="submit" class="px-6 py-2.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg text-xs font-bold transition duration-150 flex items-center gap-2 shadow-md shadow-blue-500/10">
                         <i data-lucide="save" class="w-4 h-4"></i>
                         <span>Simpan Perubahan</span>
