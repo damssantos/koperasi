@@ -48,6 +48,13 @@
         position: relative;
     }
 
+    /* Make the initial letter big and bold */
+    .profile-avatar-circle span {
+        font-size: 46px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+    }
+
     .profile-avatar-img {
         width: 100%;
         height: 100%;
@@ -60,7 +67,7 @@
         gap: 24px !important;
         row-gap: 24px !important;
         column-gap: 24px !important;
-        margin-top: 16px; /* Create breathing room from the header card */
+        margin-top: 28px; /* Breathing room below the header line */
     }
 
     @media (min-width: 768px) {
@@ -70,59 +77,36 @@
     }
 
     .info-item {
-        background-color: #1e2238; /* Soft navy slate background for sub-cards */
-        border: 1px solid #2a2f4c; /* Softer border for sub-cards */
+        background-color: #1e2238; /* Soft navy slate */
+        border: 1px solid #2a2f4c; /* Softer border */
         border-radius: 12px;
         padding: 20px 24px;
         display: flex;
         flex-direction: column;
-        gap: 10px !important;
+        gap: 12px !important;
     }
 
     .info-item-full {
         grid-column: 1 / -1;
     }
 
-    .info-header-container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .info-icon-container {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background-color: rgba(47, 84, 237, 0.1);
-        border: 1px solid rgba(47, 84, 237, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .info-icon {
-        color: #2f54eb;
-        width: 16px;
-        height: 16px;
-    }
-
     .info-label {
-        font-size: 11px; /* Slightly larger, legible labels */
+        font-size: 12px; /* Normal, legible label size */
         font-weight: 700;
         color: #8f9bb3;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        margin-bottom: 2px;
     }
 
     .info-input {
         width: 100%;
-        background-color: #111322; /* Soft darker background for inputs */
+        background-color: #111322; /* Soft input background */
         border: 1px solid #252b48; /* Softer input borders */
         border-radius: 8px;
         padding: 12px 16px;
         color: #ffffff;
-        font-size: 14px; /* Normal, user-friendly font size */
+        font-size: 14.5px; /* Normal, user-friendly font size */
         font-weight: 500;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
@@ -158,17 +142,8 @@
     }
 
     body.light .info-item {
-        background-color: #f1f5f9; /* Soft light gray card */
+        background-color: #f1f5f9;
         border-color: #e2e8f0;
-    }
-
-    body.light .info-icon-container {
-        background-color: rgba(37, 99, 235, 0.05);
-        border-color: rgba(37, 99, 235, 0.15);
-    }
-
-    body.light .info-icon {
-        color: #2563eb;
     }
 
     body.light .info-input {
@@ -212,53 +187,64 @@
     <!-- Main Profile Layout Container -->
     <div class="profile-container">
         
-        <!-- Left Side: Profile Card & Quick Stats -->
-        <div class="profile-card flex flex-col items-center text-center">
-            <!-- Decorative Blur Background -->
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
-            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
+        <!-- Left Side: Profile Card & Quick Stats & Help Card -->
+        <div class="flex flex-col">
+            <!-- Profile Overview Card -->
+            <div class="profile-card flex flex-col items-center text-center">
+                <!-- Decorative Blur Background -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
 
-            <!-- Avatar Display -->
-            <div class="profile-avatar-circle mt-4">
-                @if($hasProfileAvatar)
-                    <img src="{{ asset('storage/' . $profileAvatar) }}" alt="Avatar" class="profile-avatar-img">
-                @else
-                    <span class="text-white text-4xl font-bold">{{ $profileInitial }}</span>
-                @endif
-            </div>
+                <!-- Avatar Display -->
+                <div class="profile-avatar-circle mt-4">
+                    @if($hasProfileAvatar)
+                        <img src="{{ asset('storage/' . $profileAvatar) }}" alt="Avatar" class="profile-avatar-img">
+                    @else
+                        <span>{{ $profileInitial }}</span>
+                    @endif
+                </div>
 
-            <div class="mt-6 space-y-1.5 z-10">
-                <h3 style="font-size: 20px;" class="font-bold text-white tracking-tight leading-tight">{{ $profileUser->nama_lengkap }}</h3>
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 text-emerald-400 text-[10px] font-bold tracking-wide rounded-full mt-3" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Status Anggota Aktif</span>
+                <div class="mt-6 space-y-1.5 z-10">
+                    <h3 style="font-size: 20px;" class="font-bold text-white tracking-tight leading-tight">{{ $profileUser->nama_lengkap }}</h3>
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 text-emerald-400 text-[10px] font-bold tracking-wide rounded-full mt-3" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Status Anggota Aktif</span>
+                    </div>
+                </div>
+
+                <!-- Profile quick specs list -->
+                <div class="w-full mt-8 pt-6 border-t border-[#1f243d] space-y-4 text-left z-10" style="border-top: 1px solid #1f243d; font-size: 13px;">
+                    <div class="flex items-center justify-between" style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="color: #8f9bb3;">NIK Anggota:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->nik }}</span>
+                    </div>
+                    <div class="flex items-center justify-between" style="display: flex; justify-content: space-between;">
+                        <span style="color: #8f9bb3;">Bergabung Sejak:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->created_at->format('d M Y') }}</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Profile quick specs list -->
-            <div class="w-full mt-8 pt-6 border-t border-[#1f243d] space-y-4 text-left z-10" style="border-top: 1px solid #1f243d; font-size: 13px;">
-                <div class="flex items-center justify-between" style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                    <span style="color: #8f9bb3;">NIK Anggota:</span>
-                    <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->nik }}</span>
-                </div>
-                <div class="flex items-center justify-between" style="display: flex; justify-content: space-between;">
-                    <span style="color: #8f9bb3;">Bergabung Sejak:</span>
-                    <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->created_at->format('d M Y') }}</span>
+            <!-- Help & Guidance Card (Fills empty space beautifully) -->
+            <div class="profile-card mt-6" style="margin-top: 24px; padding: 22px; border-color: rgba(47, 84, 237, 0.15); background: linear-gradient(135deg, rgba(22, 25, 43, 0.5), rgba(30, 34, 56, 0.3));">
+                <div style="display: flex; align-items: flex-start; gap: 14px;">
+                    <div style="width: 32px; height: 32px; border-radius: 8px; background-color: rgba(47, 84, 237, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(47, 84, 237, 0.2);">
+                        <i data-lucide="shield-alert" style="color: #2f54eb; width: 16px; height: 16px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 14px; font-weight: 700; color: #ffffff; margin: 0 0 6px 0;">Bantuan & Keamanan</h4>
+                        <p style="font-size: 12px; color: #8f9bb3; line-height: 1.6; margin: 0;">Apabila terdapat ketidaksesuaian pada data <strong>Nama</strong>, <strong>NIK</strong>, atau <strong>Email</strong> Anda, silakan hubungi Administrator Koperasi untuk bantuan perubahan data.</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Right Side: Detailed Profile Information (FORM) -->
         <div class="profile-card">
-            <!-- Information Card Header -->
-            <div class="flex items-center gap-3 border-b border-[#1f243d] pb-5">
-                <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20">
-                    <i data-lucide="user" class="w-4 h-4"></i>
-                </div>
-                <div>
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Informasi Akun</h3>
-                    <p class="text-[10px] text-[#8f9bb3]">Detail data diri Anda yang terdaftar pada sistem koperasi.</p>
-                </div>
+            <!-- Information Card Header (Enlarged and with more space) -->
+            <div class="flex flex-col gap-1.5 border-b border-[#1f243d] pb-6 mb-4">
+                <h3 style="font-size: 16px; font-weight: 700;" class="text-white uppercase tracking-wider">Informasi Akun</h3>
+                <p style="font-size: 12px;" class="text-[#8f9bb3]">Detail data diri Anda yang terdaftar pada sistem koperasi.</p>
             </div>
 
             <form action="{{ route('profile.update') }}" method="POST">
@@ -269,56 +255,31 @@
                 <div class="info-grid">
                     <!-- Nama Lengkap (READ-ONLY) -->
                     <div class="info-item">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="user-check" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">Nama Lengkap</label>
-                        </div>
+                        <label class="info-label">Nama Lengkap</label>
                         <input type="text" class="info-input" value="{{ $profileUser->nama_lengkap }}" readonly disabled>
                     </div>
 
                     <!-- NIK (READ-ONLY) -->
                     <div class="info-item">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="credit-card" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">NIK (Nomor Induk Kependudukan)</label>
-                        </div>
+                        <label class="info-label">NIK (Nomor Induk Kependudukan)</label>
                         <input type="text" class="info-input" value="{{ $profileUser->nik }}" readonly disabled>
                     </div>
 
                     <!-- Email (READ-ONLY) -->
                     <div class="info-item">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="mail" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">Alamat Email</label>
-                        </div>
+                        <label class="info-label">Alamat Email</label>
                         <input type="text" class="info-input" value="{{ $profileUser->email }}" readonly disabled>
                     </div>
 
                     <!-- No HP (EDITABLE) -->
                     <div class="info-item">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="phone" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">Nomor HP</label>
-                        </div>
+                        <label class="info-label">Nomor HP</label>
                         <input type="text" name="no_hp" class="info-input" value="{{ old('no_hp', $profileUser->no_hp) }}" required>
                     </div>
 
                     <!-- Alamat Tinggal (EDITABLE, Full Width) -->
                     <div class="info-item info-item-full">
-                        <div class="info-header-container">
-                            <div class="info-icon-container">
-                                <i data-lucide="map-pin" class="info-icon"></i>
-                            </div>
-                            <label class="info-label">Alamat Tinggal</label>
-                        </div>
+                        <label class="info-label">Alamat Tinggal</label>
                         <textarea name="alamat" class="info-input info-textarea" required>{{ old('alamat', $profileUser->alamat) }}</textarea>
                     </div>
                 </div>
