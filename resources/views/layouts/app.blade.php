@@ -145,16 +145,26 @@
                 animation: fadeIn 0.3s ease-out forwards;
             }
 
-            /* Light Mode CSS Overrides */
+            /* ============================================
+               LIGHT MODE — COMPREHENSIVE OVERRIDES
+               ============================================ */
+
+            /* === 1. GLOBAL FOUNDATION === */
             body.light {
-                background-color: #f4f6fa;
+                background-color: #f4f6fa !important;
                 color: #1e293b !important;
             }
+            body.light #main-container {
+                background-color: #f4f6fa !important;
+            }
+
+            /* === 2. NAVBAR (Top Header) === */
             body.light header {
                 background-color: #ffffff !important;
                 border-color: #e2e8f0 !important;
             }
             body.light header span.logo-full,
+            body.light header .logo-mini i,
             body.light header button,
             body.light header button i,
             body.light header button span {
@@ -163,6 +173,43 @@
             body.light header button:hover {
                 background-color: #f1f5f9 !important;
             }
+
+            /* === 3. PROFILE DROPDOWN === */
+            body.light #profileDropdown {
+                background-color: #ffffff !important;
+                border-color: #e2e8f0 !important;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important;
+            }
+            body.light #profileDropdown div.bg-\[\#0d0f1a\] {
+                background-color: #f8fafc !important;
+                border-color: #e2e8f0 !important;
+            }
+            body.light #profileDropdown p.text-white,
+            body.light #profileDropdown span.font-semibold,
+            body.light #profileDropdown span.text-white {
+                color: #1e293b !important;
+            }
+            body.light #profileDropdown .text-\[\#8f9bb3\],
+            body.light #profileDropdown .text-slate-400 {
+                color: #64748b !important;
+            }
+            body.light #profileDropdown .bg-\[\#1f243d\] {
+                background-color: #f1f5f9 !important;
+                color: #64748b !important;
+            }
+            body.light #profileDropdown button:hover,
+            body.light #profileDropdown a:hover {
+                background-color: #f1f5f9 !important;
+            }
+            body.light #profileDropdown .border-\[\#1f243d\] {
+                border-color: #e2e8f0 !important;
+            }
+            body.light #languageSubmenu div.bg-\[\#0d0f1a\] {
+                background-color: #ffffff !important;
+                border-color: #e2e8f0 !important;
+            }
+
+            /* === 4. SIDEBAR === */
             body.light aside {
                 background-color: #ffffff !important;
                 border-color: #e2e8f0 !important;
@@ -178,179 +225,297 @@
                 background-color: #2f54eb !important;
                 color: #ffffff !important;
             }
-            body.light aside .border-t {
+            body.light aside .border-t,
+            body.light aside .border-\[\#1f243d\] {
                 border-color: #e2e8f0 !important;
             }
-            body.light aside .footer-full span {
+            body.light aside .footer-full span,
+            body.light aside .footer-mini span {
                 color: #64748b !important;
             }
-            body.light #main-container {
-                background-color: #f4f6fa !important;
+            body.light aside button span {
+                color: #64748b !important;
             }
+
+            /* === 5. GLOBAL TEXT COLOR OVERRIDES === */
             body.light main h2,
             body.light main h3,
-            body.light main h4,
-            body.light main p.text-white,
-            body.light main span.text-white {
+            body.light main h4 {
                 color: #1e293b !important;
             }
-            /* Welcome card text rules for light mode to keep high contrast */
-            body.light main .bg-gradient-to-r h3,
-            body.light main .bg-gradient-to-r span,
-            body.light main .bg-gradient-to-r p {
-                color: #ffffff !important;
+            body.light main p.text-white,
+            body.light main span.text-white,
+            body.light main div.text-white {
+                color: #1e293b !important;
             }
-            body.light main .bg-gradient-to-r span.text-blue-200 {
-                color: #bfdbfe !important;
-            }
-            body.light main .bg-gradient-to-r span.text-emerald-400 {
-                color: #34d399 !important;
-            }
-            body.light main p.text-blue-100 {
-                color: #ffffff !important; /* Keep welcome text white on the gradient card */
-            }
-            /* General text contrast overrides for light mode */
             body.light .text-slate-300,
             body.light .text-slate-400 {
                 color: #475569 !important;
-            }
-            body.light main .bg-\[\#16192b\],
-            body.light main .bg-\[\#16192b\] > div,
-            body.light main .bg-card {
-                background-color: #ffffff !important;
-                border-color: #e2e8f0 !important;
-                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03) !important;
-            }
-            body.light main .border-\[\#1f243d\],
-            body.light main .border-card {
-                border-color: #e2e8f0 !important;
             }
             body.light main .text-muted,
             body.light main .text-\[\#8f9bb3\],
             body.light main .text-\[\#7c83a7\] {
                 color: #64748b !important;
             }
-            body.light td, 
-            body.light th {
-                border-color: #e2e8f0 !important;
-                color: #1e293b !important;
+            body.light main .text-xs.text-\[\#8f9bb3\],
+            body.light main p.text-\[\#8f9bb3\],
+            body.light main span.text-\[\#8f9bb3\] {
+                color: #64748b !important;
             }
-            body.light td.text-slate-300,
-            body.light td.text-\[\#8f9bb3\] {
-                color: #475569 !important;
+
+            /* === 6. CARDS & CONTAINERS === */
+            body.light main .bg-\[\#16192b\] {
+                background-color: #ffffff !important;
+                border-color: #e2e8f0 !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03) !important;
+            }
+            body.light main .border-\[\#1f243d\] {
+                border-color: #e2e8f0 !important;
+            }
+            body.light main .border-b.border-\[\#1f243d\] {
+                border-color: #e2e8f0 !important;
+            }
+            body.light main .bg-\[\#07080f\],
+            body.light main .bg-\[\#07080f\]\/40,
+            body.light main .bg-\[\#07080f\]\/30 {
+                background-color: #f8fafc !important;
+                border-color: #e2e8f0 !important;
+            }
+
+            /* === 7. TABLES (All pages) === */
+            body.light table {
+                background-color: transparent !important;
+            }
+            body.light table thead {
+                background-color: #f8fafc !important;
             }
             body.light table thead tr {
                 border-color: #e2e8f0 !important;
             }
+            body.light table thead th {
+                color: #64748b !important;
+                border-color: #e2e8f0 !important;
+                background-color: #f8fafc !important;
+            }
+            body.light table tbody tr {
+                border-color: #f1f5f9 !important;
+            }
+            body.light table tbody tr:hover,
             body.light tr.hover\:bg-\[\#07080f\]\/30:hover {
-                background-color: #f1f5f9 !important;
-            }
-            body.light .divide-y > div:hover {
-                background-color: #f1f5f9 !important;
-            }
-            body.light .divide-y > div {
-                border-color: #e2e8f0 !important;
-            }
-            body.light .bg-\[\#07080f\],
-            body.light .bg-\[\#07080f\]\/40 {
                 background-color: #f8fafc !important;
-                border-color: #e2e8f0 !important;
             }
-            body.light #profileDropdown {
-                background-color: #ffffff !important;
+            body.light td,
+            body.light th {
                 border-color: #e2e8f0 !important;
+                color: #334155 !important;
             }
-            body.light #profileDropdown div.bg-\[\#0d0f1a\] {
-                background-color: #f8fafc !important;
-                border-color: #e2e8f0 !important;
-            }
-            body.light #profileDropdown p.text-white,
-            body.light #profileDropdown span.font-semibold {
+            body.light td.text-white,
+            body.light td .text-white {
                 color: #1e293b !important;
             }
-            body.light #profileDropdown .bg-\[\#1f243d\] {
-                background-color: #f1f5f9 !important;
+            body.light td.text-\[\#8f9bb3\],
+            body.light td .text-\[\#8f9bb3\] {
                 color: #64748b !important;
             }
-            body.light #profileDropdown button:hover {
-                background-color: #f1f5f9 !important;
-            }
-            body.light #languageSubmenu div.bg-\[\#0d0f1a\] {
-                background-color: #ffffff !important;
-                border-color: #e2e8f0 !important;
-            }
-            body.light .bg-blue-500\/5 {
-                background-color: rgba(47, 84, 235, 0.05) !important;
-                border-color: rgba(47, 84, 235, 0.15) !important;
-            }
-            body.light .bg-orange-500\/10 {
-                background-color: rgba(249, 115, 22, 0.1) !important;
-            }
-            body.light .bg-rose-500\/10 {
-                background-color: rgba(244, 63, 94, 0.1) !important;
-            }
-            body.light .bg-rose-950\/40 {
-                background-color: rgba(244, 63, 94, 0.05) !important;
-                border-color: rgba(244, 63, 94, 0.15) !important;
-            }
-            
-            /* Modals & Forms Light Mode */
-            body.light #transactionModal > div,
-            body.light #detailTransactionModal > div,
-            body.light #editTransactionModal > div,
-            body.light #memberModal > div {
-                background-color: #ffffff !important;
-                border-color: #e2e8f0 !important;
-            }
-            body.light #transactionModal h3,
-            body.light #detailTransactionModal h3,
-            body.light #editTransactionModal h3,
-            body.light #memberModal h3 {
-                color: #1e293b !important;
-            }
-            body.light #transactionModal select,
-            body.light #transactionModal input,
-            body.light #editTransactionModal select,
-            body.light #editTransactionModal input,
-            body.light #editTransactionModal textarea,
-            body.light #memberModal select,
-            body.light #memberModal input {
-                background-color: #f8fafc !important;
-                border-color: #cbd5e1 !important;
-                color: #1e293b !important;
-            }
-            body.light #transactionModal select:focus,
-            body.light #transactionModal input:focus,
-            body.light #editTransactionModal select:focus,
-            body.light #editTransactionModal input:focus,
-            body.light #editTransactionModal textarea:focus,
-            body.light #memberModal select:focus,
-            body.light #memberModal input:focus {
-                border-color: #2f54eb !important;
-            }
-            body.light #transactionModal button[onclick="closeNewTransactionModal()"],
-            body.light #detailTransactionModal button[onclick="closeDetailTransactionModal()"],
-            body.light #editTransactionModal button[onclick="closeEditTransactionModal()"],
-            body.light #memberModal button[onclick="closeNewMemberModal()"] {
-                background-color: #f1f5f9 !important;
-                border-color: #cbd5e1 !important;
-                color: #64748b !important;
-            }
-            body.light #transactionModal button[onclick="closeNewTransactionModal()"]:hover,
-            body.light #detailTransactionModal button[onclick="closeDetailTransactionModal()"]:hover,
-            body.light #editTransactionModal button[onclick="closeEditTransactionModal()"]:hover,
-            body.light #memberModal button[onclick="closeNewMemberModal()"]:hover {
-                color: #1e293b !important;
-            }
-            body.light #detailTransactionModal span,
-            body.light #detailTransactionModal p {
-                color: #1e293b !important;
-            }
-            body.light #detailTransactionModal label {
+            body.light td .text-slate-400,
+            body.light td.text-slate-400 {
                 color: #64748b !important;
             }
 
-            /* SweetAlert2 Compact Overrides */
+            /* === 8. ACTION BUTTONS IN TABLES === */
+            body.light table button.bg-slate-800\/40,
+            body.light table .bg-slate-800\/40 {
+                background-color: #f1f5f9 !important;
+                border-color: #e2e8f0 !important;
+                color: #475569 !important;
+            }
+            body.light table button.bg-slate-800\/40:hover,
+            body.light table .bg-slate-800\/40:hover {
+                background-color: #2f54eb !important;
+                color: #ffffff !important;
+                border-color: transparent !important;
+            }
+
+            /* === 9. INPUTS, SELECTS, TEXTAREAS (Global) === */
+            body.light input[type="text"],
+            body.light input[type="number"],
+            body.light input[type="date"],
+            body.light input[type="email"],
+            body.light input[type="password"],
+            body.light input[type="search"],
+            body.light select,
+            body.light textarea {
+                background-color: #f8fafc !important;
+                border-color: #cbd5e1 !important;
+                color: #1e293b !important;
+            }
+            body.light input:focus,
+            body.light select:focus,
+            body.light textarea:focus {
+                border-color: #2f54eb !important;
+            }
+            body.light input::placeholder,
+            body.light textarea::placeholder {
+                color: #94a3b8 !important;
+            }
+            body.light input:disabled,
+            body.light select:disabled {
+                background-color: #f1f5f9 !important;
+                color: #94a3b8 !important;
+            }
+
+            /* === 10. FILTER TABS (Semua / Pokok / Wajib / etc.) === */
+            body.light .filter-tab,
+            body.light .chart-tab {
+                color: #64748b !important;
+            }
+            body.light .filter-tab.bg-\[\#2f54eb\],
+            body.light .chart-tab.bg-\[\#2f54eb\] {
+                background-color: #2f54eb !important;
+                color: #ffffff !important;
+            }
+            body.light .bg-\[\#07080f\].border.border-\[\#1f243d\] {
+                background-color: #f1f5f9 !important;
+                border-color: #e2e8f0 !important;
+            }
+
+            /* === 11. PAGINATION === */
+            body.light button.bg-\[\#16192b\] {
+                background-color: #ffffff !important;
+                border-color: #e2e8f0 !important;
+                color: #64748b !important;
+            }
+            body.light button.bg-\[\#16192b\]:hover {
+                background-color: #f1f5f9 !important;
+                color: #1e293b !important;
+            }
+            body.light span.bg-\[\#2f54eb\] {
+                background-color: #2f54eb !important;
+                color: #ffffff !important;
+            }
+
+            /* === 12. ALL MODALS & POPUPS === */
+            body.light .fixed.inset-0 > div.bg-\[\#16192b\] {
+                background-color: #ffffff !important;
+                border-color: #e2e8f0 !important;
+                box-shadow: 0 25px 50px rgba(0,0,0,0.15) !important;
+            }
+            body.light .fixed.inset-0 h3 {
+                color: #1e293b !important;
+            }
+            body.light .fixed.inset-0 label,
+            body.light .fixed.inset-0 .text-\[\#8f9bb3\] {
+                color: #64748b !important;
+            }
+            body.light .fixed.inset-0 span.text-white,
+            body.light .fixed.inset-0 p.text-white {
+                color: #1e293b !important;
+            }
+            body.light .fixed.inset-0 .border-\[\#1f243d\] {
+                border-color: #e2e8f0 !important;
+            }
+            body.light .btn-cancel {
+                background-color: #f1f5f9 !important;
+                border-color: #cbd5e1 !important;
+                color: #475569 !important;
+            }
+            body.light .btn-cancel:hover {
+                background-color: #e2e8f0 !important;
+                color: #1e293b !important;
+            }
+
+            /* === 13. DIVIDERS & LINES === */
+            body.light .divide-y > div {
+                border-color: #e2e8f0 !important;
+            }
+            body.light .divide-y > div:hover {
+                background-color: #f8fafc !important;
+            }
+            body.light hr,
+            body.light .border-b {
+                border-color: #e2e8f0 !important;
+            }
+
+            /* === 14. BADGES & CHIPS === */
+            body.light .bg-emerald-500\/10,
+            body.light .bg-green-500\/10 {
+                background-color: rgba(16, 185, 129, 0.08) !important;
+            }
+            body.light .bg-rose-500\/10,
+            body.light .bg-red-500\/10 {
+                background-color: rgba(244, 63, 94, 0.08) !important;
+            }
+            body.light .bg-orange-500\/10,
+            body.light .bg-amber-500\/10 {
+                background-color: rgba(249, 115, 22, 0.08) !important;
+            }
+            body.light .bg-blue-500\/5,
+            body.light .bg-blue-500\/10 {
+                background-color: rgba(47, 84, 235, 0.06) !important;
+                border-color: rgba(47, 84, 235, 0.12) !important;
+            }
+            body.light .bg-purple-500\/5,
+            body.light .bg-purple-500\/10 {
+                background-color: rgba(168, 85, 247, 0.06) !important;
+            }
+            body.light .bg-emerald-500\/5,
+            body.light .bg-emerald-500\/10 {
+                background-color: rgba(16, 185, 129, 0.06) !important;
+            }
+            body.light .bg-rose-500\/5,
+            body.light .bg-rose-500\/10 {
+                background-color: rgba(244, 63, 94, 0.06) !important;
+            }
+            body.light .bg-rose-950\/40 {
+                background-color: rgba(244, 63, 94, 0.05) !important;
+                border-color: rgba(244, 63, 94, 0.12) !important;
+            }
+
+            /* === 15. CHART AREA === */
+            body.light canvas {
+                filter: none !important;
+            }
+
+            /* === 16. EMPTY STATE & MISC ICONS === */
+            body.light .bg-slate-800\/40 {
+                background-color: #f1f5f9 !important;
+                border-color: #e2e8f0 !important;
+                color: #64748b !important;
+            }
+
+            /* === 17. SCROLLBAR (Light) === */
+            body.light ::-webkit-scrollbar-track {
+                background: #f4f6fa !important;
+            }
+            body.light ::-webkit-scrollbar-thumb {
+                background: #cbd5e1 !important;
+            }
+            body.light ::-webkit-scrollbar-thumb:hover {
+                background: #94a3b8 !important;
+            }
+
+            /* === 18. LOADER (Light) === */
+            body.light #global-loader {
+                background-color: #f4f6fa !important;
+            }
+            body.light #global-loader span {
+                color: #64748b !important;
+            }
+
+            /* === 19. PROFILE PAGE === */
+            body.light .bg-\[\#0d0f1a\] {
+                background-color: #f8fafc !important;
+                border-color: #e2e8f0 !important;
+            }
+
+            /* === 20. SIDEBAR FOOTER BUTTON TEXT FIX === */
+            body.light aside button.text-\[\#8f9bb3\] span {
+                color: #64748b !important;
+            }
+
+            /* ============================================
+               SWEETALERT2 — COMPACT OVERRIDES
+               ============================================ */
             .swal2-popup.border {
                 padding: 1.5rem 1.25rem !important;
             }
