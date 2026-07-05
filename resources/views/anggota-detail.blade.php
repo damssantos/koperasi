@@ -27,7 +27,7 @@
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-top: 8px; width: 100%; text-align: left;">
         <div style="text-align: left;">
             <h2 class="text-3xl font-extrabold text-white tracking-tight" style="font-size: 32px; font-weight: 800; color: #ffffff;">{{ $anggota->nama }}</h2>
-            <div class="inline-flex items-center mt-2 px-3 py-1 bg-[#1e2238] border border-[#2a2f4c] text-xs font-semibold text-[#8f9bb3] rounded-lg">
+            <div class="inline-flex items-center mt-2 px-3 py-1 text-xs font-semibold rounded-lg" style="background-color: rgba(30, 34, 56, 0.4); border: 1px solid rgba(143, 155, 179, 0.15); color: #8f9bb3;">
                 ID: {{ $anggota->id_anggota ?? 'AGT-' . str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}
             </div>
         </div>
@@ -87,11 +87,11 @@
 
     <!-- Second Section: Informasi Anggota Card -->
     <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-6 mt-6">
-        <div class="flex items-center gap-2.5 border-b border-[#1f243d] pb-4 mb-6">
+        <div class="flex items-center gap-2.5 border-b border-[#1f243d] pb-4 mb-8">
             <i data-lucide="user" class="w-4 h-4 text-[#8f9bb3]"></i>
             <h3 class="text-sm font-bold text-white tracking-wide" style="text-align: left;">Informasi Anggota</h3>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12" style="text-align: left;">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 mt-4" style="text-align: left;">
             <!-- Column 1 -->
             <div class="space-y-6" style="text-align: left;">
                 <div style="text-align: left;">
@@ -123,7 +123,7 @@
         <div class="flex border-b border-[#1f243d] mb-6">
             <button id="tab-btn-simpanan" class="px-5 py-3 border-b-2 border-[#2f54eb] text-xs font-bold text-white" onclick="switchTab('simpanan')">Simpanan</button>
             <button id="tab-btn-pinjaman" class="px-5 py-3 border-b-2 border-transparent text-xs font-semibold text-[#8f9bb3] hover:text-white" onclick="switchTab('pinjaman')">Pinjaman</button>
-            <button id="tab-btn-transaksi" class="px-5 py-3 border-b-2 border-transparent text-xs font-semibold text-[#8f9bb3] hover:text-white" onclick="switchTab('transaksi')">Riwayat Transaksi</button>
+            <button id="tab-btn-riwayat" class="px-5 py-3 border-b-2 border-transparent text-xs font-semibold text-[#8f9bb3] hover:text-white" onclick="switchTab('riwayat')">Riwayat</button>
         </div>
         
         <!-- Tab Content: Simpanan (Active) -->
@@ -182,14 +182,78 @@
             </div>
         </div>
         
-        <!-- Tab Content: Transaksi (Empty state) -->
-        <div id="tab-content-transaksi" class="hidden py-12 flex flex-col items-center justify-center text-center space-y-3">
-            <div class="w-10 h-10 rounded-full bg-slate-800/40 border border-slate-700/20 text-slate-400 flex items-center justify-center">
-                <i data-lucide="history" class="w-5 h-5"></i>
+        <!-- Tab Content: Riwayat (Table view) -->
+        <div id="tab-content-riwayat" class="hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse table-fixed">
+                    <thead>
+                        <tr class="border-b border-[#1f243d] text-[#8f9bb3] text-[10px] font-bold uppercase tracking-wider">
+                            <th class="py-3.5 px-4 font-semibold w-[25%]">Tanggal Selesai</th>
+                            <th class="py-3.5 px-4 font-semibold w-[35%]">Jenis Riwayat</th>
+                            <th class="py-3.5 px-4 font-semibold w-[25%]">Nominal</th>
+                            <th class="py-3.5 px-4 font-semibold text-center w-[15%]">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#1f243d]">
+                        <!-- Simpanan Sukarela -->
+                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                            <td class="py-4 px-4 text-xs text-slate-300 w-[25%]">{{ $shortFormattedDate }}</td>
+                            <td class="py-4 px-4 text-xs w-[35%]">
+                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Sukarela</span>
+                            </td>
+                            <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_sukarela) }}</td>
+                            <td class="py-4 px-4 text-center w-[15%]">
+                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded bg-[#10b981]/10 border border-[#10b981]/25 text-[#34d399]">LUNAS</span>
+                            </td>
+                        </tr>
+                        <!-- Pinjaman Koperasi -->
+                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                            <td class="py-4 px-4 text-xs text-slate-300 w-[25%]">{{ $shortFormattedDate }}</td>
+                            <td class="py-4 px-4 text-xs w-[35%]">
+                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Pinjaman Koperasi</span>
+                            </td>
+                            <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">Rp 0</td>
+                            <td class="py-4 px-4 text-center w-[15%]">
+                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded bg-[#10b981]/10 border border-[#10b981]/25 text-[#34d399]">LUNAS</span>
+                            </td>
+                        </tr>
+                        <!-- Simpanan Wajib -->
+                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                            <td class="py-4 px-4 text-xs text-slate-300 w-[25%]">{{ $shortFormattedDate }}</td>
+                            <td class="py-4 px-4 text-xs w-[35%]">
+                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
+                            </td>
+                            <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_wajib) }}</td>
+                            <td class="py-4 px-4 text-center w-[15%]">
+                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded bg-[#10b981]/10 border border-[#10b981]/25 text-[#34d399]">LUNAS</span>
+                            </td>
+                        </tr>
+                        <!-- Simpanan Pokok -->
+                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                            <td class="py-4 px-4 text-xs text-slate-300 w-[25%]">{{ $shortFormattedDate }}</td>
+                            <td class="py-4 px-4 text-xs w-[35%]">
+                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
+                            </td>
+                            <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_pokok) }}</td>
+                            <td class="py-4 px-4 text-center w-[15%]">
+                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded bg-[#10b981]/10 border border-[#10b981]/25 text-[#34d399]">LUNAS</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div>
-                <p class="text-xs font-semibold text-white">Tidak ada riwayat transaksi</p>
-                <p class="text-[10px] text-[#8f9bb3]">Belum ada mutasi atau transaksi tercatat.</p>
+
+            <!-- Footer Pagination -->
+            <div class="flex justify-between items-center mt-5 pt-4 border-t border-[#1f243d]" style="text-align: left;">
+                <span class="text-[10px] font-semibold text-[#8f9bb3]">Menampilkan 4 dari 4 transaksi</span>
+                <div class="flex gap-1">
+                    <button class="w-6 h-6 rounded bg-[#1c1f36] border border-[#2a2f4c] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#2f54eb] transition-all cursor-pointer">
+                        <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button class="w-6 h-6 rounded bg-[#1c1f36] border border-[#2a2f4c] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#2f54eb] transition-all cursor-pointer">
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -198,7 +262,7 @@
 @section('scripts')
     <script>
         function switchTab(tabName) {
-            const tabs = ['simpanan', 'pinjaman', 'transaksi'];
+            const tabs = ['simpanan', 'pinjaman', 'riwayat'];
             
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab-btn-${t}`);
