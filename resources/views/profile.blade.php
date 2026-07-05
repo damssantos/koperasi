@@ -25,11 +25,12 @@
         padding: 32px 24px;
         position: relative;
         overflow: hidden;
-        transition: border-color 0.3s ease;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .profile-card:hover {
-        border-color: rgba(143, 155, 179, 0.2);
+        border-color: rgba(47, 84, 237, 0.3);
+        box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
     }
 
     .profile-avatar-circle {
@@ -41,11 +42,16 @@
         align-items: center;
         justify-content: center;
         margin: 0 auto;
-        border: 4px solid #16192b;
-        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25);
-        background: linear-gradient(135deg, #2563eb, #4338ca);
+        border: 4px solid #1f243d;
+        box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
         z-index: 10;
         position: relative;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .profile-card:hover .profile-avatar-circle {
+        transform: scale(1.03);
+        border-color: #2f54eb;
     }
 
     .profile-avatar-img {
@@ -76,6 +82,11 @@
         display: flex;
         flex-direction: column;
         gap: 8px !important;
+        transition: border-color 0.3s ease;
+    }
+
+    .info-item:hover {
+        border-color: rgba(143, 155, 179, 0.15);
     }
 
     .info-item-full {
@@ -114,6 +125,11 @@
         letter-spacing: 1px;
     }
 
+    .input-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
     .info-input {
         width: 100%;
         background-color: #07080f;
@@ -123,13 +139,14 @@
         color: #ffffff;
         font-size: 13px;
         font-weight: 600;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
     }
 
     .info-input:focus {
         outline: none;
         border-color: #2f54eb;
-        box-shadow: 0 0 0 2px rgba(47, 84, 237, 0.15);
+        box-shadow: 0 0 12px rgba(47, 84, 237, 0.25);
+        background-color: rgba(7, 8, 15, 0.6);
     }
 
     .info-input[readonly],
@@ -138,10 +155,29 @@
         color: #64748b;
         cursor: not-allowed;
         border-color: #1f243d;
+        padding-right: 38px; /* Extra space for the lock icon */
+    }
+
+    .info-input[readonly]:focus,
+    .info-input[disabled]:focus {
+        border-color: #1f243d;
+        box-shadow: none;
+    }
+
+    .lock-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        color: #475569;
+        pointer-events: none;
     }
 
     .info-textarea {
         min-height: 100px;
+        max-height: 180px;
         resize: vertical;
     }
 
@@ -153,7 +189,8 @@
     }
 
     body.light .profile-avatar-circle {
-        border-color: #ffffff;
+        border-color: #e2e8f0;
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.15);
     }
 
     body.light .info-item {
@@ -186,6 +223,10 @@
         background-color: #f1f5f9;
         color: #94a3b8;
         border-color: #cbd5e1;
+    }
+
+    body.light .lock-icon {
+        color: #94a3b8;
     }
 
     body.light .info-label {
@@ -222,7 +263,10 @@
                 @if($hasProfileAvatar)
                     <img src="{{ asset('storage/' . $profileAvatar) }}" alt="Avatar" class="profile-avatar-img">
                 @else
-                    <span class="text-white text-4xl font-bold">{{ $profileInitial }}</span>
+                    <!-- Premium Styled Letter Avatar -->
+                    <div class="w-full h-full flex items-center justify-center" style="background: radial-gradient(circle, #2f54eb 0%, #07080f 100%);">
+                        <span class="text-white text-4xl font-extrabold tracking-tight" style="text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); font-family: 'Plus Jakarta Sans', sans-serif;">{{ $profileInitial }}</span>
+                    </div>
                 @endif
             </div>
 
@@ -265,7 +309,7 @@
 
                 <!-- Info Grid -->
                 <div class="info-grid">
-                    <!-- Nama Lengkap (READ-ONLY) -->
+                    <!-- Nama Lengkap (READ-ONLY WITH LOCK) -->
                     <div class="info-item">
                         <div class="info-header-container">
                             <div class="info-icon-container">
@@ -273,10 +317,13 @@
                             </div>
                             <label class="info-label">Nama Lengkap</label>
                         </div>
-                        <input type="text" class="info-input" value="{{ $profileUser->nama_lengkap }}" readonly disabled>
+                        <div class="input-wrapper">
+                            <input type="text" class="info-input" value="{{ $profileUser->nama_lengkap }}" readonly disabled>
+                            <i data-lucide="lock" class="lock-icon"></i>
+                        </div>
                     </div>
 
-                    <!-- NIK (READ-ONLY) -->
+                    <!-- NIK (READ-ONLY WITH LOCK) -->
                     <div class="info-item">
                         <div class="info-header-container">
                             <div class="info-icon-container">
@@ -284,10 +331,13 @@
                             </div>
                             <label class="info-label">NIK (Nomor Induk Kependudukan)</label>
                         </div>
-                        <input type="text" class="info-input" value="{{ $profileUser->nik }}" readonly disabled>
+                        <div class="input-wrapper">
+                            <input type="text" class="info-input" value="{{ $profileUser->nik }}" readonly disabled>
+                            <i data-lucide="lock" class="lock-icon"></i>
+                        </div>
                     </div>
 
-                    <!-- Email (READ-ONLY) -->
+                    <!-- Email (READ-ONLY WITH LOCK) -->
                     <div class="info-item">
                         <div class="info-header-container">
                             <div class="info-icon-container">
@@ -295,7 +345,10 @@
                             </div>
                             <label class="info-label">Alamat Email</label>
                         </div>
-                        <input type="text" class="info-input" value="{{ $profileUser->email }}" readonly disabled>
+                        <div class="input-wrapper">
+                            <input type="text" class="info-input" value="{{ $profileUser->email }}" readonly disabled>
+                            <i data-lucide="lock" class="lock-icon"></i>
+                        </div>
                     </div>
 
                     <!-- No HP (EDITABLE) -->
@@ -306,7 +359,9 @@
                             </div>
                             <label class="info-label">Nomor HP <span class="text-blue-500 font-bold">*</span></label>
                         </div>
-                        <input type="text" name="no_hp" class="info-input" value="{{ old('no_hp', $profileUser->no_hp) }}" required>
+                        <div class="input-wrapper">
+                            <input type="text" name="no_hp" class="info-input" value="{{ old('no_hp', $profileUser->no_hp) }}" required>
+                        </div>
                     </div>
 
                     <!-- Alamat Tinggal (EDITABLE, Full Width) -->
@@ -317,7 +372,9 @@
                             </div>
                             <label class="info-label">Alamat Tinggal <span class="text-blue-500 font-bold">*</span></label>
                         </div>
-                        <textarea name="alamat" class="info-input info-textarea" required>{{ old('alamat', $profileUser->alamat) }}</textarea>
+                        <div class="input-wrapper">
+                            <textarea name="alamat" class="info-input info-textarea" required>{{ old('alamat', $profileUser->alamat) }}</textarea>
+                        </div>
                     </div>
                 </div>
 
