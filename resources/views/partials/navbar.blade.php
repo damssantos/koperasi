@@ -8,35 +8,24 @@
 <header class="h-16 bg-[#07080f] border-b border-[#1f243d] flex items-center justify-between px-6 w-full fixed top-0 left-0 z-50">
     <!-- Left side: Brand Logo and Minimize Toggle Button -->
     <div class="flex items-center gap-4">
-        @if(request()->routeIs('anggota.show'))
-            <!-- Back Arrow and Custom Detail Title -->
-            <a href="{{ route('anggota.index') }}" class="text-slate-400 hover:text-white p-1.5 hover:bg-[#16192b] rounded-lg transition-colors mr-1">
-                <i data-lucide="arrow-left" class="w-5 h-5"></i>
-            </a>
-            <div>
-                <span class="block text-sm font-bold text-white uppercase tracking-wider">Koperasi Simpan Pinjam</span>
-                <span class="block text-[9px] font-semibold text-[#3b82f6] uppercase tracking-wider mt-0.5" style="color: #3b82f6;">DETAIL ANGGOTA</span>
+        <div class="flex items-center gap-3">
+            <!-- Logo YPIK PAM JAYA -->
+            <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm">
+                <img src="{{ asset('images/logo-ypik.png') }}" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
             </div>
-        @else
-            <div class="flex items-center gap-3">
-                <!-- Logo YPIK PAM JAYA -->
-                <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm">
-                    <img src="{{ asset('images/logo-ypik.png') }}" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
-                </div>
-                <span class="text-sm font-bold tracking-wider text-white uppercase logo-full">SOY YPIK PAM JAYA</span>
-                <span class="text-sm font-bold tracking-wider text-blue-500 uppercase logo-mini hidden">YPIK</span>
-            </div>
-            
-            <!-- Desktop Sidebar Collapse Toggle -->
-            <button onclick="toggleSidebarCollapse()" class="hidden lg:flex text-slate-400 hover:text-white p-1.5 hover:bg-[#16192b] rounded-lg transition-colors" title="Perkecil Menu">
-                <i data-lucide="menu" class="w-5 h-5"></i>
-            </button>
-            
-            <!-- Mobile Sidebar Toggle -->
-            <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1.5 hover:bg-[#16192b] rounded-lg transition-colors">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-        @endif
+            <span class="text-sm font-bold tracking-wider text-white uppercase logo-full">SOY YPIK PAM JAYA</span>
+            <span class="text-sm font-bold tracking-wider text-blue-500 uppercase logo-mini hidden">YPIK</span>
+        </div>
+        
+        <!-- Desktop Sidebar Collapse Toggle -->
+        <button onclick="toggleSidebarCollapse()" class="hidden lg:flex text-slate-400 hover:text-white p-1.5 hover:bg-[#16192b] rounded-lg transition-colors" title="Perkecil Menu">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        
+        <!-- Mobile Sidebar Toggle -->
+        <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1.5 hover:bg-[#16192b] rounded-lg transition-colors">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
     </div>
 
     <!-- Right side: Profile Dropdown -->

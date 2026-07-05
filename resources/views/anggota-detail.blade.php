@@ -23,6 +23,14 @@
         $shortFormattedDate = $dateObj ? $dateObj->format('d') . ' ' . ($shortIndonesianMonths[$dateObj->format('M')] ?? $dateObj->format('M')) . ' ' . $dateObj->format('Y') : '-';
     @endphp
 
+    <!-- Back Navigation -->
+    <div style="text-align: left; margin-bottom: 12px;">
+        <a href="{{ route('anggota.index') }}" class="inline-flex items-center gap-1 text-[11px] font-bold text-[#8f9bb3] hover:text-[#2f54eb] uppercase tracking-wider transition-colors duration-200">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <span>Kembali ke daftar anggota</span>
+        </a>
+    </div>
+
     <!-- Main Member Header Area -->
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-top: 8px; width: 100%; text-align: left;">
         <div style="text-align: left;">
