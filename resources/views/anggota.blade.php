@@ -99,7 +99,7 @@
                             <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">{{ $formatRupiah($item->total_saldo ?: $item->simpanan_pokok) }}</td>
                             <td class="py-4 px-4 text-center w-[10%]">
                                 <div class="flex items-center justify-center gap-1.5">
-                                    <button onclick='openViewMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                                    <button onclick='openViewMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
                                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                     </button>
                                     <button onclick='openEditMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
@@ -229,71 +229,71 @@
 
     <!-- View Member Modal -->
     <div id="viewMemberModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-sm hidden transition-opacity">
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center pb-2 border-b border-[#1f243d]">
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4" style="background-color: #16192b; border: 1px solid #1f243d; border-radius: 1rem; max-width: 42rem; width: 100%; padding: 1.5rem;">
+            <div class="flex justify-between items-center pb-2 border-b border-[#1f243d]" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid #1f243d;">
                 <h3 class="text-base font-bold text-white">Detail Anggota</h3>
-                <button onclick="closeMemberModal('viewMemberModal')" class="text-slate-400 hover:text-white transition-colors">
+                <button onclick="closeMemberModal('viewMemberModal')" class="text-slate-400 hover:text-white transition-colors" style="background: none; border: none; cursor: pointer;">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch pt-2">
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: stretch; padding-top: 0.5rem;">
                 <!-- Left Column -->
-                <div class="md:col-span-1 bg-[#07080f]/40 border border-[#1f243d] rounded-xl p-5 flex flex-col items-center text-center relative overflow-hidden">
+                <div style="grid-column: span 1 / span 1; background-color: rgba(7, 8, 15, 0.4); border: 1px solid #1f243d; border-radius: 0.75rem; padding: 1.25rem; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; justify-content: space-between;">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/5 rounded-full blur-xl"></div>
-                    <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg border-4 border-[#16192b]" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
+                    <div style="width: 64px; height: 64px; min-width: 64px; min-height: 64px; flex-shrink: 0; border-radius: 9999px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.25rem; font-weight: 700; border: 4px solid #16192b; background: linear-gradient(135deg, #2563eb, #4338ca);">
                         <span id="view_avatar_initial">A</span>
                     </div>
-                    <div class="mt-4 space-y-1 z-10 w-full">
-                        <h4 id="view_nama" class="text-xs font-bold text-white tracking-tight truncate">Nama</h4>
-                        <p id="view_id_anggota" class="text-[9px] font-semibold text-[#8f9bb3]">AGT-000</p>
-                        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 text-emerald-400 text-[8px] font-bold rounded-full mt-2" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                            <span class="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <div class="mt-4 space-y-1 z-10 w-full" style="width: 100%;">
+                        <h4 id="view_nama" class="text-xs font-bold text-white tracking-tight truncate" style="color: #ffffff; font-weight: 700; font-size: 0.75rem; margin-top: 1rem; width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">Nama</h4>
+                        <p id="view_id_anggota" class="text-[9px] font-semibold text-[#8f9bb3]" style="color: #8f9bb3; font-weight: 600; font-size: 9px; margin-top: 0.25rem;">AGT-000</p>
+                        <div style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; color: #34d399; font-size: 8px; font-weight: 700; border-radius: 9999px; background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); margin-top: 0.5rem;">
+                            <span style="width: 4px; height: 4px; border-radius: 9999px; background-color: #34d399;"></span>
                             <span>Anggota Aktif</span>
                         </div>
                     </div>
-                    <div class="w-full mt-5 pt-4 border-t border-[#1f243d] space-y-3 text-left text-[11px]">
-                        <div class="flex flex-col gap-0.5">
-                            <span class="text-[8px] text-[#8f9bb3] uppercase font-bold tracking-wider">Nomor HP</span>
-                            <span id="view_no_hp" class="text-white font-semibold">-</span>
+                    <div class="w-full mt-5 pt-4 border-t border-[#1f243d] space-y-3 text-left text-[11px]" style="width: 100%; border-top: 1px solid #1f243d; padding-top: 1rem; margin-top: 1.25rem; text-align: left; font-size: 11px;">
+                        <div class="flex flex-col gap-0.5" style="display: flex; flex-direction: column; gap: 2px;">
+                            <span class="text-[8px] text-[#8f9bb3] uppercase font-bold tracking-wider" style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase;">Nomor HP</span>
+                            <span id="view_no_hp" class="text-white font-semibold" style="color: #ffffff; font-weight: 600;">-</span>
                         </div>
-                        <div class="flex flex-col gap-0.5">
-                            <span class="text-[8px] text-[#8f9bb3] uppercase font-bold tracking-wider">Bergabung Pada</span>
-                            <span id="view_tanggal_join" class="text-white font-semibold">-</span>
+                        <div class="flex flex-col gap-0.5" style="display: flex; flex-direction: column; gap: 2px; margin-top: 0.75rem;">
+                            <span class="text-[8px] text-[#8f9bb3] uppercase font-bold tracking-wider" style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase;">Bergabung Pada</span>
+                            <span id="view_tanggal_join" class="text-white font-semibold" style="color: #ffffff; font-weight: 600;">-</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Column -->
-                <div class="md:col-span-2 flex flex-col justify-between gap-4">
-                    <div class="bg-[#07080f]/20 border border-[#1f243d] rounded-xl p-5 space-y-4 flex-grow">
-                        <div class="flex items-center gap-2 pb-3 border-b border-[#1f243d]">
+                <div style="grid-column: span 2 / span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem;">
+                    <div style="background-color: rgba(7, 8, 15, 0.2); border: 1px solid #1f243d; border-radius: 0.75rem; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; flex-grow: 1;">
+                        <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 0.75rem; border-bottom: 1px solid #1f243d;">
                             <i data-lucide="wallet" class="w-3.5 h-3.5 text-blue-500"></i>
-                            <h4 class="text-[10px] font-bold text-white uppercase tracking-wider">Rincian Simpanan Koperasi</h4>
+                            <h4 style="font-size: 10px; font-weight: 700; color: #ffffff; text-transform: uppercase; margin: 0; letter-spacing: 0.05em;">Rincian Simpanan Koperasi</h4>
                         </div>
-                        <div class="grid grid-cols-3 gap-2">
-                            <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-lg p-3 space-y-0.5">
-                                <p class="text-[8px] font-bold text-[#8f9bb3] uppercase tracking-wider">Pokok</p>
-                                <p id="view_simpanan_pokok" class="text-[11px] font-bold text-white">Rp 0</p>
+                        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+                            <div style="background-color: rgba(7, 8, 15, 0.4); border: 1px solid #1f243d; border-radius: 0.5rem; padding: 0.75rem; display: flex; flex-direction: column; gap: 2px;">
+                                <p style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase; margin: 0;">Pokok</p>
+                                <p id="view_simpanan_pokok" style="font-size: 11px; font-weight: 700; color: #ffffff; margin: 0;">Rp 0</p>
                             </div>
-                            <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-lg p-3 space-y-0.5">
-                                <p class="text-[8px] font-bold text-[#8f9bb3] uppercase tracking-wider">Wajib</p>
-                                <p id="view_simpanan_wajib" class="text-[11px] font-bold text-white">Rp 0</p>
+                            <div style="background-color: rgba(7, 8, 15, 0.4); border: 1px solid #1f243d; border-radius: 0.5rem; padding: 0.75rem; display: flex; flex-direction: column; gap: 2px;">
+                                <p style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase; margin: 0;">Wajib</p>
+                                <p id="view_simpanan_wajib" style="font-size: 11px; font-weight: 700; color: #ffffff; margin: 0;">Rp 0</p>
                             </div>
-                            <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-lg p-3 space-y-0.5">
-                                <p class="text-[8px] font-bold text-[#8f9bb3] uppercase tracking-wider">Sukarela</p>
-                                <p id="view_simpanan_sukarela" class="text-[11px] font-bold text-white">Rp 0</p>
+                            <div style="background-color: rgba(7, 8, 15, 0.4); border: 1px solid #1f243d; border-radius: 0.5rem; padding: 0.75rem; display: flex; flex-direction: column; gap: 2px;">
+                                <p style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase; margin: 0;">Sukarela</p>
+                                <p id="view_simpanan_sukarela" style="font-size: 11px; font-weight: 700; color: #ffffff; margin: 0;">Rp 0</p>
                             </div>
                         </div>
-                        <div class="bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-500/15 rounded-lg p-4 mt-2">
-                            <p class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Akumulasi Saldo</p>
-                            <h3 id="view_total_saldo" class="text-base font-black text-white mt-0.5">Rp 0</h3>
+                        <div style="background: linear-gradient(to right, rgba(37, 99, 235, 0.1), rgba(147, 51, 234, 0.1)); border: 1px solid rgba(37, 99, 235, 0.15); border-radius: 0.5rem; padding: 1rem; margin-top: 0.5rem;">
+                            <p style="font-size: 9px; font-weight: 700; color: #8f9bb3; text-transform: uppercase; margin: 0;">Total Akumulasi Saldo</p>
+                            <h3 id="view_total_saldo" style="font-size: 1rem; font-weight: 900; color: #ffffff; margin: 5px 0 0 0;">Rp 0</h3>
                         </div>
                     </div>
                     
-                    <div class="flex items-center justify-end gap-3 pt-2">
-                        <button onclick="closeMemberModal('viewMemberModal')" class="px-5 py-2.5 border border-[#1f243d] rounded-lg bg-transparent text-white text-xs font-semibold hover:bg-[#16192b] transition-colors">Tutup</button>
-                        <button id="view_edit_button" class="px-5 py-2.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-blue-500/10 flex items-center gap-1.5">
+                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 0.5rem;">
+                        <button onclick="closeMemberModal('viewMemberModal')" style="padding: 0.625rem 1.25rem; border: 1px solid #1f243d; border-radius: 0.5rem; background-color: transparent; color: #ffffff; font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;" onmouseover="this.style.backgroundColor='#16192b'" onmouseout="this.style.backgroundColor='transparent'">Tutup</button>
+                        <button id="view_edit_button" style="padding: 0.625rem 1.25rem; background-color: #2f54eb; color: #ffffff; border: none; border-radius: 0.5rem; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2f54eb'">
                             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                             <span>Ubah Anggota</span>
                         </button>
