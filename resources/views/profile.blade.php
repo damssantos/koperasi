@@ -205,7 +205,7 @@
     <!-- Main Profile Layout Container -->
     <div class="profile-container">
         
-        <!-- Left Side: Profile Card & Service Info Card -->
+        <!-- Left Side: Profile Card & Account Status Card -->
         <div class="profile-left-column">
             <!-- Profile Overview Card -->
             <div class="profile-card flex flex-col items-center text-center">
@@ -243,30 +243,34 @@
                 </div>
             </div>
 
-            <!-- Service Info Card (Fills empty space beautifully, aligned with right card) -->
+            <!-- Account Status Card (Fills empty space beautifully, aligned with right card) -->
             <div class="profile-card profile-card-fill">
                 <!-- Header -->
                 <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1f243d; padding-bottom: 16px; margin-bottom: 16px;" class="border-b">
                     <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20">
-                        <i data-lucide="help-circle" class="w-4 h-4"></i>
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h4 style="font-size: 13px; font-weight: 700; color: #ffffff; margin: 0;">Layanan Koperasi</h4>
+                        <h4 style="font-size: 13px; font-weight: 700; color: #ffffff; margin: 0;">Status & Keamanan Akun</h4>
                     </div>
                 </div>
                 <!-- Content list -->
                 <div style="font-size: 13px; display: flex; flex-direction: column; gap: 14px; flex-grow: 1; justify-content: center;">
                     <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #8f9bb3;">Jam Operasional:</span>
-                        <span style="color: #ffffff; font-weight: 600;" class="text-white">08:00 - 17:00</span>
+                        <span style="color: #8f9bb3;">Tipe Akun:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">Anggota Koperasi</span>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #8f9bb3;">Hari Kerja:</span>
-                        <span style="color: #ffffff; font-weight: 600;" class="text-white">Senin - Jumat</span>
+                        <span style="color: #8f9bb3;">Status Akun:</span>
+                        <span style="color: #10b981; font-weight: 600;">Aktif</span>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #8f9bb3;">Email Kontak:</span>
-                        <span style="color: #ffffff; font-weight: 600;" class="text-white">info@ypik-koperasi.co.id</span>
+                        <span style="color: #8f9bb3;">Keamanan Sandi:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">Terlindungi (Enkripsi)</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #8f9bb3;">Terakhir Diperbarui:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->updated_at->format('d M Y, H:i') }} WIB</span>
                     </div>
                 </div>
             </div>
