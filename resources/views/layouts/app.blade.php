@@ -128,6 +128,21 @@
                 animation: dropdownIn 0.2s ease-out;
             }
 
+            /* Fade In Animation */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-4px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.3s ease-out forwards;
+            }
+
             /* Light Mode CSS Overrides */
             body.light {
                 background-color: #f4f6fa;
@@ -347,14 +362,16 @@
                     <!-- CONTENT WRAPPER -->
                     <main class="flex-1 p-6 lg:p-8 space-y-8 w-full">
                         @if (session('success'))
-                            <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-xs font-semibold text-emerald-300">
-                                {{ session('success') }}
+                            <div class="rounded-xl border border-emerald-500/15 bg-emerald-500/5 px-4 py-3.5 text-xs font-semibold text-emerald-400 flex items-center gap-2.5 shadow-sm shadow-emerald-500/5 animate-fade-in">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+                                <span>{{ session('success') }}</span>
                             </div>
                         @endif
 
                         @if ($errors->any())
-                            <div class="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs font-semibold text-rose-300">
-                                {{ $errors->first() }}
+                            <div class="rounded-xl border border-rose-500/15 bg-rose-500/5 px-4 py-3.5 text-xs font-semibold text-rose-400 flex items-center gap-2.5 shadow-sm shadow-rose-500/5 animate-fade-in">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 flex-shrink-0"></i>
+                                <span>{{ $errors->first() }}</span>
                             </div>
                         @endif
 
