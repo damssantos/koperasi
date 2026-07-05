@@ -2,6 +2,41 @@
 
 @section('title', 'SOY YPIK PAM JAYA - Transaksi Simpanan')
 
+@section('styles')
+    <style>
+        .btn-cancel {
+            background-color: #334155 !important; /* slate-700 */
+            color: #f1f5f9 !important; /* slate-100 */
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            transition: all 0.2s ease-in-out !important;
+            cursor: pointer;
+        }
+        .btn-cancel:hover {
+            background-color: #475569 !important; /* slate-600 */
+            color: #ffffff !important;
+            transform: scale(1.02) !important;
+        }
+        .btn-cancel:active {
+            transform: scale(0.98) !important;
+        }
+        .btn-save {
+            background-color: #2f54eb !important; /* brand blue */
+            color: #ffffff !important;
+            border: none !important;
+            transition: all 0.2s ease-in-out !important;
+            box-shadow: 0 4px 14px 0 rgba(47, 84, 235, 0.2) !important;
+            cursor: pointer;
+        }
+        .btn-save:hover {
+            background-color: #4361ee !important;
+            transform: scale(1.02) !important;
+        }
+        .btn-save:active {
+            transform: scale(0.98) !important;
+        }
+    </style>
+@endsection
+
 @section('content')
     <!-- Page Header Title and Action buttons -->
     <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 pb-6 border-b border-[#1f243d]">
@@ -12,10 +47,6 @@
         
         <!-- Action Buttons Group -->
         <div class="flex items-center gap-3">
-            <a href="{{ route('simpanan.print') }}" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
-                <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                <span>Ekspor Laporan</span>
-            </a>
             <button onclick="openNewTransactionModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Tambah Simpanan</span>
@@ -90,7 +121,7 @@
                 <!-- Legend -->
                 <div class="flex items-center gap-2 text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">
                     <span class="w-2.5 h-2.5 rounded-full bg-[#2f54eb]"></span>
-                    <span>Total Dana (Miliar)</span>
+                    <span>Total Dana ({{ $chartDataSets['unit'] }})</span>
                 </div>
                 <!-- Time Range -->
                 <div class="bg-[#07080f] border border-[#1f243d] rounded-lg p-0.5 flex">
@@ -109,6 +140,14 @@
 
     <!-- Data Table & Search controls Section -->
     <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-6 space-y-6">
+        <!-- Title Section -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Transaksi Simpanan</h3>
+                <p class="text-[10px] text-[#8f9bb3] mt-0.5">Daftar riwayat transaksi simpanan anggota</p>
+            </div>
+        </div>
+
         <!-- Search, Filter Tabs, and Sort bar -->
         <div class="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
             <!-- Left: Search and Filters -->
@@ -196,8 +235,9 @@
         </div>
     </div>
 
+@push('modals')
     <!-- NEW TRANSACTION MODAL -->
-    <div id="transactionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-sm hidden transition-opacity">
+    <div id="transactionModal" class="fixed inset-0 flex items-center justify-center p-4 hidden transition-opacity" style="z-index: 9999; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background-color: rgba(7, 8, 15, 0.75);">
         <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <!-- Modal Header -->
             <div class="flex justify-between items-center pb-2">
@@ -248,7 +288,7 @@
                     <input type="date" id="txDate" name="tanggal_transaksi" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
                 </div>
 
-                <!-- Status * -->
+                 <!-- Status * -->
                 <div>
                     <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Status *</label>
                     <select id="txStatus" name="status" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
@@ -256,15 +296,150 @@
                         <option value="Lunas">Lunas</option>
                     </select>
                 </div>
+
+                <!-- Keterangan -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Keterangan</label>
+                    <textarea name="keterangan" rows="2" placeholder="Contoh: Setoran rutin bulanan" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"></textarea>
+                </div>
                 
                 <!-- Action Buttons -->
                 <div class="flex items-center gap-3 pt-4 justify-end">
-                    <button type="button" onclick="closeNewTransactionModal()" class="px-5 py-2.5 border border-[#1f243d] rounded-lg bg-transparent text-white text-xs font-semibold hover:bg-[#16192b] transition-colors">Batal</button>
-                    <button type="submit" class="px-5 py-2.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-blue-500/10">Simpan Transaksi</button>
+                    <button type="button" onclick="closeNewTransactionModal()" class="btn-cancel px-5 py-2.5 rounded-lg text-xs font-semibold">Batal</button>
+                    <button type="submit" class="btn-save px-5 py-2.5 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/10">Simpan Transaksi</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <!-- DETAIL TRANSACTION MODAL -->
+    <div id="detailTransactionModal" class="fixed inset-0 flex items-center justify-center p-4 hidden transition-opacity" style="z-index: 9999; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background-color: rgba(7, 8, 15, 0.75);">
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-6">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center pb-2 border-b border-[#1f243d]">
+                <h3 class="text-base font-bold text-white">Detail Simpanan</h3>
+                <button onclick="closeDetailTransactionModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Content Grid -->
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 1.5rem; text-align: left;">
+                <!-- ID Transaksi -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1 uppercase tracking-wider">ID Transaksi</label>
+                    <span class="text-sm font-bold text-white" id="detailTxId">TX-000001</span>
+                </div>
+                <!-- Tanggal -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1 uppercase tracking-wider">Tanggal</label>
+                    <span class="text-sm font-bold text-white" id="detailTxDate">12 Mar 2024</span>
+                </div>
+
+                <!-- ID Anggota -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1 uppercase tracking-wider">ID Anggota</label>
+                    <span class="text-sm font-bold text-white" id="detailMemberId">KSP-0021</span>
+                </div>
+                <!-- Nama Anggota -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1 uppercase tracking-wider">Nama Anggota</label>
+                    <span class="text-sm font-bold text-white" id="detailMemberName">Budi Satria</span>
+                </div>
+
+                <!-- Jenis Simpanan -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1 uppercase tracking-wider">Jenis Simpanan</label>
+                    <div id="detailTxTypeBadge" class="mt-1">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
+                    </div>
+                </div>
+                <!-- Nominal -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1 uppercase tracking-wider">Nominal</label>
+                    <span class="text-sm font-extrabold text-white" id="detailTxAmount">Rp 500.000</span>
+                </div>
+
+                <!-- Keterangan -->
+                <div style="grid-column: span 2 / span 2; padding-top: 1.25rem; border-top: 1px solid #1f243d;">
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1 uppercase tracking-wider">Keterangan</label>
+                    <p class="text-xs text-slate-300 leading-relaxed" id="detailTxDesc">Setoran rutin bulanan Mei 2024.</p>
+                </div>
+            </div>
+            
+            <!-- Close Button -->
+            <div class="flex justify-end pt-2">
+                <button type="button" onclick="closeDetailTransactionModal()" class="btn-cancel px-6 py-2.5 rounded-lg text-xs font-semibold">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT TRANSACTION MODAL -->
+    <div id="editTransactionModal" class="fixed inset-0 flex items-center justify-center p-4 hidden transition-opacity" style="z-index: 9999; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background-color: rgba(7, 8, 15, 0.75);">
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center pb-2">
+                <h3 class="text-base font-bold text-white">Ubah Transaksi Simpanan</h3>
+                <button onclick="closeEditTransactionModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Form Inputs -->
+            <form id="editTransactionForm" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+                <!-- ID/Nama Anggota (Disabled) -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Anggota</label>
+                    <input type="text" id="editTxMemberText" disabled class="w-full bg-[#07080f]/50 border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-slate-400 focus:outline-none cursor-not-allowed">
+                </div>
+
+                <!-- Jenis Simpanan (Disabled) -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Jenis Simpanan</label>
+                    <input type="text" id="editTxTypeText" disabled class="w-full bg-[#07080f]/50 border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-slate-400 focus:outline-none cursor-not-allowed">
+                </div>
+
+                <!-- Nominal * -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Nominal (Rupiah) *</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8f9bb3] text-xs font-bold">Rp</span>
+                        <input type="number" id="editTxAmount" name="nominal" required min="1000" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Tanggal Transaksi * -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Tanggal Transaksi *</label>
+                    <input type="date" id="editTxDate" name="tanggal_transaksi" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                </div>
+
+                <!-- Status * -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Status *</label>
+                    <select id="editTxStatus" name="status" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                        <option value="Aktif">Aktif</option>
+                        <option value="Lunas">Lunas</option>
+                    </select>
+                </div>
+
+                <!-- Keterangan -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Keterangan</label>
+                    <textarea id="editTxDesc" name="keterangan" rows="2" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"></textarea>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-3 pt-4 justify-end">
+                    <button type="button" onclick="closeEditTransactionModal()" class="btn-cancel px-5 py-2.5 rounded-lg text-xs font-semibold">Batal</button>
+                    <button type="submit" class="btn-save px-5 py-2.5 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/10">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endpush
 @endsection
 
 @section('scripts')
@@ -281,20 +456,7 @@
         let chartInstance = null;
 
         // Chart Data Definitions
-        const chartDataSets = {
-            monthly: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
-                data: [1.2, 1.4, 1.6, 1.75, 1.9, 2.05, 2.15, 2.22, 2.3, 2.38, 2.42, 2.45]
-            },
-            weekly: {
-                labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
-                data: [2.35, 2.38, 2.41, 2.45]
-            },
-            yearly: {
-                labels: ["2021", "2022", "2023", "2024"],
-                data: [0.8, 1.3, 1.9, 2.45]
-            }
-        };
+        const chartDataSets = @json($chartDataSets);
 
         // Initialize Page
         document.addEventListener('DOMContentLoaded', () => {
@@ -317,6 +479,71 @@
         function closeNewTransactionModal() {
             document.getElementById('transactionModal').classList.add('hidden');
             document.getElementById('transactionForm').reset();
+        }
+
+        async function showTransactionDetail(txId) {
+            try {
+                const response = await fetch(`{{ url('/simpanan') }}/${txId}`);
+                if (!response.ok) throw new Error('Failed to fetch transaction details');
+                const tx = await response.json();
+
+                document.getElementById('detailTxId').textContent = tx.formattedId;
+                document.getElementById('detailTxDate').textContent = tx.date;
+                document.getElementById('detailMemberId').textContent = tx.memberId;
+                document.getElementById('detailMemberName').textContent = tx.name;
+                document.getElementById('detailTxAmount').textContent = `Rp ${tx.amount.toLocaleString('id-ID')}`;
+                document.getElementById('detailTxDesc').textContent = tx.keterangan || '-';
+
+                const badgeContainer = document.getElementById('detailTxTypeBadge');
+                badgeContainer.innerHTML = '';
+                
+                let typeBadge = '';
+                if(tx.type === 'Pokok') {
+                    typeBadge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>`;
+                } else if(tx.type === 'Wajib') {
+                    typeBadge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>`;
+                } else {
+                    typeBadge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>`;
+                }
+                badgeContainer.innerHTML = typeBadge;
+
+                document.getElementById('detailTransactionModal').classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                alert('Gagal mengambil data detail transaksi dari server.');
+            }
+        }
+
+        function closeDetailTransactionModal() {
+            document.getElementById('detailTransactionModal').classList.add('hidden');
+        }
+
+        async function showTransactionEdit(txId) {
+            try {
+                const response = await fetch(`{{ url('/simpanan') }}/${txId}`);
+                if (!response.ok) throw new Error('Failed to fetch transaction details');
+                const tx = await response.json();
+
+                document.getElementById('editTxMemberText').value = `${tx.name} (${tx.memberId})`;
+                document.getElementById('editTxTypeText').value = `Simpanan ${tx.type}`;
+                document.getElementById('editTxAmount').value = tx.amount;
+                document.getElementById('editTxDate').value = tx.rawDate;
+                document.getElementById('editTxStatus').value = tx.status;
+                document.getElementById('editTxDesc').value = tx.keterangan !== '-' ? tx.keterangan : '';
+
+                // Set form action dynamically
+                const form = document.getElementById('editTransactionForm');
+                form.action = `{{ url('/simpanan') }}/${tx.id}`;
+
+                document.getElementById('editTransactionModal').classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                alert('Gagal mengambil data transaksi untuk diedit.');
+            }
+        }
+
+        function closeEditTransactionModal() {
+            document.getElementById('editTransactionModal').classList.add('hidden');
         }
 
         // Handle Form Submit
@@ -479,16 +706,16 @@
                 tr.innerHTML = `
                     <td class="py-4 px-4 text-xs text-slate-400 w-[15%]">${tx.date}</td>
                     <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium w-[15%]">${tx.memberId}</td>
-                    <td class="py-4 px-4 text-xs font-bold text-slate-300 w-[25%]">${tx.name}</td>
+                    <td class="py-4 px-4 text-xs font-bold w-[25%]"><a href="{{ url('/anggota') }}/${tx.memberDbId}" class="text-slate-300 hover:text-[#2f54eb] hover:underline transition-colors">${tx.name}</a></td>
                     <td class="py-4 px-4 text-xs w-[15%]">${typeBadge}</td>
                     <td class="py-4 px-4 text-xs font-bold text-slate-300 w-[10%]">Rp ${tx.amount.toLocaleString('id-ID')}</td>
                     <td class="py-4 px-4 text-xs w-[10%]">${statusBadge}</td>
                     <td class="py-4 px-4 text-center w-[10%]">
                         <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="window.location.href='{{ url('/anggota') }}/' + tx.memberDbId" class="w-7 h-7 rounded-lg text-blue-400 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-200" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);" title="Detail">
+                            <button onclick="showTransactionDetail(${tx.id})" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Detail">
                                 <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                             </button>
-                            <button onclick="window.location.href='{{ url('/anggota') }}?edit=' + tx.memberDbId" class="w-7 h-7 rounded-lg text-slate-400 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" style="background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);" title="Edit">
+                            <button onclick="showTransactionEdit(${tx.id})" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Edit">
                                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                             </button>
                         </div>
@@ -583,7 +810,7 @@
                 data: {
                     labels: dataConfig.labels,
                     datasets: [{
-                        label: 'Total Dana (Miliar)',
+                        label: `Total Dana (${chartDataSets.unit})`,
                         data: dataConfig.data,
                         borderColor: '#2f54eb',
                         borderWidth: 2.5,
@@ -616,7 +843,7 @@
                             displayColors: false,
                             callbacks: {
                                 label: function(context) {
-                                    return `Rp ${context.raw} Miliar`;
+                                    return `Rp ${context.raw} ${chartDataSets.unit}`;
                                 }
                             }
                         }
@@ -639,7 +866,7 @@
                                 color: '#7c83a7',
                                 font: { size: 9, family: 'Plus Jakarta Sans' },
                                 callback: function(value) {
-                                    return `Rp ${value}M`;
+                                    return `Rp ${value}${chartDataSets.unit === 'Miliar' ? 'M' : 'Jt'}`;
                                 }
                             }
                         }

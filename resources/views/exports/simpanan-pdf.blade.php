@@ -111,9 +111,12 @@
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                window.print();
-            }, 500);
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.has('preview')) {
+                setTimeout(() => {
+                    window.print();
+                }, 500);
+            }
         });
     </script>
 </body>

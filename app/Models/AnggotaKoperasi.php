@@ -21,4 +21,9 @@ class AnggotaKoperasi extends Model
     protected $casts = [
         'tanggal_join' => 'date',
     ];
+
+    public function transactions()
+    {
+        return $this->hasMany(TransaksiSimpanan::class, 'anggota_id');
+    }
 }

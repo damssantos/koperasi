@@ -34,7 +34,7 @@ class AnggotaController extends Controller
 
         $pokok = (int)$request->input('simpanan_pokok', 100000);
 
-        AnggotaKoperasi::create([
+        $newMember = AnggotaKoperasi::create([
             'id_anggota' => $data['id_anggota'],
             'nama' => $data['nama'],
             'no_hp' => $data['no_hp'],
@@ -45,11 +45,24 @@ class AnggotaController extends Controller
             'total_saldo' => $pokok,
         ]);
 
+        if ($pokok > 0) {
+            \App\Models\TransaksiSimpanan::create([
+                'anggota_id' => $newMember->id,
+                'jenis_simpanan' => 'Pokok',
+                'nominal' => $pokok,
+                'status' => 'Lunas',
+                'tanggal_transaksi' => $data['tanggal_join'],
+            ]);
+        }
+
         return redirect()->route('anggota.index')->with('success', 'Anggota baru berhasil ditambahkan.');
     }
 
     public function show(AnggotaKoperasi $anggota)
     {
+        $anggota->load(['transactions' => function ($query) {
+            $query->orderBy('tanggal_transaksi', 'desc')->orderBy('id', 'desc');
+        }]);
         return view('anggota-detail', compact('anggota'));
     }
 
@@ -77,6 +90,36 @@ class AnggotaController extends Controller
         $data['total_saldo'] = (int)$data['simpanan_pokok'] + (int)$data['simpanan_wajib'] + (int)$data['simpanan_sukarela'];
 
         $anggota->update($data);
+
+        // Sync transactions in database
+        foreach ([
+            'Pokok' => 'simpanan_pokok',
+            'Wajib' => 'simpanan_wajib',
+            'Sukarela' => 'simpanan_sukarela',
+        ] as $type => $field) {
+            $newVal = (int)$data[$field];
+            $tx = \App\Models\TransaksiSimpanan::where('anggota_id', $anggota->id)
+                ->where('jenis_simpanan', $type)
+                ->first();
+
+            if ($tx) {
+                if ($newVal > 0) {
+                    $tx->update(['nominal' => $newVal]);
+                } else {
+                    $tx->delete();
+                }
+            } else {
+                if ($newVal > 0) {
+                    \App\Models\TransaksiSimpanan::create([
+                        'anggota_id' => $anggota->id,
+                        'jenis_simpanan' => $type,
+                        'nominal' => $newVal,
+                        'status' => $type === 'Pokok' ? 'Lunas' : 'Aktif',
+                        'tanggal_transaksi' => $data['tanggal_join'],
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('anggota.index')->with('success', 'Data anggota berhasil diperbarui.');
     }

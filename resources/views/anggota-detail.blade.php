@@ -147,33 +147,30 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[#1f243d]">
-                        <!-- Simpanan Pokok -->
-                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                            <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $shortFormattedDate }}</td>
-                            <td class="py-4 px-4 text-xs w-[35%]">
-                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
-                            </td>
-                            <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">{{ $formatRupiah($anggota->simpanan_pokok) }}</td>
-                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-[#2f54eb]/80 transition-colors duration-150 cursor-pointer w-[15%]">Detail</td>
-                        </tr>
-                        <!-- Simpanan Wajib -->
-                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                            <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $shortFormattedDate }}</td>
-                            <td class="py-4 px-4 text-xs w-[35%]">
-                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
-                            </td>
-                            <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">{{ $formatRupiah($anggota->simpanan_wajib) }}</td>
-                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-[#2f54eb]/80 transition-colors duration-150 cursor-pointer w-[15%]">Detail</td>
-                        </tr>
-                        <!-- Simpanan Sukarela -->
-                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                            <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $shortFormattedDate }}</td>
-                            <td class="py-4 px-4 text-xs w-[35%]">
-                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>
-                            </td>
-                            <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">{{ $formatRupiah($anggota->simpanan_sukarela) }}</td>
-                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-[#2f54eb]/80 transition-colors duration-150 cursor-pointer w-[15%]">Detail</td>
-                        </tr>
+                        @forelse($anggota->transactions as $tx)
+                            @php
+                                $txDate = optional($tx->tanggal_transaksi ?? $tx->created_at);
+                                $formattedTxDate = $txDate ? $txDate->format('d') . ' ' . ($shortIndonesianMonths[$txDate->format('M')] ?? $txDate->format('M')) . ' ' . $txDate->format('Y') : '-';
+                            @endphp
+                            <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                                <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $formattedTxDate }}</td>
+                                <td class="py-4 px-4 text-xs w-[35%]">
+                                    @if($tx->jenis_simpanan === 'Pokok')
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
+                                    @elseif($tx->jenis_simpanan === 'Wajib')
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
+                                    @else
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>
+                                    @endif
+                                </td>
+                                <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">{{ $formatRupiah($tx->nominal) }}</td>
+                                <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-[#2f54eb]/80 transition-colors duration-150 cursor-pointer w-[15%]" onclick="window.location.href='{{ url('/simpanan') }}'">Detail</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-8 text-center text-xs text-slate-500">Belum ada transaksi simpanan.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -203,57 +200,43 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[#1f243d]">
-                        <!-- Simpanan Sukarela -->
-                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                            <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $shortFormattedDate }}</td>
-                            <td class="py-4 px-4 text-xs w-[35%]">
-                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Sukarela</span>
-                            </td>
-                            <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">{{ $formatRupiah($anggota->simpanan_sukarela) }}</td>
-                            <td class="py-4 px-4 text-center w-[15%]">
-                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
-                            </td>
-                        </tr>
-                        <!-- Pinjaman Koperasi -->
-                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                            <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $shortFormattedDate }}</td>
-                            <td class="py-4 px-4 text-xs w-[35%]">
-                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Pinjaman Koperasi</span>
-                            </td>
-                            <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">Rp 0</td>
-                            <td class="py-4 px-4 text-center w-[15%]">
-                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
-                            </td>
-                        </tr>
-                        <!-- Simpanan Wajib -->
-                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                            <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $shortFormattedDate }}</td>
-                            <td class="py-4 px-4 text-xs w-[35%]">
-                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
-                            </td>
-                            <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">{{ $formatRupiah($anggota->simpanan_wajib) }}</td>
-                            <td class="py-4 px-4 text-center w-[15%]">
-                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
-                            </td>
-                        </tr>
-                        <!-- Simpanan Pokok -->
-                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                            <td class="py-4 px-4 text-xs text-slate-300 w-[25%]">{{ $shortFormattedDate }}</td>
-                            <td class="py-4 px-4 text-xs w-[35%]">
-                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
-                            </td>
-                            <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_pokok) }}</td>
-                            <td class="py-4 px-4 text-center w-[15%]">
-                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
-                            </td>
-                        </tr>
+                        @forelse($anggota->transactions as $tx)
+                            @php
+                                $txDate = optional($tx->tanggal_transaksi ?? $tx->created_at);
+                                $formattedTxDate = $txDate ? $txDate->format('d') . ' ' . ($shortIndonesianMonths[$txDate->format('M')] ?? $txDate->format('M')) . ' ' . $txDate->format('Y') : '-';
+                            @endphp
+                            <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                                <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $formattedTxDate }}</td>
+                                <td class="py-4 px-4 text-xs w-[35%]">
+                                    @if($tx->jenis_simpanan === 'Pokok')
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
+                                    @elseif($tx->jenis_simpanan === 'Wajib')
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
+                                    @else
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>
+                                    @endif
+                                </td>
+                                <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">{{ $formatRupiah($tx->nominal) }}</td>
+                                <td class="py-4 px-4 text-center w-[15%]">
+                                    @if($tx->status === 'Lunas')
+                                        <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
+                                    @else
+                                        <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.18); color: #60a5fa;">AKTIF</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-8 text-center text-xs text-slate-500">Belum ada riwayat transaksi.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
             <!-- Footer Pagination -->
             <div class="flex justify-between items-center mt-5 pt-4 border-t border-[#1f243d]" style="text-align: left;">
-                <span class="text-[10px] font-semibold text-[#8f9bb3]">Menampilkan 4 dari 4 transaksi</span>
+                <span class="text-[10px] font-semibold text-[#8f9bb3]">Menampilkan {{ $anggota->transactions->count() }} dari {{ $anggota->transactions->count() }} transaksi</span>
                 <div class="flex gap-1">
                     <button class="w-6 h-6 rounded bg-[#16192b] border border-[#1f243d] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#1f243d] transition-all cursor-pointer">
                         <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>

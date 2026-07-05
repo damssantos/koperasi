@@ -294,16 +294,23 @@
             
             /* Modals & Forms Light Mode */
             body.light #transactionModal > div,
+            body.light #detailTransactionModal > div,
+            body.light #editTransactionModal > div,
             body.light #memberModal > div {
                 background-color: #ffffff !important;
                 border-color: #e2e8f0 !important;
             }
             body.light #transactionModal h3,
+            body.light #detailTransactionModal h3,
+            body.light #editTransactionModal h3,
             body.light #memberModal h3 {
                 color: #1e293b !important;
             }
             body.light #transactionModal select,
             body.light #transactionModal input,
+            body.light #editTransactionModal select,
+            body.light #editTransactionModal input,
+            body.light #editTransactionModal textarea,
             body.light #memberModal select,
             body.light #memberModal input {
                 background-color: #f8fafc !important;
@@ -312,19 +319,33 @@
             }
             body.light #transactionModal select:focus,
             body.light #transactionModal input:focus,
+            body.light #editTransactionModal select:focus,
+            body.light #editTransactionModal input:focus,
+            body.light #editTransactionModal textarea:focus,
             body.light #memberModal select:focus,
             body.light #memberModal input:focus {
                 border-color: #2f54eb !important;
             }
             body.light #transactionModal button[onclick="closeNewTransactionModal()"],
+            body.light #detailTransactionModal button[onclick="closeDetailTransactionModal()"],
+            body.light #editTransactionModal button[onclick="closeEditTransactionModal()"],
             body.light #memberModal button[onclick="closeNewMemberModal()"] {
                 background-color: #f1f5f9 !important;
                 border-color: #cbd5e1 !important;
                 color: #64748b !important;
             }
             body.light #transactionModal button[onclick="closeNewTransactionModal()"]:hover,
+            body.light #detailTransactionModal button[onclick="closeDetailTransactionModal()"]:hover,
+            body.light #editTransactionModal button[onclick="closeEditTransactionModal()"]:hover,
             body.light #memberModal button[onclick="closeNewMemberModal()"]:hover {
                 color: #1e293b !important;
+            }
+            body.light #detailTransactionModal span,
+            body.light #detailTransactionModal p {
+                color: #1e293b !important;
+            }
+            body.light #detailTransactionModal label {
+                color: #64748b !important;
             }
         </style>
         @yield('styles')
@@ -379,6 +400,7 @@
                     </main>
                 </div>
             </div>
+            @stack('modals')
         </div>
 
         <!-- Common JavaScript -->
