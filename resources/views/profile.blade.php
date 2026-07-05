@@ -10,12 +10,20 @@
         gap: 30px !important;
         margin-top: 24px;
         width: 100%;
+        align-items: stretch; /* Stretch child columns to have identical height */
     }
 
     @media (min-width: 1024px) {
         .profile-container {
             grid-template-columns: 320px 1fr; /* Left panel 320px, Right panel takes the rest */
         }
+    }
+
+    .profile-left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 24px !important;
+        height: 100%;
     }
 
     .profile-card {
@@ -30,6 +38,16 @@
 
     .profile-card:hover {
         border-color: rgba(143, 155, 179, 0.2);
+    }
+
+    /* Flex stretch for the bottom card on desktop to line up exactly with right card */
+    @media (min-width: 1024px) {
+        .profile-left-column .profile-card-fill {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
     }
 
     .profile-avatar-circle {
@@ -187,8 +205,8 @@
     <!-- Main Profile Layout Container -->
     <div class="profile-container">
         
-        <!-- Left Side: Profile Card & Quick Stats & Help Card -->
-        <div class="flex flex-col">
+        <!-- Left Side: Profile Card & Service Info Card -->
+        <div class="profile-left-column">
             <!-- Profile Overview Card -->
             <div class="profile-card flex flex-col items-center text-center">
                 <!-- Decorative Blur Background -->
@@ -225,15 +243,30 @@
                 </div>
             </div>
 
-            <!-- Help & Guidance Card (Fills empty space beautifully) -->
-            <div class="profile-card mt-6" style="margin-top: 24px; padding: 22px; border-color: rgba(47, 84, 237, 0.15); background: linear-gradient(135deg, rgba(22, 25, 43, 0.5), rgba(30, 34, 56, 0.3));">
-                <div style="display: flex; align-items: flex-start; gap: 14px;">
-                    <div style="width: 32px; height: 32px; border-radius: 8px; background-color: rgba(47, 84, 237, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(47, 84, 237, 0.2);">
-                        <i data-lucide="shield-alert" style="color: #2f54eb; width: 16px; height: 16px;"></i>
+            <!-- Service Info Card (Fills empty space beautifully, aligned with right card) -->
+            <div class="profile-card profile-card-fill">
+                <!-- Header -->
+                <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1f243d; padding-bottom: 16px; margin-bottom: 16px;" class="border-b">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h4 style="font-size: 14px; font-weight: 700; color: #ffffff; margin: 0 0 6px 0;">Bantuan & Keamanan</h4>
-                        <p style="font-size: 12px; color: #8f9bb3; line-height: 1.6; margin: 0;">Apabila terdapat ketidaksesuaian pada data <strong>Nama</strong>, <strong>NIK</strong>, atau <strong>Email</strong> Anda, silakan hubungi Administrator Koperasi untuk bantuan perubahan data.</p>
+                        <h4 style="font-size: 13px; font-weight: 700; color: #ffffff; margin: 0;">Layanan Koperasi</h4>
+                    </div>
+                </div>
+                <!-- Content list -->
+                <div style="font-size: 13px; display: flex; flex-direction: column; gap: 14px; flex-grow: 1; justify-content: center;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #8f9bb3;">Jam Operasional:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">08:00 - 17:00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #8f9bb3;">Hari Kerja:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">Senin - Jumat</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #8f9bb3;">Email Kontak:</span>
+                        <span style="color: #ffffff; font-weight: 600;" class="text-white">info@ypik-koperasi.co.id</span>
                     </div>
                 </div>
             </div>
@@ -241,7 +274,7 @@
 
         <!-- Right Side: Detailed Profile Information (FORM) -->
         <div class="profile-card">
-            <!-- Information Card Header (Enlarged and with more space) -->
+            <!-- Information Card Header -->
             <div class="flex flex-col gap-1.5 border-b border-[#1f243d] pb-6 mb-4">
                 <h3 style="font-size: 16px; font-weight: 700;" class="text-white uppercase tracking-wider">Informasi Akun</h3>
                 <p style="font-size: 12px;" class="text-[#8f9bb3]">Detail data diri Anda yang terdaftar pada sistem koperasi.</p>
