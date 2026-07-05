@@ -45,8 +45,8 @@
                         <th class="py-3.5 px-4 font-semibold w-[15%]">ID Anggota</th>
                         <th class="py-3.5 px-4 font-semibold w-[25%]">Nama Lengkap</th>
                         <th class="py-3.5 px-4 font-semibold w-[20%]">Nomor HP</th>
-                        <th class="py-3.5 px-4 font-semibold w-[15%]">Total Simpanan</th>
-                        <th class="py-3.5 px-4 font-semibold text-center w-[10%]">Aksi</th>
+                        <th class="py-3.5 px-4 font-semibold w-[13%]">Total Simpanan</th>
+                        <th class="py-3.5 px-4 font-semibold text-center w-[12%]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#1f243d]">
@@ -56,8 +56,8 @@
                             <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium member-id w-[15%]">{{ $item->id_anggota ?? 'AGT-' . str_pad($item->id, 3, '0', STR_PAD_LEFT) }}</td>
                             <td class="py-4 px-4 text-xs font-bold text-white member-name w-[25%]">{{ $item->nama }}</td>
                             <td class="py-4 px-4 text-xs text-[#8f9bb3] member-phone w-[20%]">{{ $item->no_hp ?? '-' }}</td>
-                            <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">{{ $formatRupiah($item->total_saldo ?: $item->simpanan_pokok) }}</td>
-                            <td class="py-4 px-4 text-center w-[10%]">
+                            <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[13%]">{{ $formatRupiah($item->total_saldo ?: $item->simpanan_pokok) }}</td>
+                            <td class="py-4 px-4 text-center w-[12%]">
                                 <div class="flex items-center justify-center gap-1.5">
                                     <a href="{{ route('anggota.show', $item) }}" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
                                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
@@ -65,6 +65,13 @@
                                     <button onclick='openEditMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
                                         <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                     </button>
+                                    <form action="{{ route('anggota.destroy', $item) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini?')" class="inline m-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-7 h-7 rounded-lg bg-slate-800/40 text-rose-500 hover:text-white border border-slate-700/20 flex items-center justify-center hover:bg-rose-600 hover:border-transparent transition-all duration-200 cursor-pointer" title="Hapus Anggota">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -75,6 +82,13 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <!-- Table Footer: Total Members Count -->
+            <div id="tableFooter" class="flex justify-between items-center mt-5 pt-4 border-t border-[#1f243d]" style="text-align: left;">
+                <span class="text-[10px] font-semibold text-[#8f9bb3]">
+                    Total Anggota Terdaftar: <span id="memberCountText" class="text-white">{{ $anggota->count() }} Orang</span>
+                </span>
+            </div>
 
             <div id="emptyState" class="hidden py-12 flex flex-col items-center justify-center text-center space-y-3">
                 <div class="w-12 h-12 rounded-full bg-slate-800/40 border border-slate-700/20 text-slate-400 flex items-center justify-center">
@@ -224,6 +238,7 @@
             const query = document.getElementById('memberSearch').value.toLowerCase();
             const rows = document.querySelectorAll('.member-row');
             let foundAny = false;
+            let visibleCount = 0;
 
             rows.forEach(row => {
                 const name = row.querySelector('.member-name')?.textContent.toLowerCase() ?? '';
@@ -232,10 +247,14 @@
                 const matchesQuery = name.includes(query) || id.includes(query) || phone.includes(query);
 
                 row.classList.toggle('hidden', !matchesQuery);
-                foundAny = foundAny || matchesQuery;
+                if (matchesQuery) {
+                    visibleCount++;
+                    foundAny = true;
+                }
             });
 
             document.getElementById('emptyState').classList.toggle('hidden', foundAny);
+            document.getElementById('memberCountText').textContent = `${visibleCount} Orang`;
         }
     </script>
 @endsection

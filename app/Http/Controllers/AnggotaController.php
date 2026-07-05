@@ -86,4 +86,10 @@ class AnggotaController extends Controller
         $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
         return view('exports.anggota-print', compact('anggota'));
     }
+
+    public function destroy(AnggotaKoperasi $anggota)
+    {
+        $anggota->delete();
+        return redirect()->route('anggota.index')->with('success', 'Anggota berhasil dihapus.');
+    }
 }

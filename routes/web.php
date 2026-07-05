@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
     })->name('anggota.downloadPdf');
     Route::get('/anggota/{anggota}', [AnggotaController::class, 'show'])->name('anggota.show');
     Route::put('/anggota/{anggota}', [AnggotaController::class, 'update'])->name('anggota.update');
+    Route::delete('/anggota/{anggota}', [AnggotaController::class, 'destroy'])->name('anggota.destroy');
 
     Route::get('/simpanan', function () {
         $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
