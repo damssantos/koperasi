@@ -27,45 +27,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
-            <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/10 transition-colors"></div>
-            <div>
-                <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Anggota Terdaftar</p>
-                <h3 class="text-xl font-extrabold text-white mt-1.5">{{ number_format($totalAnggota, 0, ',', '.') }} Orang</h3>
-                <p class="text-[9px] text-[#7c83a7] mt-1">Aktif berpartisipasi simpan pinjam</p>
-            </div>
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center shadow-inner" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">
-                <i data-lucide="users-2" class="w-5 h-5"></i>
-            </div>
-        </div>
-
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
-            <div class="absolute -top-10 -right-10 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-colors"></div>
-            <div>
-                <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Simpanan Pokok</p>
-                <h3 class="text-xl font-extrabold text-white mt-1.5">{{ $formatRupiah($totalPokok) }}</h3>
-                <p class="text-[9px] text-[#7c83a7] mt-1">Estimasi kas simpanan pokok awal</p>
-            </div>
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center shadow-inner" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">
-                <i data-lucide="banknote" class="w-5 h-5"></i>
-            </div>
-        </div>
-
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-5 flex items-center justify-between hover:border-[#8f9bb3]/20 transition duration-300 relative overflow-hidden group">
-            <div class="absolute -top-10 -right-10 w-24 h-24 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/10 transition-colors"></div>
-            <div>
-                <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Saldo Tercatat</p>
-                <h3 class="text-xl font-extrabold text-white mt-1.5">{{ $formatRupiah($totalSaldo) }}</h3>
-                <p class="text-[9px] text-[#7c83a7] mt-1">Akumulasi saldo anggota di database</p>
-            </div>
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center shadow-inner" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #a855f7;">
-                <i data-lucide="badge-check" class="w-5 h-5"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-6 space-y-6">
+    <div class="bg-[#16192b] border border-[#1f243d] rounded-xl p-6 mt-6 space-y-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="relative max-w-sm w-full">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8f9bb3]">
