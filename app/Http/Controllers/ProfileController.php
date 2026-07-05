@@ -18,24 +18,17 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'nama_lengkap' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'no_hp' => 'required|numeric|digits_between:10,15',
-            'alamat' => 'nullable|string|min:10',
+            'alamat' => 'required|string|min:10',
         ], [
-            'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email ini sudah terdaftar.',
             'no_hp.required' => 'Nomor handphone wajib diisi.',
             'no_hp.numeric' => 'Nomor handphone harus berupa angka.',
             'no_hp.digits_between' => 'Nomor handphone harus terdiri dari 10 sampai 15 digit.',
-            'alamat.min' => 'Mohon masukkan alamat rumah Anda dengan lebih lengkap (minimal 10 karakter).',
+            'alamat.required' => 'Alamat tinggal wajib diisi.',
+            'alamat.min' => 'Mohon masukkan alamat tinggal Anda dengan lebih lengkap (minimal 10 karakter).',
         ]);
 
         $user->update([
-            'nama_lengkap' => $request->nama_lengkap,
-            'email' => $request->email,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
         ]);
