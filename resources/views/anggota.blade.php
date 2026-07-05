@@ -73,8 +73,6 @@
                 </span>
                 <input type="text" id="memberSearch" oninput="filterMembers()" placeholder="Cari nama, ID anggota, atau nomor HP..." class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500">
             </div>
-
-            <p class="text-[10px] font-semibold text-[#8f9bb3] uppercase tracking-wider">Menampilkan Data Urutan Terbaru</p>
         </div>
 
         <div class="overflow-x-auto">
@@ -99,9 +97,9 @@
                             <td class="py-4 px-4 text-xs font-bold text-white member-simpanan w-[15%]">{{ $formatRupiah($item->total_saldo ?: $item->simpanan_pokok) }}</td>
                             <td class="py-4 px-4 text-center w-[10%]">
                                 <div class="flex items-center justify-center gap-1.5">
-                                    <button onclick='openViewMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
+                                    <a href="{{ route('anggota.show', $item) }}" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
                                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                                    </button>
+                                    </a>
                                     <button onclick='openEditMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
                                         <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                     </button>
@@ -226,82 +224,6 @@
             </form>
         </div>
     </div>
-
-    <!-- View Member Modal -->
-    <div id="viewMemberModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-sm hidden transition-opacity">
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4" style="background-color: #16192b; border: 1px solid #1f243d; border-radius: 1rem; max-width: 42rem; width: 100%; padding: 1.5rem;">
-            <div class="flex justify-between items-center pb-2 border-b border-[#1f243d]" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid #1f243d;">
-                <h3 class="text-base font-bold text-white">Detail Anggota</h3>
-                <button onclick="closeMemberModal('viewMemberModal')" class="text-slate-400 hover:text-white transition-colors" style="background: none; border: none; cursor: pointer;">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: stretch; padding-top: 0.5rem;">
-                <!-- Left Column -->
-                <div style="grid-column: span 1 / span 1; background-color: rgba(7, 8, 15, 0.4); border: 1px solid #1f243d; border-radius: 0.75rem; padding: 1.25rem; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; justify-content: space-between;">
-                    <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/5 rounded-full blur-xl"></div>
-                    <div style="width: 64px; height: 64px; min-width: 64px; min-height: 64px; flex-shrink: 0; border-radius: 9999px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.25rem; font-weight: 700; border: 4px solid #16192b; background: linear-gradient(135deg, #2563eb, #4338ca);">
-                        <span id="view_avatar_initial">A</span>
-                    </div>
-                    <div class="mt-4 space-y-1 z-10 w-full" style="width: 100%;">
-                        <h4 id="view_nama" class="text-xs font-bold text-white tracking-tight truncate" style="color: #ffffff; font-weight: 700; font-size: 0.75rem; margin-top: 1rem; width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">Nama</h4>
-                        <p id="view_id_anggota" class="text-[9px] font-semibold text-[#8f9bb3]" style="color: #8f9bb3; font-weight: 600; font-size: 9px; margin-top: 0.25rem;">AGT-000</p>
-                        <div style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; color: #34d399; font-size: 8px; font-weight: 700; border-radius: 9999px; background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); margin-top: 0.5rem;">
-                            <span style="width: 4px; height: 4px; border-radius: 9999px; background-color: #34d399;"></span>
-                            <span>Anggota Aktif</span>
-                        </div>
-                    </div>
-                    <div class="w-full mt-5 pt-4 border-t border-[#1f243d] space-y-3 text-left text-[11px]" style="width: 100%; border-top: 1px solid #1f243d; padding-top: 1rem; margin-top: 1.25rem; text-align: left; font-size: 11px;">
-                        <div class="flex flex-col gap-0.5" style="display: flex; flex-direction: column; gap: 2px;">
-                            <span class="text-[8px] text-[#8f9bb3] uppercase font-bold tracking-wider" style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase;">Nomor HP</span>
-                            <span id="view_no_hp" class="text-white font-semibold" style="color: #ffffff; font-weight: 600;">-</span>
-                        </div>
-                        <div class="flex flex-col gap-0.5" style="display: flex; flex-direction: column; gap: 2px; margin-top: 0.75rem;">
-                            <span class="text-[8px] text-[#8f9bb3] uppercase font-bold tracking-wider" style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase;">Bergabung Pada</span>
-                            <span id="view_tanggal_join" class="text-white font-semibold" style="color: #ffffff; font-weight: 600;">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column -->
-                <div style="grid-column: span 2 / span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem;">
-                    <div style="background-color: rgba(7, 8, 15, 0.2); border: 1px solid #1f243d; border-radius: 0.75rem; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; flex-grow: 1;">
-                        <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 0.75rem; border-bottom: 1px solid #1f243d;">
-                            <i data-lucide="wallet" class="w-3.5 h-3.5 text-blue-500"></i>
-                            <h4 style="font-size: 10px; font-weight: 700; color: #ffffff; text-transform: uppercase; margin: 0; letter-spacing: 0.05em;">Rincian Simpanan Koperasi</h4>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
-                            <div style="background-color: rgba(7, 8, 15, 0.4); border: 1px solid #1f243d; border-radius: 0.5rem; padding: 0.75rem; display: flex; flex-direction: column; gap: 2px;">
-                                <p style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase; margin: 0;">Pokok</p>
-                                <p id="view_simpanan_pokok" style="font-size: 11px; font-weight: 700; color: #ffffff; margin: 0;">Rp 0</p>
-                            </div>
-                            <div style="background-color: rgba(7, 8, 15, 0.4); border: 1px solid #1f243d; border-radius: 0.5rem; padding: 0.75rem; display: flex; flex-direction: column; gap: 2px;">
-                                <p style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase; margin: 0;">Wajib</p>
-                                <p id="view_simpanan_wajib" style="font-size: 11px; font-weight: 700; color: #ffffff; margin: 0;">Rp 0</p>
-                            </div>
-                            <div style="background-color: rgba(7, 8, 15, 0.4); border: 1px solid #1f243d; border-radius: 0.5rem; padding: 0.75rem; display: flex; flex-direction: column; gap: 2px;">
-                                <p style="font-size: 8px; font-weight: 700; color: #8f9bb3; text-transform: uppercase; margin: 0;">Sukarela</p>
-                                <p id="view_simpanan_sukarela" style="font-size: 11px; font-weight: 700; color: #ffffff; margin: 0;">Rp 0</p>
-                            </div>
-                        </div>
-                        <div style="background: linear-gradient(to right, rgba(37, 99, 235, 0.1), rgba(147, 51, 234, 0.1)); border: 1px solid rgba(37, 99, 235, 0.15); border-radius: 0.5rem; padding: 1rem; margin-top: 0.5rem;">
-                            <p style="font-size: 9px; font-weight: 700; color: #8f9bb3; text-transform: uppercase; margin: 0;">Total Akumulasi Saldo</p>
-                            <h3 id="view_total_saldo" style="font-size: 1rem; font-weight: 900; color: #ffffff; margin: 5px 0 0 0;">Rp 0</h3>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 0.5rem;">
-                        <button onclick="closeMemberModal('viewMemberModal')" style="padding: 0.625rem 1.25rem; border: 1px solid #1f243d; border-radius: 0.5rem; background-color: transparent; color: #ffffff; font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 0.15s;" onmouseover="this.style.backgroundColor='#16192b'" onmouseout="this.style.backgroundColor='transparent'">Tutup</button>
-                        <button id="view_edit_button" style="padding: 0.625rem 1.25rem; background-color: #2f54eb; color: #ffffff; border: none; border-radius: 0.5rem; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);" onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2f54eb'">
-                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                            <span>Ubah Anggota</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('scripts')
@@ -336,49 +258,6 @@
                 openEditMemberModal(members[editId]);
             }
         });
-
-        function formatRupiahJs(value) {
-            return 'Rp ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
-        }
-
-        function formatDateJs(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            return `${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} ${date.getFullYear()}`;
-        }
-
-        function openViewMemberModal(member) {
-            const initial = member.nama ? member.nama.trim().charAt(0).toUpperCase() : 'A';
-            document.getElementById('view_avatar_initial').textContent = initial;
-            document.getElementById('view_nama').textContent = member.nama;
-            
-            const nextId = member.id_anggota ?? `AGT-${String(member.id).padStart(3, '0')}`;
-            document.getElementById('view_id_anggota').textContent = nextId;
-            document.getElementById('view_no_hp').textContent = member.no_hp ?? '-';
-            document.getElementById('view_tanggal_join').textContent = formatDateJs(member.tanggal_join ?? member.created_at);
-            
-            document.getElementById('view_simpanan_pokok').textContent = formatRupiahJs(member.simpanan_pokok ?? 0);
-            document.getElementById('view_simpanan_wajib').textContent = formatRupiahJs(member.simpanan_wajib ?? 0);
-            document.getElementById('view_simpanan_sukarela').textContent = formatRupiahJs(member.simpanan_sukarela ?? 0);
-            
-            const total = (member.simpanan_pokok ?? 0) + (member.simpanan_wajib ?? 0) + (member.simpanan_sukarela ?? 0);
-            document.getElementById('view_total_saldo').textContent = formatRupiahJs(member.total_saldo || total);
-            
-            const editBtn = document.getElementById('view_edit_button');
-            editBtn.onclick = () => {
-                closeMemberModal('viewMemberModal');
-                setTimeout(() => {
-                    openEditMemberModal(member);
-                }, 200);
-            };
-
-            document.getElementById('viewMemberModal').classList.remove('hidden');
-            if (window.lucide) {
-                window.lucide.createIcons();
-            }
-        }
-
         function filterMembers() {
             const query = document.getElementById('memberSearch').value.toLowerCase();
             const rows = document.querySelectorAll('.member-row');

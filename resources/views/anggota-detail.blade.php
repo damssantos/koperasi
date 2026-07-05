@@ -5,108 +5,226 @@
 @section('content')
     @php
         $formatRupiah = fn ($value) => 'Rp ' . number_format((int) $value, 0, ',', '.');
-        $profileInitial = strtoupper(substr(trim($anggota->nama ?: 'A'), 0, 1));
+        
+        $indonesianMonths = [
+            'January' => 'Januari', 'February' => 'Februari', 'March' => 'Maret',
+            'April' => 'April', 'May' => 'Mei', 'June' => 'Juni',
+            'July' => 'Juli', 'August' => 'Agustus', 'September' => 'September',
+            'October' => 'Oktober', 'November' => 'November', 'December' => 'Desember'
+        ];
+        $shortIndonesianMonths = [
+            'Jan' => 'Jan', 'Feb' => 'Feb', 'Mar' => 'Mar', 'Apr' => 'Apr',
+            'May' => 'Mei', 'Jun' => 'Jun', 'Jul' => 'Jul', 'Aug' => 'Agu',
+            'Sep' => 'Sep', 'Oct' => 'Okt', 'Nov' => 'Nov', 'Dec' => 'Des'
+        ];
+
+        $dateObj = optional($anggota->tanggal_join ?? $anggota->created_at);
+        $formattedDate = $dateObj ? $dateObj->format('d') . ' ' . ($indonesianMonths[$dateObj->format('F')] ?? $dateObj->format('F')) . ' ' . $dateObj->format('Y') : '-';
+        $shortFormattedDate = $dateObj ? $dateObj->format('d') . ' ' . ($shortIndonesianMonths[$dateObj->format('M')] ?? $dateObj->format('M')) . ' ' . $dateObj->format('Y') : '-';
     @endphp
 
-    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 pb-6 border-b border-[#1f243d]">
+    <!-- Top Navigation / Sub-Header -->
+    <div class="flex items-center gap-3 pb-5 border-b border-[#1f243d]">
+        <a href="{{ route('anggota.index') }}" class="w-8 h-8 rounded-lg bg-slate-800/40 text-slate-400 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        </a>
         <div>
-            <h2 class="text-2xl font-bold text-white tracking-tight">Detail Anggota</h2>
-            <p class="text-xs text-[#8f9bb3] mt-0.5">Informasi lengkap dan rincian saldo simpanan anggota koperasi.</p>
-        </div>
-        
-        <div class="flex items-center gap-3">
-            <a href="{{ route('anggota.index') }}" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-                <span>Kembali ke Daftar</span>
-            </a>
-            <a href="{{ route('anggota.index') }}?edit={{ $anggota->id }}" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
-                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                <span>Ubah Anggota</span>
-            </a>
+            <h1 class="text-base font-bold text-white leading-tight">Koperasi Simpan Pinjam</h1>
+            <h2 class="text-[10px] font-semibold text-[#8f9bb3] uppercase tracking-wider mt-0.5">Detail Anggota</h2>
         </div>
     </div>
 
-    <!-- Main Grid -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
-        
-        <!-- Left Column: Member Card -->
-        <div class="xl:col-span-1 space-y-6">
-            <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden group hover:border-[#8f9bb3]/20 transition duration-300">
-                <!-- Decorative Blur Background -->
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
-                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
-
-                <!-- Initial Avatar -->
-                <div class="w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl shadow-blue-500/25 border-4 border-[#16192b] mt-4" style="background: linear-gradient(135deg, #2563eb, #4338ca);">
-                    <span>{{ $profileInitial }}</span>
-                </div>
-
-                <div class="mt-5 space-y-1 z-10">
-                    <h3 class="text-lg font-bold text-white tracking-tight">{{ $anggota->nama }}</h3>
-                    <p class="text-xs font-semibold text-[#8f9bb3]">{{ $anggota->id_anggota ?? 'AGT-' . str_pad($anggota->id, 5, '0', STR_PAD_LEFT) }}</p>
-                    <div class="inline-flex items-center gap-1.5 px-3 py-1 text-emerald-400 text-[10px] font-bold tracking-wide rounded-full mt-2" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>Anggota Aktif</span>
-                    </div>
-                </div>
-
-                <!-- Info List -->
-                <div class="w-full mt-8 pt-6 border-t border-[#1f243d] space-y-4 text-left text-xs">
-                    <div class="flex items-center justify-between text-[#8f9bb3]">
-                        <span>Nomor HP:</span>
-                        <span class="text-white font-semibold">{{ $anggota->no_hp ?? '-' }}</span>
-                    </div>
-                    <div class="flex items-center justify-between text-[#8f9bb3]">
-                        <span>Bergabung Pada:</span>
-                        <span class="text-white font-semibold">{{ optional($anggota->tanggal_join ?? $anggota->created_at)->format('d M Y') }}</span>
-                    </div>
-                </div>
+    <!-- Main Member Header Area -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-6">
+        <div>
+            <h2 class="text-3xl font-extrabold text-white tracking-tight">{{ $anggota->nama }}</h2>
+            <div class="inline-flex items-center mt-2 px-3 py-1 bg-[#1e2238] border border-[#2a2f4c] text-xs font-semibold text-[#8f9bb3] rounded-lg">
+                ID: {{ $anggota->id_anggota ?? 'AGT-' . str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}
             </div>
         </div>
-
-        <!-- Right Column: Savings Breakdown -->
-        <div class="xl:col-span-2 space-y-6">
-            <!-- Savings Breakdown Card -->
-            <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-6 space-y-6">
-                <div class="flex items-center gap-3 border-b border-[#1f243d] pb-4">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20">
-                        <i data-lucide="wallet" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Rincian Simpanan Koperasi</h3>
-                        <p class="text-[10px] text-[#8f9bb3]">Pembagian saldo simpanan pokok, wajib, dan sukarela.</p>
-                    </div>
-                </div>
-
-                <!-- Grid Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-xl p-4 space-y-1">
-                        <p class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Simpanan Pokok</p>
-                        <h4 class="text-lg font-bold text-white">{{ $formatRupiah($anggota->simpanan_pokok) }}</h4>
-                    </div>
-                    <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-xl p-4 space-y-1">
-                        <p class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Simpanan Wajib</p>
-                        <h4 class="text-lg font-bold text-white">{{ $formatRupiah($anggota->simpanan_wajib) }}</h4>
-                    </div>
-                    <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-xl p-4 space-y-1">
-                        <p class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Simpanan Sukarela</p>
-                        <h4 class="text-lg font-bold text-white">{{ $formatRupiah($anggota->simpanan_sukarela) }}</h4>
-                    </div>
-                </div>
-
-                <!-- Total Balance Card -->
-                <div class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/20 rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div class="space-y-1">
-                        <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Akumulasi Saldo</p>
-                        <h3 class="text-2xl font-black text-white">{{ $formatRupiah($anggota->total_saldo ?: ($anggota->simpanan_pokok + $anggota->simpanan_wajib + $anggota->simpanan_sukarela)) }}</h3>
-                    </div>
-                    <a href="{{ route('simpanan') }}" class="px-4 py-2 bg-[#2f54eb] hover:bg-blue-600 text-white rounded-lg text-xs font-bold transition duration-150 flex items-center gap-2">
-                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                        <span>Tambah Setoran Simpanan</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
+        <a href="{{ route('anggota.index') }}?edit={{ $anggota->id }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+            <span>Edit</span>
+        </a>
     </div>
+
+    <!-- First Section: 3 Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <!-- Card 1: Total Simpanan -->
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-5 hover:border-[#8f9bb3]/20 transition duration-300 flex flex-col justify-between h-[135px] relative overflow-hidden group">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Simpanan</span>
+            </div>
+            <div style="margin-top: auto;">
+                <h3 class="text-2xl font-extrabold text-white">{{ $formatRupiah($anggota->total_saldo ?: ($anggota->simpanan_pokok + $anggota->simpanan_wajib + $anggota->simpanan_sukarela)) }}</h3>
+                <p class="text-[10px] text-emerald-400 font-semibold mt-1 flex items-center gap-1">
+                    <span>↗</span>
+                    <span>+Rp 450.000 bulan ini</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 2: Pinjaman Aktif -->
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-5 hover:border-[#8f9bb3]/20 transition duration-300 flex flex-col justify-between h-[135px] relative overflow-hidden group">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.2); color: #f97316;">
+                    <i data-lucide="banknote" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Pinjaman Aktif</span>
+            </div>
+            <div style="margin-top: auto;">
+                <h3 class="text-2xl font-extrabold text-white">Rp 0</h3>
+                <p class="text-[10px] text-[#7c83a7] font-semibold mt-1">Tidak ada pinjaman aktif</p>
+            </div>
+        </div>
+
+        <!-- Card 3: Sisa Cicilan -->
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-5 hover:border-[#8f9bb3]/20 transition duration-300 flex flex-col justify-between h-[135px] relative overflow-hidden group">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #a855f7;">
+                    <i data-lucide="history" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Sisa Cicilan</span>
+            </div>
+            <div style="margin-top: auto;">
+                <h3 class="text-2xl font-extrabold text-white">Rp 0</h3>
+                <p class="text-[10px] text-[#7c83a7] font-semibold mt-1">Belum ada cicilan</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Section: Informasi Anggota Card -->
+    <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-6 mt-6">
+        <div class="flex items-center gap-2.5 border-b border-[#1f243d] pb-4 mb-6">
+            <i data-lucide="user" class="w-4 h-4 text-[#8f9bb3]"></i>
+            <h3 class="text-sm font-bold text-white tracking-wide">Informasi Anggota</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+            <!-- Column 1 -->
+            <div class="space-y-6">
+                <div>
+                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">ID Anggota</p>
+                    <p class="text-sm font-semibold text-white mt-1">{{ $anggota->id_anggota ?? 'AGT-' . str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Nomor HP</p>
+                    <p class="text-sm font-semibold text-white mt-1">{{ $anggota->no_hp ?? '-' }}</p>
+                </div>
+            </div>
+            <!-- Column 2 -->
+            <div class="space-y-6">
+                <div>
+                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Nama Lengkap</p>
+                    <p class="text-sm font-semibold text-white mt-1">{{ $anggota->nama }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Tanggal Bergabung</p>
+                    <p class="text-sm font-semibold text-white mt-1">{{ $formattedDate }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third Section: Tabs and Table Card -->
+    <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-6 mt-6">
+        <!-- Tabs Header -->
+        <div class="flex border-b border-[#1f243d] mb-6">
+            <button id="tab-btn-simpanan" class="px-5 py-3 border-b-2 border-[#2f54eb] text-xs font-bold text-white" onclick="switchTab('simpanan')">Simpanan</button>
+            <button id="tab-btn-pinjaman" class="px-5 py-3 border-b-2 border-transparent text-xs font-semibold text-[#8f9bb3] hover:text-white" onclick="switchTab('pinjaman')">Pinjaman</button>
+            <button id="tab-btn-transaksi" class="px-5 py-3 border-b-2 border-transparent text-xs font-semibold text-[#8f9bb3] hover:text-white" onclick="switchTab('transaksi')">Riwayat Transaksi</button>
+        </div>
+        
+        <!-- Tab Content: Simpanan (Active) -->
+        <div id="tab-content-simpanan">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse table-fixed">
+                    <thead>
+                        <tr class="border-b border-[#1f243d] text-[#8f9bb3] text-[10px] font-bold uppercase tracking-wider">
+                            <th class="py-3.5 px-4 font-semibold w-[25%]">Tanggal</th>
+                            <th class="py-3.5 px-4 font-semibold w-[35%]">Jenis Simpanan</th>
+                            <th class="py-3.5 px-4 font-semibold w-[25%]">Nominal</th>
+                            <th class="py-3.5 px-4 font-semibold text-center w-[15%]">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#1f243d]">
+                        <!-- Simpanan Pokok -->
+                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                            <td class="py-4 px-4 text-xs text-slate-300 w-[25%]">{{ $shortFormattedDate }}</td>
+                            <td class="py-4 px-4 text-xs w-[35%]">
+                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
+                            </td>
+                            <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_pokok) }}</td>
+                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-blue-400 cursor-pointer w-[15%]">Detail</td>
+                        </tr>
+                        <!-- Simpanan Wajib -->
+                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                            <td class="py-4 px-4 text-xs text-slate-300 w-[25%]">{{ $shortFormattedDate }}</td>
+                            <td class="py-4 px-4 text-xs w-[35%]">
+                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
+                            </td>
+                            <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_wajib) }}</td>
+                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-blue-400 cursor-pointer w-[15%]">Detail</td>
+                        </tr>
+                        <!-- Simpanan Sukarela -->
+                        <tr class="hover:bg-[#07080f]/30 transition duration-150">
+                            <td class="py-4 px-4 text-xs text-slate-300 w-[25%]">{{ $shortFormattedDate }}</td>
+                            <td class="py-4 px-4 text-xs w-[35%]">
+                                <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>
+                            </td>
+                            <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_sukarela) }}</td>
+                            <td class="py-4 px-4 text-center text-xs font-bold text-[#2f54eb] hover:text-blue-400 cursor-pointer w-[15%]">Detail</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Tab Content: Pinjaman (Empty state) -->
+        <div id="tab-content-pinjaman" class="hidden py-12 flex flex-col items-center justify-center text-center space-y-3">
+            <div class="w-10 h-10 rounded-full bg-slate-800/40 border border-slate-700/20 text-slate-400 flex items-center justify-center">
+                <i data-lucide="info" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-white">Tidak ada data pinjaman</p>
+                <p class="text-[10px] text-[#8f9bb3]">Anggota ini tidak memiliki pinjaman aktif.</p>
+            </div>
+        </div>
+        
+        <!-- Tab Content: Transaksi (Empty state) -->
+        <div id="tab-content-transaksi" class="hidden py-12 flex flex-col items-center justify-center text-center space-y-3">
+            <div class="w-10 h-10 rounded-full bg-slate-800/40 border border-slate-700/20 text-slate-400 flex items-center justify-center">
+                <i data-lucide="history" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-white">Tidak ada riwayat transaksi</p>
+                <p class="text-[10px] text-[#8f9bb3]">Belum ada mutasi atau transaksi tercatat.</p>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function switchTab(tabName) {
+            const tabs = ['simpanan', 'pinjaman', 'transaksi'];
+            
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-btn-${t}`);
+                const content = document.getElementById(`tab-content-${t}`);
+                
+                if (t === tabName) {
+                    btn.classList.remove('border-transparent', 'text-[#8f9bb3]');
+                    btn.classList.add('border-[#2f54eb]', 'text-white', 'font-bold');
+                    content.classList.remove('hidden');
+                } else {
+                    btn.classList.remove('border-[#2f54eb]', 'text-white', 'font-bold');
+                    btn.classList.add('border-transparent', 'text-[#8f9bb3]', 'font-semibold');
+                    content.classList.add('hidden');
+                }
+            });
+        }
+    </script>
 @endsection
