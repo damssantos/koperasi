@@ -203,7 +203,7 @@
                             </td>
                             <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_sukarela) }}</td>
                             <td class="py-4 px-4 text-center w-[15%]">
-                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded bg-[#10b981]/10 border border-[#10b981]/25 text-[#34d399]">LUNAS</span>
+                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
                             </td>
                         </tr>
                         <!-- Pinjaman Koperasi -->
@@ -214,7 +214,7 @@
                             </td>
                             <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">Rp 0</td>
                             <td class="py-4 px-4 text-center w-[15%]">
-                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded bg-[#10b981]/10 border border-[#10b981]/25 text-[#34d399]">LUNAS</span>
+                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
                             </td>
                         </tr>
                         <!-- Simpanan Wajib -->
@@ -225,7 +225,7 @@
                             </td>
                             <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_wajib) }}</td>
                             <td class="py-4 px-4 text-center w-[15%]">
-                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded bg-[#10b981]/10 border border-[#10b981]/25 text-[#34d399]">LUNAS</span>
+                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
                             </td>
                         </tr>
                         <!-- Simpanan Pokok -->
@@ -236,7 +236,7 @@
                             </td>
                             <td class="py-4 px-4 text-xs font-extrabold text-white w-[25%]">{{ $formatRupiah($anggota->simpanan_pokok) }}</td>
                             <td class="py-4 px-4 text-center w-[15%]">
-                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded bg-[#10b981]/10 border border-[#10b981]/25 text-[#34d399]">LUNAS</span>
+                                <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
                             </td>
                         </tr>
                     </tbody>
