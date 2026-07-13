@@ -56,9 +56,6 @@
                                     <a href="{{ route('anggota.show', $item) }}" class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Lihat Detail">
                                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                     </a>
-                                    <button onclick='openEditMemberModal(@json($item))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Ubah Anggota">
-                                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                                    </button>
                                     <button type="button" onclick="openDeleteModal({{ $item->id }}, '{{ addslashes($item->nama) }}')" class="w-7 h-7 rounded-lg bg-slate-800/40 text-rose-500 hover:text-white border border-slate-700/20 flex items-center justify-center hover:bg-rose-600 hover:border-transparent transition-all duration-200 cursor-pointer" title="Hapus Anggota">
                                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                     </button>
@@ -278,7 +275,7 @@
     <script>
         function openDeleteModal(id, name) {
             const form = document.getElementById('deleteMemberForm');
-            form.action = `{{ url('/anggota') }}/${id}`;
+            form.action = `/anggota/${id}`;
             document.getElementById('deleteMemberNameText').textContent = name;
             document.getElementById('deleteConfirmModal').classList.remove('hidden');
         }
@@ -297,7 +294,7 @@
 
         function openEditMemberModal(member) {
             const form = document.getElementById('editMemberForm');
-            form.action = `{{ url('/anggota') }}/${member.id}`;
+            form.action = `/anggota/${member.id}`;
             document.getElementById('edit_id_anggota').value = member.id_anggota ?? `AGT-${String(member.id).padStart(3, '0')}`;
             document.getElementById('edit_nama').value = member.nama ?? '';
             document.getElementById('edit_no_hp').value = member.no_hp ?? '';

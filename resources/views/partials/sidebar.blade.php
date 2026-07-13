@@ -22,17 +22,13 @@
             <span class="font-bold text-xs uppercase tracking-wider">Pinjaman</span>
         </a>
 
-        <a href="#" onclick="showNotImplementedAlert('Kas Usaha')" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-[#8f9bb3] hover:text-white hover:bg-[#16192b] transition-all duration-150">
+        <a href="{{ route('kas-usaha') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->is('kas-usaha') ? 'bg-[#2f54eb] text-white shadow-md shadow-blue-500/10' : 'text-[#8f9bb3] hover:text-white hover:bg-[#16192b]' }} transition-all duration-150">
             <i data-lucide="briefcase" class="w-4 h-4"></i>
             <span class="font-bold text-xs uppercase tracking-wider">Kas Usaha</span>
         </a>
 
-        <a href="#" onclick="showNotImplementedAlert('Pembukuan')" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-[#8f9bb3] hover:text-white hover:bg-[#16192b] transition-all duration-150">
-            <i data-lucide="book-open" class="w-4 h-4"></i>
-            <span class="font-bold text-xs uppercase tracking-wider">Pembukuan</span>
-        </a>
 
-        <a href="{{ route('simpanan.print') }}" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-[#8f9bb3] hover:text-white hover:bg-[#16192b] transition-all duration-150">
+        <a href="{{ url('/laporan') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->is('laporan') ? 'bg-[#2f54eb] text-white shadow-md shadow-blue-500/10' : 'text-[#8f9bb3] hover:text-white hover:bg-[#16192b]' }} transition-all duration-150">
             <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
             <span class="font-bold text-xs uppercase tracking-wider">Laporan</span>
         </a>

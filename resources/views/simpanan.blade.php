@@ -240,9 +240,9 @@
     <div id="transactionModal" class="fixed inset-0 flex items-center justify-center p-4 hidden transition-opacity" style="z-index: 9999; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background-color: rgba(7, 8, 15, 0.75);">
         <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <!-- Modal Header -->
-            <div class="flex justify-between items-center pb-2">
-                <h3 class="text-base font-bold text-white">Tambah Transaksi Simpanan</h3>
-                <button onclick="closeNewTransactionModal()" class="text-slate-400 hover:text-white transition-colors">
+            <div class="flex justify-between items-center pb-4 border-b border-[#1f243d]">
+                <h3 class="text-base font-bold text-white">Tambah Simpanan</h3>
+                <button type="button" onclick="closeNewTransactionModal()" class="text-slate-400 hover:text-white transition-colors">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -252,61 +252,79 @@
                 @csrf
                 <!-- ID/Nama Anggota * -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Anggota *</label>
-                    <select id="txMemberSelect" name="anggota_id" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
-                        <option value="" disabled selected>Pilih Anggota</option>
-                        @forelse($anggota as $member)
-                            <option value="{{ $member->id }}">{{ $member->id_anggota ?? 'AGT-' . str_pad($member->id, 5, '0', STR_PAD_LEFT) }} - {{ $member->nama }}</option>
-                        @empty
-                            <option value="" disabled>Belum ada anggota di database</option>
-                        @endforelse
-                    </select>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Anggota *</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8f9bb3]">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                        </span>
+                        <select id="txMemberSelect" name="anggota_id" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-10 py-2.5 text-xs text-[#8f9bb3] focus:outline-none focus:border-blue-500 appearance-none">
+                            <option value="" disabled selected>Cari nama atau ID anggota...</option>
+                            @forelse($anggota as $member)
+                                <option value="{{ $member->id }}">{{ $member->id_anggota ?? 'AGT-' . str_pad($member->id, 5, '0', STR_PAD_LEFT) }} - {{ $member->nama }}</option>
+                            @empty
+                                <option value="" disabled>Belum ada anggota di database</option>
+                            @endforelse
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#8f9bb3]">
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Jenis Simpanan * -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Jenis Simpanan *</label>
-                    <select id="txTypeSelect" name="jenis_simpanan" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
-                        <option value="Pokok">Pokok</option>
-                        <option value="Wajib">Wajib</option>
-                        <option value="Sukarela">Sukarela</option>
-                    </select>
-                </div>
-
-                <!-- Nominal * -->
-                <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Nominal (Rupiah) *</label>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Jenis Simpanan *</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8f9bb3] text-xs font-bold">Rp</span>
-                        <input type="number" id="txAmount" name="nominal" required placeholder="Contoh: 500000" min="1000" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8f9bb3]">
+                            <i data-lucide="wallet" class="w-4 h-4"></i>
+                        </span>
+                        <select id="txTypeSelect" name="jenis_simpanan" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-10 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 appearance-none">
+                            <option value="Pokok">Simpanan Pokok</option>
+                            <option value="Wajib">Simpanan Wajib</option>
+                            <option value="Sukarela">Simpanan Sukarela</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#8f9bb3]">
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Tanggal Transaksi * -->
-                <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Tanggal Transaksi *</label>
-                    <input type="date" id="txDate" name="tanggal_transaksi" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                <!-- Nominal & Tanggal Grid Row -->
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Nominal * -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nominal Simpanan *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-xs font-bold text-[#8f9bb3]">Rp</span>
+                            <input type="number" id="txAmount" name="nominal" required placeholder="Masukkan nominal" min="1000" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Tanggal Transaksi * -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Tanggal Transaksi *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8f9bb3]">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                            </span>
+                            <input type="date" id="txDate" name="tanggal_transaksi" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
                 </div>
 
-                 <!-- Status * -->
-                <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Status *</label>
-                    <select id="txStatus" name="status" required class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
-                        <option value="Aktif">Aktif</option>
-                        <option value="Lunas">Lunas</option>
-                    </select>
-                </div>
+                <!-- Hidden Status Field (Required for validation) -->
+                <input type="hidden" name="status" id="txStatus" value="Lunas">
 
                 <!-- Keterangan -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Keterangan</label>
-                    <textarea name="keterangan" rows="2" placeholder="Contoh: Setoran rutin bulanan" class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"></textarea>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Keterangan (Opsional)</label>
+                    <textarea name="keterangan" rows="3" placeholder="Tambahkan keterangan..." class="w-full bg-[#07080f] border border-[#1f243d] rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"></textarea>
                 </div>
                 
                 <!-- Action Buttons -->
-                <div class="flex items-center gap-3 pt-4 justify-end">
-                    <button type="button" onclick="closeNewTransactionModal()" class="btn-cancel px-5 py-2.5 rounded-lg text-xs font-semibold">Batal</button>
-                    <button type="submit" class="btn-save px-5 py-2.5 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/10">Simpan Transaksi</button>
+                <div class="flex items-center gap-3 pt-4 border-t border-[#1f243d] justify-end">
+                    <button type="button" onclick="closeNewTransactionModal()" class="px-5 py-2.5 border border-[#1f243d] bg-[#16192b] hover:bg-[#1f243d] text-slate-300 rounded-lg text-xs font-semibold transition">Batal</button>
+                    <button type="submit" class="px-6 py-2.5 bg-[#2f54eb] hover:bg-blue-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/10 transition">Simpan</button>
                 </div>
             </form>
         </div>
@@ -461,6 +479,23 @@
         // Initialize Page
         document.addEventListener('DOMContentLoaded', () => {
             renderTable();
+            
+            // Dynamic text color for member select placeholder
+            const memberSelect = document.getElementById('txMemberSelect');
+            if (memberSelect) {
+                const handleMemberColor = () => {
+                    if (memberSelect.value) {
+                        memberSelect.classList.remove('text-[#8f9bb3]');
+                        memberSelect.classList.add('text-white');
+                    } else {
+                        memberSelect.classList.remove('text-white');
+                        memberSelect.classList.add('text-[#8f9bb3]');
+                    }
+                };
+                memberSelect.addEventListener('change', handleMemberColor);
+                handleMemberColor(); // Initial run
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('action') === 'new') {
                 openNewTransactionModal();
@@ -487,7 +522,7 @@
 
         async function showTransactionDetail(txId) {
             try {
-                const response = await fetch(`{{ url('/simpanan') }}/${txId}`);
+                const response = await fetch(`/simpanan/${txId}`);
                 if (!response.ok) throw new Error('Failed to fetch transaction details');
                 const tx = await response.json();
 
@@ -524,7 +559,7 @@
 
         async function showTransactionEdit(txId) {
             try {
-                const response = await fetch(`{{ url('/simpanan') }}/${txId}`);
+                const response = await fetch(`/simpanan/${txId}`);
                 if (!response.ok) throw new Error('Failed to fetch transaction details');
                 const tx = await response.json();
 
@@ -537,7 +572,7 @@
 
                 // Set form action dynamically
                 const form = document.getElementById('editTransactionForm');
-                form.action = `{{ url('/simpanan') }}/${tx.id}`;
+                form.action = `/simpanan/${tx.id}`;
 
                 document.getElementById('editTransactionModal').classList.remove('hidden');
             } catch (err) {
