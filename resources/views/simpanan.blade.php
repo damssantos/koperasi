@@ -829,8 +829,11 @@
             }
         }
 
+        let activeRangeType = 'monthly';
+
         // Initialize Chart.js
         function initChart(rangeType) {
+            activeRangeType = rangeType;
             const ctx = document.getElementById('simpananChart').getContext('2d');
             const dataConfig = chartDataSets[rangeType];
 
@@ -844,6 +847,11 @@
             gradientFill.addColorStop(0, 'rgba(47, 84, 235, 0.25)'); // Indigo/Blue translucent
             gradientFill.addColorStop(1, 'rgba(47, 84, 235, 0)');    // Transparent
 
+            const isLight = document.body.classList.contains('light');
+            const gridColor = isLight ? '#cbd5e1' : '#1f243d';
+            const tickColor = isLight ? '#64748b' : '#7c83a7';
+            const pointBorderColor = isLight ? '#ffffff' : '#16192b';
+
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -854,7 +862,7 @@
                         borderColor: '#2f54eb',
                         borderWidth: 2.5,
                         pointBackgroundColor: '#2f54eb',
-                        pointBorderColor: '#16192b',
+                        pointBorderColor: pointBorderColor,
                         pointBorderWidth: 2,
                         pointRadius: rangeType === 'weekly' ? 5 : 3,
                         pointHoverRadius: 6,
@@ -893,16 +901,16 @@
                                 display: false
                             },
                             ticks: {
-                                color: '#7c83a7',
+                                color: tickColor,
                                 font: { size: 9, family: 'Plus Jakarta Sans' }
                             }
                         },
                         y: {
                             grid: {
-                                color: '#1f243d'
+                                color: gridColor
                             },
                             ticks: {
-                                color: '#7c83a7',
+                                color: tickColor,
                                 font: { size: 9, family: 'Plus Jakarta Sans' },
                                 callback: function(value) {
                                     return `Rp ${value}${chartDataSets.unit === 'Miliar' ? 'M' : 'Jt'}`;
@@ -930,5 +938,10 @@
 
             initChart(rangeType);
         }
+
+        // Listen for theme changes to re-render chart with matching grid color
+        window.addEventListener('themechanged', (e) => {
+            initChart(activeRangeType);
+        });
     </script>
 @endsection

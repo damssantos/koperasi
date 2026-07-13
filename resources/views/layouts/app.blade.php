@@ -69,33 +69,10 @@
             /* Sidebar collapsed state rules on Desktop */
             @media (min-width: 1024px) {
                 .sidebar-collapsed aside {
-                    width: 5rem; /* w-20 */
+                    transform: translateX(-100%);
                 }
                 .sidebar-collapsed #main-container {
-                    padding-left: 5rem; /* lg:pl-20 */
-                }
-                .sidebar-collapsed aside .logo-full {
-                    display: none;
-                }
-                .sidebar-collapsed aside .logo-mini {
-                    display: block;
-                }
-                .sidebar-collapsed aside nav a span {
-                    display: none;
-                }
-                .sidebar-collapsed aside nav a {
-                    justify-content: center;
                     padding-left: 0;
-                    padding-right: 0;
-                }
-                .sidebar-collapsed aside .footer-full {
-                    display: none;
-                }
-                .sidebar-collapsed aside .footer-mini {
-                    display: block;
-                }
-                .sidebar-collapsed aside .sidebar-logos {
-                    display: none;
                 }
             }
 
@@ -151,11 +128,11 @@
 
             /* === 1. GLOBAL FOUNDATION === */
             body.light {
-                background-color: #f4f6fa !important;
+                background-color: #EFF6FF !important;
                 color: #1e293b !important;
             }
             body.light #main-container {
-                background-color: #f4f6fa !important;
+                background-color: #EFF6FF !important;
             }
 
             /* === 2. NAVBAR (Top Header) === */
@@ -280,6 +257,9 @@
             body.light main .bg-\[\#07080f\]\/30 {
                 background-color: #f8fafc !important;
                 border-color: #e2e8f0 !important;
+            }
+            body.light main .bg-\[\#1f243d\] {
+                background-color: #cbd5e1 !important;
             }
 
             /* === 7. TABLES (All pages) === */
@@ -712,6 +692,7 @@
                 const isLight = document.body.classList.contains('light');
                 localStorage.setItem('theme', isLight ? 'light' : 'dark');
                 updateThemeUI(isLight);
+                window.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: isLight ? 'light' : 'dark' } }));
             }
 
             function toggleLanguageSubmenu(event) {

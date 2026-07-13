@@ -300,8 +300,6 @@
                         <th class="py-3.5 px-4 font-semibold">Waktu</th>
                         <th class="py-3.5 px-4 font-semibold">ID Transaksi</th>
                         <th class="py-3.5 px-4 font-semibold">Jenis Transaksi</th>
-                        <th class="py-3.5 px-4 font-semibold">Cara Bayar</th>
-                        <th class="py-3.5 px-4 font-semibold">Petugas</th>
                         <th class="py-3.5 px-4 font-semibold text-right">Jumlah Uang</th>
                     </tr>
                 </thead>
@@ -315,21 +313,19 @@
                         $sign = $isIncome ? '+' : '-';
                     @endphp
                     <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                        <td class="py-4 px-4 text-sm text-slate-400">{{ $tx->tanggal_transaksi->format('d M Y, H:i') }} WIB</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3] font-medium">TX-{{ str_pad($tx->id, 5, '0', STR_PAD_LEFT) }}</td>
-                        <td class="py-4 px-4 text-sm">
+                        <td class="py-4 px-4 text-xs text-slate-400 font-medium">{{ $tx->tanggal_transaksi->format('d M Y, H:i') }} WIB</td>
+                        <td class="py-4 px-4 text-xs text-[#8f9bb3] font-medium">TX-{{ str_pad($tx->id, 5, '0', STR_PAD_LEFT) }}</td>
+                        <td class="py-4 px-4 text-xs">
                             <div class="flex items-center gap-2 text-slate-400">
                                 <span class="w-2 h-2 rounded-full {{ $dotColor }} {{ $pulseClass }} shadow-sm shadow-emerald-500/50"></span>
                                 <span>Simpanan {{ $tx->jenis_simpanan }}</span>
                             </div>
                         </td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Transfer Bank</td>
-                        <td class="py-4 px-4 text-sm text-[#8f9bb3]">Admin Koperasi</td>
-                        <td class="py-4 px-4 text-sm font-bold {{ $textClass }} text-right">{{ $sign }} Rp {{ number_format($tx->nominal, 0, ',', '.') }}</td>
+                        <td class="py-4 px-4 text-xs font-bold {{ $textClass }} text-right">{{ $sign }} Rp {{ number_format($tx->nominal, 0, ',', '.') }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="py-8 text-center text-xs text-[#8f9bb3]">Belum ada transaksi simpanan tercatat.</td>
+                        <td colspan="4" class="py-8 text-center text-xs text-[#8f9bb3]">Belum ada transaksi simpanan tercatat.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -387,6 +383,11 @@
         gradientEmerald.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
         gradientEmerald.addColorStop(1, 'rgba(16, 185, 129, 0)');
 
+        const isLight = document.body.classList.contains('light');
+        const gridColor = isLight ? '#cbd5e1' : '#1f243d';
+        const tickColor = isLight ? '#64748b' : '#8f9bb3';
+        const pointBorderColor = isLight ? '#ffffff' : '#0f111a';
+
         const cashFlowChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -401,7 +402,7 @@
                         fill: true,
                         tension: 0.4,
                         pointBackgroundColor: '#2f54eb',
-                        pointBorderColor: '#0f111a',
+                        pointBorderColor: pointBorderColor,
                         pointBorderWidth: 2,
                         pointRadius: 5,
                         pointHoverRadius: 7,
@@ -415,7 +416,7 @@
                         fill: true,
                         tension: 0.4,
                         pointBackgroundColor: '#fb7185',
-                        pointBorderColor: '#0f111a',
+                        pointBorderColor: pointBorderColor,
                         pointBorderWidth: 2,
                         pointRadius: 5,
                         pointHoverRadius: 7,
@@ -429,7 +430,7 @@
                         fill: true,
                         tension: 0.4,
                         pointBackgroundColor: '#34d399',
-                        pointBorderColor: '#0f111a',
+                        pointBorderColor: pointBorderColor,
                         pointBorderWidth: 2,
                         pointRadius: 5,
                         pointHoverRadius: 7,
@@ -463,9 +464,9 @@
                 },
                 scales: {
                     y: {
-                        grid: { color: '#1f243d', drawTicks: false },
+                        grid: { color: gridColor, drawTicks: false },
                         ticks: {
-                            color: '#8f9bb3',
+                            color: tickColor,
                             callback: function(value) {
                                 if (value >= 1000000000) { return (value / 1000000000).toFixed(1) + ' M'; }
                                 if (value >= 1000000) { return (value / 1000000).toFixed(0) + ' Jt'; }
@@ -473,7 +474,7 @@
                             }
                         }
                     },
-                    x: { grid: { display: false }, ticks: { color: '#8f9bb3' } }
+                    x: { grid: { display: false }, ticks: { color: tickColor } }
                 }
             }
         });
@@ -494,5 +495,23 @@
             cashFlowChart.data.datasets[2].data = chartData[period].saldo;
             cashFlowChart.update();
         }
+
+        // Listen for theme changes to re-render chart with matching colors
+        window.addEventListener('themechanged', (e) => {
+            const currentIsLight = document.body.classList.contains('light');
+            const newGridColor = currentIsLight ? '#cbd5e1' : '#1f243d';
+            const newTickColor = currentIsLight ? '#64748b' : '#8f9bb3';
+            const newPointBorderColor = currentIsLight ? '#ffffff' : '#0f111a';
+
+            cashFlowChart.options.scales.y.grid.color = newGridColor;
+            cashFlowChart.options.scales.y.ticks.color = newTickColor;
+            cashFlowChart.options.scales.x.ticks.color = newTickColor;
+            
+            cashFlowChart.data.datasets[0].pointBorderColor = newPointBorderColor;
+            cashFlowChart.data.datasets[1].pointBorderColor = newPointBorderColor;
+            cashFlowChart.data.datasets[2].pointBorderColor = newPointBorderColor;
+            
+            cashFlowChart.update();
+        });
     </script>
 @endsection
