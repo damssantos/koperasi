@@ -31,4 +31,9 @@ class AnggotaKoperasi extends Model
     {
         return $this->hasMany(Pinjaman::class, 'anggota_id');
     }
+
+    public function jurnalKeuangan()
+    {
+        return $this->hasMany(JurnalKeuangan::class, 'anggota_id');
+    }
 }
