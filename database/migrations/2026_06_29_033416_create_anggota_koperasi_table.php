@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('anggota_koperasi', function (Blueprint $table) {
+            $table->id();
+            $table->string('id_anggota')->unique()->nullable();
+            $table->string('nama');
+            $table->string('no_hp')->nullable();
+            $table->date('tanggal_join')->nullable();
+            $table->integer('simpanan_pokok')->default(0);
+            $table->integer('simpanan_wajib')->default(0);
+            $table->integer('simpanan_sukarela')->default(0);
+            $table->integer('total_saldo')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('anggota_koperasi');
+    }
+};
