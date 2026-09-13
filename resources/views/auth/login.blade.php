@@ -130,16 +130,7 @@
 
                 <!-- Password -->
                 <div class="space-y-1.5">
-                  <div class="flex items-center justify-between">
-    <label class="block text-xs font-bold auth-muted">
-        Kata Sandi
-    </label>
-
-    <a href="{{ route('password.request') }}"
-       class="text-xs font-semibold text-[#2f54eb] hover:text-[#1d39c4] hover:underline transition-colors">
-        Lupa Kata Sandi?
-    </a>
-</div>
+                    <label class="block text-xs font-bold auth-muted">Kata Sandi</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[var(--text-muted)]">
                             <i data-lucide="lock" class="w-4 h-4"></i>

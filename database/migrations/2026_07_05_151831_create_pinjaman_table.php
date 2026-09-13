@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('jumlah_cicilan_dibayar'); // How many installments paid
             $table->bigInteger('sisa_pinjaman');
             $table->date('tanggal_pengajuan');
-            $table->string('bukti_transfer')->nullable();
             $table->string('status'); // Aktif, Menunggak, Lunas
             $table->timestamps();
         });

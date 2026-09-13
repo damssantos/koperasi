@@ -12,7 +12,6 @@ class TransaksiSimpanan extends Model
     protected $fillable = [
         'anggota_id',
         'jenis_simpanan',
-        'arah',
         'nominal',
         'status',
         'tanggal_transaksi',

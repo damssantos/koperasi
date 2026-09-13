@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-       
+        // Seed initial 10 transactions from the design image
         $data = [
             [
                 'tanggal' => '2023-10-16 09:10:00',

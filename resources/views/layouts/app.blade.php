@@ -517,50 +517,6 @@
             .swal2-popup .swal2-actions {
                 margin-top: 0.5rem !important;
             }
-
-            /* Mobile usability: preserve the existing layout while making dense
-               data screens, dialogs, and navigation practical on small devices. */
-            @media (max-width: 639px) {
-                html, body {
-                    overflow-x: hidden;
-                }
-                header {
-                    padding-left: 1rem !important;
-                    padding-right: 1rem !important;
-                }
-                header .logo-full {
-                    display: none;
-                }
-                #profileDropdown {
-                    width: min(16rem, calc(100vw - 2rem));
-                }
-                main {
-                    padding: 1rem !important;
-                    row-gap: 1.5rem !important;
-                }
-                main > .rounded-xl,
-                main > .rounded-2xl {
-                    padding: 1rem;
-                }
-                .overflow-x-auto > table {
-                    min-width: 40rem;
-                }
-                .fixed.inset-0:not(#global-loader) {
-                    align-items: flex-start !important;
-                    overflow-y: auto;
-                    padding: 0.75rem !important;
-                }
-                .fixed.inset-0:not(#global-loader) > div {
-                    max-height: calc(100dvh - 1.5rem);
-                    margin-top: 0.75rem;
-                    margin-bottom: 0.75rem;
-                    overflow-y: auto;
-                    padding: 1rem !important;
-                }
-                .swal2-popup {
-                    width: calc(100% - 1.5rem) !important;
-                }
-            }
         </style>
         @yield('styles')
     </head>
@@ -686,13 +642,6 @@
                 const sidebar = document.getElementById('sidebar');
                 sidebar.classList.toggle('-translate-x-full');
             }
-
-            // Keep the mobile drawer from remaining open after a viewport change.
-            window.addEventListener('resize', function() {
-                if (window.innerWidth >= 1024) {
-                    document.getElementById('sidebar')?.classList.add('-translate-x-full');
-                }
-            });
 
             // Toggle Minimize Sidebar (Desktop Collapse)
             function toggleSidebarCollapse() {

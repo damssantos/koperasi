@@ -19,11 +19,8 @@ class ProfileController extends Controller
 
         $request->validate([
             'no_hp' => 'required|numeric|digits_between:10,15',
-
             'nama_bank' => 'nullable|string|max:100',
-
             'no_rekening' => 'nullable|numeric|digits_between:10,20',
-
             'alamat' => 'required|string|min:10',
         ], [
             'no_hp.required' => 'Nomor handphone wajib diisi.',
@@ -42,11 +39,8 @@ class ProfileController extends Controller
 
         $user->update([
             'no_hp' => $request->no_hp,
-
             'nama_bank' => $request->nama_bank,
-
             'no_rekening' => $request->no_rekening,
-
             'alamat' => $request->alamat,
         ]);
 

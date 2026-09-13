@@ -7,10 +7,13 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+<<<<<<< HEAD
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Api\LaporanController;
 use App\Http\Controllers\Api\SimpananController;
 
+=======
+>>>>>>> origin/main
 use App\Models\AnggotaKoperasi;
 use App\Models\Pinjaman;
 use App\Models\TransaksiKasUsaha;
@@ -43,6 +46,7 @@ Route::get('/', function () {
 */
 
 Route::middleware('guest')->group(function () {
+<<<<<<< HEAD
 
     // ---- Login ----
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -244,6 +248,16 @@ Route::post('/laporan-keuangan/kirim-email', [LaporanController::class, 'kirimEm
 | format, bukan menyamaratakan middleware-nya.
 */
 
+=======
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+}); 
+
+// 3. Proteksi semua halaman dashboard, anggota, DAN profile baru milik mereka
+>>>>>>> origin/main
 Route::middleware('auth')->group(function () {
 
     /*
@@ -655,6 +669,7 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('simpanan')->with('success', 'Transaksi simpanan berhasil disimpan ke database.');
     })->name('simpanan.store');
 
+<<<<<<< HEAD
     // Static export endpoints harus didaftarkan sebelum {transaction} di
     // bawah, kalau tidak "print"/"download-pdf" akan dianggap sebagai ID.
     Route::get('/simpanan/print', function () {
@@ -750,6 +765,8 @@ Route::middleware('auth')->group(function () {
         // ...
     });
 
+=======
+>>>>>>> origin/main
     Route::get('/simpanan/{transaction}', function (App\Models\TransaksiSimpanan $transaction) {
         $dateNum = $transaction->tanggal_transaksi->format('Ymd');
         $formattedId = 'TX-' . $dateNum . '-' . str_pad($transaction->id, 3, '0', STR_PAD_LEFT);
@@ -889,11 +906,42 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('simpanan')->with('success', 'Transaksi simpanan berhasil diperbarui.');
     })->name('simpanan.update');
 
+<<<<<<< HEAD
     /*
     |----------------------------------------------------------------------
     | Pinjaman
     |----------------------------------------------------------------------
     */
+=======
+    Route::get('/simpanan/print', function () {
+        $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
+
+        return view('exports.simpanan-pdf', compact('anggota'));
+    })->name('simpanan.print');
+
+    Route::get('/simpanan/download-pdf', function () {
+        $anggota = AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
+        $rows = $anggota->map(fn ($item, $index) => [
+            $index + 1,
+            $item->id_anggota ?? 'AGT-' . str_pad($item->id, 5, '0', STR_PAD_LEFT),
+            $item->nama,
+            'Rp ' . number_format((int) $item->simpanan_pokok, 0, ',', '.'),
+            'Rp ' . number_format((int) $item->simpanan_wajib, 0, ',', '.'),
+            'Rp ' . number_format((int) $item->simpanan_sukarela, 0, ',', '.'),
+            'Rp ' . number_format((int) $item->total_saldo, 0, ',', '.'),
+        ])->all();
+
+        return response(SimplePdf::table('Laporan Simpanan', ['No', 'ID Anggota', 'Nama', 'Pokok', 'Wajib', 'Sukarela', 'Total'], $rows, [
+            'Total Simpanan: Rp ' . number_format((int) $anggota->sum('total_saldo'), 0, ',', '.'),
+            'Simpanan Pokok: Rp ' . number_format((int) $anggota->sum('simpanan_pokok'), 0, ',', '.'),
+            'Simpanan Wajib: Rp ' . number_format((int) $anggota->sum('simpanan_wajib'), 0, ',', '.'),
+            'Simpanan Sukarela: Rp ' . number_format((int) $anggota->sum('simpanan_sukarela'), 0, ',', '.'),
+        ]), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="laporan-simpanan.pdf"',
+        ]);
+    })->name('simpanan.downloadPdf');
+>>>>>>> origin/main
 
     Route::get('/pinjaman', function () {
         $loans = App\Models\Pinjaman::with('anggota')
@@ -1429,5 +1477,9 @@ Route::middleware('auth')->group(function () {
     |----------------------------------------------------------------------
     */
 
+<<<<<<< HEAD
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+=======
+
+>>>>>>> origin/main

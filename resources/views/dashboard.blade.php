@@ -11,9 +11,15 @@
         </div>
         
         <!-- Action Buttons Group -->
-        <div class="flex flex-wrap items-center gap-3">
-           
-            
+        <div class="flex items-center gap-3">
+            <a href="{{ route('simpanan.print') }}" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#1f243d] rounded-lg bg-[#16192b] text-[#8f9bb3] hover:text-white hover:bg-[#1f243d] transition duration-150 text-xs font-semibold">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>Unduh Laporan</span>
+            </a>
+            <a href="{{ route('simpanan') }}?action=new" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Transaksi Baru</span>
+            </a>
         </div>
     </div>
 
@@ -65,7 +71,7 @@
                     <p class="text-[#8f9bb3] text-xs mt-1 max-w-2xl leading-relaxed">Pantau data tabungan, pinjaman berjalan, dan laporan keuangan kas secara real-time dari satu dashboard terpadu.</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-4 pt-4 border-t border-[#1f243d]">
+                <div class="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-[#1f243d]">
                     <div class="bg-[#07080f]/40 border border-[#1f243d] rounded-lg p-3">
                         <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-widest block">Modul Aktif</span>
                         <span class="text-xs lg:text-sm font-extrabold text-white mt-1 block">4 Modul</span>

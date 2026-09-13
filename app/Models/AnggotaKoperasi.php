@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AnggotaKoperasi extends Model
 {
     protected $table = 'anggota_koperasi';
+
     protected $fillable = [
         'user_id',
         'id_anggota',
@@ -40,7 +41,7 @@ class AnggotaKoperasi extends Model
         return $this->hasMany(JurnalKeuangan::class, 'anggota_id');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

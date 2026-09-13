@@ -19,8 +19,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->text('alamat');
             $table->string('no_hp');
+
             $table->string('no_rekening')->nullable();
             $table->string('nama_bank')->nullable();
+
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

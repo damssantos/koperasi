@@ -310,7 +310,7 @@
                 </div>
 
                 <!-- Nominal & Tanggal Grid Row -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
                     <!-- Nominal * -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nominal Simpanan *</label>
