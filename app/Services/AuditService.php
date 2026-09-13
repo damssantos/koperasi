@@ -2,21 +2,42 @@
 
 namespace App\Services;
 
-use App\Models\AuditLog;
+use App\Models\ActivityLog;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class AuditService
 {
-    public static function catat(string $aksi, Model $model, ?array $sebelum = null, ?array $sesudah = null): void
-    {
-        AuditLog::create([
-            'user_id' => auth()->id(),
-            'aksi' => $aksi,
-            'subjek_tipe' => $model::class,
-            'subjek_id' => $model->getKey(),
-            'data_sebelum' => $sebelum,
-            'data_sesudah' => $sesudah,
-            'ip_address' => request()?->ip(),
+    /**
+     * Mencatat aktivitas user.
+     */
+    public static function catat(
+        string $aktivitas,
+        ?Model $subject = null,
+        ?array $dataSebelum = null,
+        ?array $dataSesudah = null,
+        ?string $deskripsi = null
+    ): ActivityLog {
+        return ActivityLog::create([
+            'user_id' => Auth::id(),
+
+            'aktivitas' => $aktivitas,
+
+            'deskripsi' => $deskripsi,
+
+            'data_sebelum' => $dataSebelum,
+
+            'data_sesudah' => $dataSesudah,
+
+            'subject_type' => $subject
+                ? get_class($subject)
+                : null,
+
+            'subject_id' => $subject?->getKey(),
+
+            'ip_address' => request()->ip(),
+
+            'user_agent' => request()->userAgent(),
         ]);
     }
 }

@@ -14,8 +14,25 @@
             <h2 class="text-2xl font-bold text-white tracking-tight">Data Anggota</h2>
             <p class="text-xs text-[#8f9bb3] mt-0.5">Manajemen keanggotaan dan simpanan pokok wajib koperasi.</p>
         </div>
-        
-        <div class="flex items-center gap-3">
+
+        <div class="flex items-center gap-3 flex-wrap">
+            
+            <a  href="{{ route('anggota.export') }}"
+                class="inline-flex items-center gap-2 px-3.5 py-1.5  bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-emerald-500/10""
+            >
+                <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
+                <span>Export Excel</span>
+            </a>
+
+            <button
+                type="button"
+                onclick="openImportAnggotaModal()"
+                class="inline-flex items-center gap-2 px-3.5 py-1.5  bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10"
+            >
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Import Excel</span>
+            </button>
+
             <button onclick="openNewMemberModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
                 <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
                 <span>+ Tambah Anggota</span>
@@ -236,6 +253,85 @@
         }
     </style>
 
+    <!-- Import Anggota Modal -->
+    <div
+        id="importAnggotaModal"
+        class="fixed inset-0 z-[99] hidden items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-lg transition-opacity"
+    >
+        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center pb-2">
+                <div>
+                    <h3 class="text-base font-bold text-white">Import Data Anggota</h3>
+                    <p class="text-xs text-[#8f9bb3] mt-0.5">Import data anggota menggunakan file Excel</p>
+                </div>
+                <button
+                    type="button"
+                    onclick="closeImportAnggotaModal()"
+                    class="text-slate-400 hover:text-white transition-colors"
+                >
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Info Box -->
+            <div class="p-4 bg-[#07080f]/60 border border-[#1f243d] rounded-xl">
+                <p class="text-xs font-semibold text-blue-400">Format Excel</p>
+                <p class="text-[10px] text-[#8f9bb3] mt-1">Gunakan template agar format kolom sesuai dengan sistem.</p>
+
+                
+                    <a href="{{ route('anggota.template') }}"
+                    class="inline-flex items-center gap-2 mt-3 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold"
+                >
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    Download Template
+                </a>
+            </div>
+
+            <form
+                action="{{ route('anggota.import') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                class="space-y-4"
+            >
+                @csrf
+
+                <div>
+                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5">Pilih File Excel</label>
+                    <input
+                        type="file"
+                        name="file"
+                        accept=".xlsx,.xls"
+                        required
+                        class="block w-full text-xs text-[#8f9bb3] bg-[#07080f] border border-[#1f243d] rounded-lg p-3
+                               file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0
+                               file:bg-blue-600 file:text-white file:text-xs file:font-semibold
+                               hover:file:bg-blue-700 focus:outline-none focus:border-blue-500"
+                    >
+                    <p class="text-[10px] text-slate-500 mt-2">Format: .xlsx atau .xls — maksimal 5 MB</p>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2 justify-end">
+                    <button
+                        type="button"
+                        onclick="closeImportAnggotaModal()"
+                        class="btn-edit-cancel px-5 py-2.5 rounded-lg text-xs font-semibold cursor-pointer"
+                    >
+                        Batal
+                    </button>
+                    <button
+                        type="submit"
+                        class="btn-edit-save inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold cursor-pointer"
+                    >
+                        <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                        Import Excel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div id="deleteConfirmModal" class="fixed inset-0 z-[99] flex items-center justify-center p-4 bg-[#07080f]/75 backdrop-blur-lg hidden transition-opacity">
         <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5" style="max-width: 448px; width: 100%;">
@@ -273,6 +369,21 @@
 
 @section('scripts')
     <script>
+
+        function openImportAnggotaModal() {
+            const modal = document.getElementById('importAnggotaModal');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeImportAnggotaModal() {
+            const modal = document.getElementById('importAnggotaModal');
+
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
         function openDeleteModal(id, name) {
             const form = document.getElementById('deleteMemberForm');
             form.action = `/anggota/${id}`;

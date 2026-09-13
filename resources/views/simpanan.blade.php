@@ -46,7 +46,25 @@
         </div>
         
         <!-- Action Buttons Group -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3"
+        >
+         <a
+        href="{{ route('simpanan.export') }}"
+        class="inline-flex items-center gap-2 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10"
+    >
+        <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
+        <span>Export Excel</span>
+    </a>
+    
+    <button
+    type="button"
+    onclick="openImportSimpananModal()"
+    class="inline-flex items-center gap-2 px-3.5 py-2 bg-green-600 hover:bg-green-700 active:bg-green-800 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-green-500/10"
+>
+    <i data-lucide="file-up" class="w-3.5 h-3.5"></i>
+    <span>Import Excel</span>
+</button>
+
             <button onclick="openNewTransactionModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Tambah Simpanan</span>
@@ -125,8 +143,10 @@
                 </div>
                 <!-- Time Range -->
                 <div class="bg-[#07080f] border border-[#1f243d] rounded-lg p-0.5 flex">
+                    <button onclick="changeChartRange('daily')" class="chart-tab px-2.5 py-1 text-[10px] font-bold uppercase rounded-md text-[#8f9bb3] hover:text-white transition duration-150">Harian</button>
                     <button onclick="changeChartRange('weekly')" class="chart-tab px-2.5 py-1 text-[10px] font-bold uppercase rounded-md text-[#8f9bb3] hover:text-white transition duration-150">Mingguan</button>
                     <button onclick="changeChartRange('monthly')" class="chart-tab px-2.5 py-1 text-[10px] font-bold uppercase rounded-md bg-[#2f54eb] text-white transition duration-150">Bulanan</button>
+                    <button onclick="changeChartRange('quarterly')" class="chart-tab px-2.5 py-1 text-[10px] font-bold uppercase rounded-md text-[#8f9bb3] hover:text-white transition duration-150">Triwulan</button>
                     <button onclick="changeChartRange('yearly')" class="chart-tab px-2.5 py-1 text-[10px] font-bold uppercase rounded-md text-[#8f9bb3] hover:text-white transition duration-150">Tahunan</button>
                 </div>
             </div>
@@ -457,11 +477,211 @@
             </form>
         </div>
     </div>
+
+    {{-- MODAL IMPORT SIMPANAN --}}
+{{-- Modal Import Simpanan --}}
+<div
+    id="importSimpananModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 px-4"
+>
+    <div
+        class="w-full max-w-lg bg-[#151827] rounded-2xl shadow-2xl border border-[#252a3d] overflow-hidden"
+    >
+
+        {{-- Header --}}
+        <div class="flex items-center justify-between px-6 py-5">
+            <div>
+                <h3 class="text-lg font-bold text-white">
+                    Import Data Simpanan
+                </h3>
+
+                <p class="text-xs text-gray-400 mt-1">
+                    Import data simpanan menggunakan file Excel.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                onclick="closeImportSimpananModal()"
+                class="text-gray-400 hover:text-white transition"
+            >
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        {{-- Form --}}
+        <form
+            action="{{ route('simpanan.import') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+            @csrf
+
+            <div class="px-6 pb-6 space-y-5">
+
+                {{-- Format Excel --}}
+                <div
+                    class="p-4 bg-[#0d101c] border border-[#252a3d] rounded-xl"
+                >
+                    <div class="flex items-start gap-3">
+
+                        {{-- Icon --}}
+                        <div
+                            class="p-2 bg-blue-600/20 rounded-lg flex-shrink-0"
+                        >
+                            <i
+                                data-lucide="file-spreadsheet"
+                                class="w-5 h-5 text-blue-400"
+                            ></i>
+                        </div>
+
+                        {{-- Text --}}
+                        <div class="flex-1">
+                            <p class="text-sm font-bold text-white">
+                                Format Excel
+                            </p>
+
+                            <p class="text-xs text-gray-400 mt-1">
+                                Gunakan template agar format kolom sesuai dengan sistem.
+                            </p>
+
+                            {{-- Download Template --}}
+                            <a
+                                href="{{ route('simpanan.template') }}"
+                                class="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition"
+                            >
+                                <i
+                                    data-lucide="download"
+                                    class="w-4 h-4"
+                                ></i>
+
+                                Download Template
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                {{-- Upload File --}}
+                <div>
+                    <label
+                        class="block text-xs font-semibold text-gray-400 mb-2"
+                    >
+                        Pilih File Excel
+                    </label>
+
+                    <div
+                        class="bg-[#080a12] border border-[#252a3d] rounded-xl p-3"
+                    >
+                        <input
+                            type="file"
+                            name="file"
+                            accept=".xlsx,.xls"
+                            required
+                            class="block w-full text-sm text-gray-400
+                            file:mr-4
+                            file:py-2
+                            file:px-4
+                            file:rounded-lg
+                            file:border-0
+                            file:bg-blue-600
+                            file:text-white
+                            file:font-semibold
+                            hover:file:bg-blue-500
+                            cursor-pointer"
+                        >
+                    </div>
+
+                    <p class="text-[11px] text-gray-500 mt-2">
+                        Format: .xlsx atau .xls — maksimal 5 MB
+                    </p>
+                </div>
+
+                {{-- Action --}}
+                <div class="flex items-center justify-end gap-3 pt-2">
+
+                    {{-- Batal --}}
+                    <button
+                        type="button"
+                        onclick="closeImportSimpananModal()"
+                        class="px-5 py-2.5 bg-[#344054] hover:bg-[#475467] text-white text-sm font-bold rounded-lg transition"
+                    >
+                        Batal
+                    </button>
+
+                    {{-- Import --}}
+                    <button
+                        type="submit"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-lg transition shadow-lg shadow-blue-600/20"
+                    >
+                        <i
+                            data-lucide="upload"
+                            class="w-4 h-4"
+                        ></i>
+
+                        Import Excel
+                    </button>
+
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+            {{-- Footer --}}
+            <div class="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50 rounded-b-2xl">
+
+                <button
+                    type="button"
+                    onclick="closeImportSimpananModal()"
+                    class="px-4 py-2 text-sm font-semibold text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100"
+                >
+                    Batal
+                </button>
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-green-600 rounded-lg hover:bg-green-700"
+                >
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                    Import Data
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
 @endpush
 @endsection
 
 @section('scripts')
     <script>
+
+        function openImportSimpananModal() {
+    const modal = document.getElementById('importSimpananModal');
+
+    if (!modal) {
+        console.error('Modal Import Simpanan tidak ditemukan.');
+        return;
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeImportSimpananModal() {
+    const modal = document.getElementById('importSimpananModal');
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
         const originalTransactions = @json($transactions);
 
         // Active State
@@ -475,6 +695,15 @@
 
         // Chart Data Definitions
         const chartDataSets = @json($chartDataSets);
+
+        // Maps rangeType keys -> the label text shown on the chart tab buttons (lowercase, as rendered)
+        const rangeLabels = {
+            daily: 'harian',
+            weekly: 'mingguan',
+            monthly: 'bulanan',
+            quarterly: 'triwulan',
+            yearly: 'tahunan'
+        };
 
         // Initialize Page
         document.addEventListener('DOMContentLoaded', () => {
@@ -833,9 +1062,17 @@
 
         // Initialize Chart.js
         function initChart(rangeType) {
+            const dataConfig = chartDataSets[rangeType];
+
+            // Guard: if the backend hasn't sent data for this range yet, don't crash silently later —
+            // log clearly and bail out, keeping whatever chart was last shown.
+            if (!dataConfig) {
+                console.error(`chartDataSets["${rangeType}"] tidak ditemukan. Pastikan controller mengirim data untuk rentang ini.`);
+                return;
+            }
+
             activeRangeType = rangeType;
             const ctx = document.getElementById('simpananChart').getContext('2d');
-            const dataConfig = chartDataSets[rangeType];
 
             // Destroy existing chart to prevent garbage canvas overlap on range switches
             if (chartInstance) {
@@ -864,7 +1101,7 @@
                         pointBackgroundColor: '#2f54eb',
                         pointBorderColor: pointBorderColor,
                         pointBorderWidth: 2,
-                        pointRadius: rangeType === 'weekly' ? 5 : 3,
+                        pointRadius: rangeType === 'weekly' || rangeType === 'daily' ? 5 : 3,
                         pointHoverRadius: 6,
                         tension: 0.4, // Curved smooth lines
                         fill: true,
@@ -922,12 +1159,14 @@
             });
         }
 
-        // Switch chart range (weekly/monthly/yearly)
+        // Switch chart range (daily/weekly/monthly/quarterly/yearly)
         function changeChartRange(rangeType) {
-            // Update active state class in range tabs
+            // Update active state class in range tabs, using the explicit label map
+            // (fixes the old ternary that only recognized 'weekly'/'monthly' and defaulted
+            // everything else to 'tahunan', which mis-highlighted the tab for any other range).
             const tabs = document.querySelectorAll('.chart-tab');
             tabs.forEach(tab => {
-                if (tab.textContent.trim().toLowerCase() === (rangeType === 'weekly' ? 'mingguan' : rangeType === 'monthly' ? 'bulanan' : 'tahunan')) {
+                if (tab.textContent.trim().toLowerCase() === rangeLabels[rangeType]) {
                     tab.classList.add('bg-[#2f54eb]', 'text-white');
                     tab.classList.remove('text-[#8f9bb3]', 'hover:text-white');
                 } else {

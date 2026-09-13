@@ -79,15 +79,16 @@ class PinjamanController extends Controller
         ]);
 
         $pinjaman = Pinjaman::create([
-            'anggota_id' => $data['anggota_id'],
-            'nominal_pinjaman' => $data['nominal_pinjaman'],
-            'tenor' => $data['tenor'],
-            'jumlah_cicilan_dibayar' => 0,
-            'sisa_pinjaman' => $data['nominal_pinjaman'],
-            'tanggal_pengajuan' => $data['tanggal_pengajuan'],
-            'status' => 'Pengajuan',
-            'keterangan' => $data['keterangan'] ?? null,
-        ]);
+    'anggota_id' => $data['anggota_id'],
+    'nominal_pinjaman' => $data['nominal_pinjaman'],
+    'tenor' => $data['tenor'],
+    'jumlah_cicilan_dibayar' => 0,
+    'sisa_pinjaman' => $data['nominal_pinjaman'],
+    'tanggal_pengajuan' => $data['tanggal_pengajuan'],
+    'status' => 'Pengajuan',
+    'status_persetujuan' => 'Menunggu',
+    'keterangan' => $data['keterangan'] ?? null,
+]);
 
         AuditService::catat(
             'buat_pengajuan_pinjaman',
@@ -221,7 +222,56 @@ class PinjamanController extends Controller
         ]);
     }
 
+/**
+ * Menyetujui atau menolak pengajuan pinjaman.
+ */
+public function approval(Request $request, Pinjaman $pinjaman)
+{
+    $data = $request->validate([
+        'status_persetujuan' => [
+            'required',
+            'in:Disetujui,Ditolak',
+        ],
+        'keterangan' => [
+            'nullable',
+            'string',
+            'max:1000',
+        ],
+    ]);
 
+    // Approval hanya boleh dilakukan pada pinjaman yang masih diajukan
+    if ($pinjaman->status !== 'Pengajuan') {
+        return response()->json([
+            'message' => 'Pinjaman ini tidak sedang dalam status pengajuan.',
+        ], 422);
+    }
+
+    $before = $pinjaman->toArray();
+
+    DB::transaction(function () use ($pinjaman, $data) {
+
+        $pinjaman->update([
+            'status_persetujuan' => $data['status_persetujuan'],
+            'keterangan' => $data['keterangan'] ?? $pinjaman->keterangan,
+            'diperbarui_oleh' => auth()->id(),
+        ]);
+
+    });
+
+    AuditService::catat(
+        'approval_pinjaman',
+        $pinjaman,
+        $before,
+        $pinjaman->fresh()->toArray()
+    );
+
+    return response()->json([
+        'message' => $data['status_persetujuan'] === 'Disetujui'
+            ? 'Pengajuan pinjaman berhasil disetujui.'
+            : 'Pengajuan pinjaman berhasil ditolak.',
+        'data' => $pinjaman->fresh('anggota'),
+    ]);
+}
     /**
      * Upload bukti transfer / pencairan.
      */

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\SimpananController;
 use App\Http\Middleware\ApiTokenAuthentication;
 use Illuminate\Support\Facades\Route;
 
+
 Route::prefix('v1')->group(function () {
 
     // API TOKEN
@@ -24,9 +25,11 @@ Route::prefix('v1')->group(function () {
         // =========================
         // SIMPANAN
         // =========================
-        Route::get('simpanan', [SimpananController::class, 'index']);
-        Route::post('simpanan', [SimpananController::class, 'store']);
-        Route::post('simpanan/penarikan', [SimpananController::class, 'tarik']);
+       Route::get('simpanan', [SimpananController::class, 'index']);
+       Route::get('simpanan/statistik', [SimpananController::class, 'statistik']);
+       Route::post('simpanan', [SimpananController::class, 'store']);
+       Route::post('simpanan/penarikan', [SimpananController::class, 'tarik']);
+
 
 
         // =========================
@@ -45,6 +48,10 @@ Route::prefix('v1')->group(function () {
             [PinjamanController::class, 'updateStatus']
         );
 
+
+        Route::post('/pinjaman/{pinjaman}/approval', [PinjamanController::class, 'approval'])
+    ->name('pinjaman.approval');
+    
         // Upload bukti transfer
         Route::post(
             'pinjaman/{pinjaman}/bukti',
@@ -93,9 +100,7 @@ Route::prefix('v1')->group(function () {
         );
 
 
-        // =========================
-        // BUKTI / JURNAL
-        // =========================
+       
 
         Route::get(
             'bukti/{jurnal}',

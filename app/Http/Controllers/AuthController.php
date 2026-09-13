@@ -54,16 +54,26 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if (
-            Auth::attempt([
-                'email' => $credentials['akun'],
-                'password' => $credentials['password'],
-            ])
-        ) {
-            $request->session()->regenerate();
+    if (
+    Auth::attempt([
+        'email' => $credentials['akun'],
+        'password' => $credentials['password'],
+    ])
+) {
+    $request->session()->regenerate();
 
-            return redirect('/dashboard');
-        }
+    $user = Auth::user();
+
+    if ($user->role === 'admin') {
+        return redirect('/dashboard');
+    }
+
+    if ($user->role === 'pengawas') {
+        return redirect('/pengawas');
+    }
+
+    return redirect('/customer/dashboard');
+}
 
         return back()->withErrors([
             'akun' => 'Email atau kata sandi yang Anda masukkan salah.',
@@ -121,15 +131,16 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $user = User::create([
-            'nama_lengkap' => $request->nama_lengkap,
-            'nik' => $request->nik,
-            'email' => $request->email,
-            'alamat' => $request->alamat,
-            'no_hp' => $request->no_hp,
-            'password' => Hash::make($request->password),
-            'email_verified_at' => null,
-        ]);
+      $user = User::create([
+    'nama_lengkap' => $request->nama_lengkap,
+    'nik' => $request->nik,
+    'email' => $request->email,
+    'alamat' => $request->alamat,
+    'no_hp' => $request->no_hp,
+    'password' => Hash::make($request->password),
+    'email_verified_at' => null,
+    'role' => 'customer',
+]);
 
         /*
         |--------------------------------------------------------------------------

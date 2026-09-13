@@ -315,7 +315,140 @@
                     </div>
 
                     <!-- No Rekening (EDITABLE) -->
-        <div class="info-item">
+       <!-- Nama Bank (EDITABLE) -->
+<div class="info-item">
+    <label class="info-label">Nama Bank</label>
+
+    <select
+        name="nama_bank"
+        class="info-input"
+    >
+        <option value="">-- Pilih Bank --</option>
+
+        <option value="Bank Central Asia (BCA)"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Central Asia (BCA)' ? 'selected' : '' }}>
+            Bank Central Asia (BCA)
+        </option>
+
+        <option value="Bank Negara Indonesia (BNI)"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Negara Indonesia (BNI)' ? 'selected' : '' }}>
+            Bank Negara Indonesia (BNI)
+        </option>
+
+        <option value="Bank Rakyat Indonesia (BRI)"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Rakyat Indonesia (BRI)' ? 'selected' : '' }}>
+            Bank Rakyat Indonesia (BRI)
+        </option>
+
+        <option value="Bank Mandiri"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Mandiri' ? 'selected' : '' }}>
+            Bank Mandiri
+        </option>
+
+        <option value="Bank Tabungan Negara (BTN)"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Tabungan Negara (BTN)' ? 'selected' : '' }}>
+            Bank Tabungan Negara (BTN)
+        </option>
+
+        <option value="Bank Syariah Indonesia (BSI)"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Syariah Indonesia (BSI)' ? 'selected' : '' }}>
+            Bank Syariah Indonesia (BSI)
+        </option>
+
+        <option value="CIMB Niaga"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'CIMB Niaga' ? 'selected' : '' }}>
+            CIMB Niaga
+        </option>
+
+        <option value="Bank Danamon"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Danamon' ? 'selected' : '' }}>
+            Bank Danamon
+        </option>
+
+        <option value="Bank Permata"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Permata' ? 'selected' : '' }}>
+            Bank Permata
+        </option>
+
+        <option value="Bank OCBC"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank OCBC' ? 'selected' : '' }}>
+            Bank OCBC
+        </option>
+
+        <option value="Bank Mega"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Mega' ? 'selected' : '' }}>
+            Bank Mega
+        </option>
+
+        <option value="Bank Panin"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Panin' ? 'selected' : '' }}>
+            Bank Panin
+        </option>
+
+        <option value="Maybank Indonesia"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Maybank Indonesia' ? 'selected' : '' }}>
+            Maybank Indonesia
+        </option>
+
+        <option value="Bank Jago"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Jago' ? 'selected' : '' }}>
+            Bank Jago
+        </option>
+
+        <option value="SeaBank Indonesia"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'SeaBank Indonesia' ? 'selected' : '' }}>
+            SeaBank Indonesia
+        </option>
+
+        <option value="Bank Muamalat Indonesia"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Muamalat Indonesia' ? 'selected' : '' }}>
+            Bank Muamalat Indonesia
+        </option>
+
+        <option value="Bank Sinarmas"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Sinarmas' ? 'selected' : '' }}>
+            Bank Sinarmas
+        </option>
+
+        <option value="Bank BTPN / SMBC Indonesia"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank BTPN / SMBC Indonesia' ? 'selected' : '' }}>
+            Bank BTPN / SMBC Indonesia
+        </option>
+
+        <option value="Bank Neo Commerce"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Neo Commerce' ? 'selected' : '' }}>
+            Bank Neo Commerce
+        </option>
+
+        <option value="Bank Raya Indonesia"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Raya Indonesia' ? 'selected' : '' }}>
+            Bank Raya Indonesia
+        </option>
+
+        <option value="Bank Aladin Syariah"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Aladin Syariah' ? 'selected' : '' }}>
+            Bank Aladin Syariah
+        </option>
+
+        <option value="Bank Victoria"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Victoria' ? 'selected' : '' }}>
+            Bank Victoria
+        </option>
+
+        <option value="Bank Woori Saudara"
+            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Woori Saudara' ? 'selected' : '' }}>
+            Bank Woori Saudara
+        </option>
+    </select>
+
+    @error('nama_bank')
+        <span class="text-red-400 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+
+
+<!-- Nomor Rekening (EDITABLE) -->
+<div class="info-item">
     <label class="info-label">Nomor Rekening</label>
 
     <input
@@ -330,7 +463,7 @@
     @error('no_rekening')
         <span class="text-red-400 text-xs">{{ $message }}</span>
     @enderror
-</div>  
+</div>
 
                     <!-- Alamat Tinggal (EDITABLE, Full Width) -->
                     <div class="info-item info-item-full">

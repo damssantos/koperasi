@@ -19,12 +19,19 @@ class ProfileController extends Controller
 
         $request->validate([
             'no_hp' => 'required|numeric|digits_between:10,15',
+
+            'nama_bank' => 'nullable|string|max:100',
+
             'no_rekening' => 'nullable|numeric|digits_between:10,20',
+
             'alamat' => 'required|string|min:10',
         ], [
             'no_hp.required' => 'Nomor handphone wajib diisi.',
             'no_hp.numeric' => 'Nomor handphone harus berupa angka.',
             'no_hp.digits_between' => 'Nomor handphone harus terdiri dari 10 sampai 15 digit.',
+
+            'nama_bank.string' => 'Nama bank tidak valid.',
+            'nama_bank.max' => 'Nama bank maksimal 100 karakter.',
 
             'no_rekening.numeric' => 'Nomor rekening harus berupa angka.',
             'no_rekening.digits_between' => 'Nomor rekening harus terdiri dari 10 sampai 20 digit.',
@@ -35,7 +42,11 @@ class ProfileController extends Controller
 
         $user->update([
             'no_hp' => $request->no_hp,
+
+            'nama_bank' => $request->nama_bank,
+
             'no_rekening' => $request->no_rekening,
+
             'alamat' => $request->alamat,
         ]);
 

@@ -6,11 +6,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use App\Models\AnggotaKoperasi;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    public function anggota(): HasOne
+{
+    return $this->hasOne(AnggotaKoperasi::class, 'user_id');
+}
+
 
     /**
      * The attributes that are mass assignable.
@@ -20,10 +26,12 @@ class User extends Authenticatable
     protected $fillable = [
         'nama_lengkap', 
         'nik',
-        'email',        
+        'email', 
+        'role',
         'alamat',
         'no_hp',
         'no_rekening',
+        'nama_bank',
         'avatar',
         'password',
         'email_verified_at',
@@ -39,6 +47,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
 
     /**
      * Get the attributes that should be cast.
