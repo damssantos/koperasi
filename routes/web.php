@@ -362,7 +362,7 @@ Route::middleware('auth')->group(function () {
     */
 
     Route::get('/anggota', [AnggotaController::class, 'index'])
-        ->middleware('role:admin')->name('anggota');
+        ->middleware('role:admin')->name('anggota.index');
 
     Route::get('/anggota/export', function () {
         return Excel::download(new AnggotaExport, 'data_anggota.xlsx');
