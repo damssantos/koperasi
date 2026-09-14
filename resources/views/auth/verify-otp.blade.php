@@ -164,60 +164,53 @@
 
             @endif
 
-            <!-- OTP Form -->
-            <form
-                action="{{ route('register.verify.otp') }}"
-                method="POST"
-                class="space-y-5"
-            >
+         <!-- OTP Form -->
+<form
+    action="{{ route('register.verify.submit') }}"
+    method="POST"
+    class="space-y-5"
+>
+    @csrf
 
-                @csrf
+    <div>
+        <label class="block text-xs font-bold text-slate-400 mb-2">
+            Kode OTP
+        </label>
 
-                <div>
+        <input
+            type="text"
+            name="otp"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="one-time-code"
+            placeholder="Masukkan 6 digit OTP"
+            class="w-full bg-black/30 border
+                border-white/10 rounded-xl
+                px-4 py-3 text-center text-xl
+                tracking-[0.5em] text-white
+                focus:outline-none focus:border-blue-500
+                transition"
+            required
+        >
 
-                    <label class="block text-xs font-bold text-slate-400 mb-2">
-                        Kode OTP
-                    </label>
+        @error('otp')
+            <p class="text-rose-400 text-xs mt-2">
+                {{ $message }}
+            </p>
+        @enderror
+    </div>
 
-                    <input
-                        type="text"
-                        name="otp"
-                        inputmode="numeric"
-                        maxlength="6"
-                        autocomplete="one-time-code"
-                        placeholder="Masukkan 6 digit OTP"
-                        class="w-full bg-black/30 border
-                            border-white/10 rounded-xl
-                            px-4 py-3 text-center text-xl
-                            tracking-[0.5em] text-white
-                            focus:outline-none focus:border-blue-500
-                            transition"
-                        required
-                    >
-
-                    @error('otp')
-
-                        <p class="text-rose-400 text-xs mt-2">
-                            {{ $message }}
-                        </p>
-
-                    @enderror
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="w-full bg-[#2f54eb]
-                        hover:bg-[#1d39c4]
-                        text-white font-bold py-3
-                        rounded-xl text-sm
-                        transition-all shadow-md"
-                >
-                    Verifikasi OTP
-                </button>
-
-            </form>
-
+    <button
+        type="submit"
+        class="w-full bg-[#2f54eb]
+            hover:bg-[#1d39c4]
+            text-white font-bold py-3
+            rounded-xl text-sm
+            transition-all shadow-md"
+    >
+        Verifikasi OTP
+    </button>
+</form>
             <!-- Resend -->
             <div class="text-center pt-2 border-t border-white/5">
 

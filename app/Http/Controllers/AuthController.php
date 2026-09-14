@@ -98,6 +98,12 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDASI DATA REGISTER
+        |--------------------------------------------------------------------------
+        */
+
         $request->validate([
             'nama_lengkap' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'nik' => 'required|numeric|digits:16|unique:users,nik',
@@ -135,7 +141,7 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        User::create([
+        $user = User::create([
             'nama_lengkap' => $request->nama_lengkap,
             'nik' => $request->nik,
             'email' => $request->email,
@@ -146,11 +152,321 @@ class AuthController extends Controller
             'role' => 'customer',
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | HAPUS OTP REGISTER SEBELUMNYA
+        |--------------------------------------------------------------------------
+        */
+
+        OtpVerification::where('email', $user->email)
+            ->where('type', 'register')
+            ->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | GENERATE OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $otp = (string) random_int(100000, 999999);
+
+        /*
+        |--------------------------------------------------------------------------
+        | SIMPAN OTP DALAM DATABASE
+        |--------------------------------------------------------------------------
+        */
+
+        OtpVerification::create([
+            'email' => $user->email,
+            'code' => Hash::make($otp),
+            'type' => 'register',
+            'expires_at' => now()->addMinutes(5),
+            'attempts' => 0,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | SIMPAN EMAIL REGISTER KE SESSION
+        |--------------------------------------------------------------------------
+        */
+
+        session([
+            'register_email' => $user->email,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | KIRIM OTP KE EMAIL
+        |--------------------------------------------------------------------------
+        */
+
+        Mail::to($user->email)->send(
+            new OtpMail($otp, 'register')
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | KE HALAMAN OTP
+        |--------------------------------------------------------------------------
+        */
+
+        return redirect()
+            ->route('register.verify')
+            ->with(
+                'success',
+                'Registrasi berhasil. Kode OTP telah dikirim ke email Anda.'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | HALAMAN OTP REGISTER
+    |--------------------------------------------------------------------------
+    */
+
+    public function showRegisterOtp()
+    {
+        $email = session('register_email');
+
+        if (!$email) {
+            return redirect()
+                ->route('register')
+                ->with(
+                    'error',
+                    'Silakan lakukan registrasi terlebih dahulu.'
+                );
+        }
+
+        return view(
+            'auth.verify-otp',
+            compact('email')
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFIKASI OTP REGISTER
+    |--------------------------------------------------------------------------
+    */
+
+    public function verifyRegisterOtp(Request $request)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDASI OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $request->validate([
+            'otp' => 'required|digits:6',
+        ], [
+            'otp.required' => 'Kode OTP wajib diisi.',
+            'otp.digits' => 'Kode OTP harus terdiri dari 6 digit.',
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL EMAIL DARI SESSION
+        |--------------------------------------------------------------------------
+        */
+
+        $email = session('register_email');
+
+        if (!$email) {
+            return redirect()
+                ->route('register')
+                ->with(
+                    'error',
+                    'Sesi registrasi sudah berakhir. Silakan registrasi kembali.'
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CARI OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $verification = OtpVerification::where('email', $email)
+            ->where('type', 'register')
+            ->first();
+
+        if (!$verification) {
+            return back()
+                ->withErrors([
+                    'otp' => 'Kode OTP tidak ditemukan. Silakan kirim ulang OTP.',
+                ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CEK EXPIRED
+        |--------------------------------------------------------------------------
+        */
+
+        if ($verification->expires_at->isPast()) {
+            $verification->delete();
+
+            return back()
+                ->withErrors([
+                    'otp' => 'Kode OTP sudah kedaluwarsa. Silakan kirim ulang OTP.',
+                ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CEK OTP
+        |--------------------------------------------------------------------------
+        */
+
+        if (!Hash::check($request->otp, $verification->code)) {
+
+            $verification->increment('attempts');
+
+            return back()
+                ->withErrors([
+                    'otp' => 'Kode OTP yang Anda masukkan salah.',
+                ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CARI USER
+        |--------------------------------------------------------------------------
+        */
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return redirect()
+                ->route('register')
+                ->with(
+                    'error',
+                    'Akun tidak ditemukan. Silakan registrasi kembali.'
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | VERIFIKASI EMAIL
+        |--------------------------------------------------------------------------
+        */
+
+        $user->update([
+            'email_verified_at' => now(),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | HAPUS OTP
+        |--------------------------------------------------------------------------
+        */
+
+        $verification->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | HAPUS SESSION REGISTER
+        |--------------------------------------------------------------------------
+        */
+
+        session()->forget([
+            'register_email',
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | KEMBALI KE LOGIN
+        |--------------------------------------------------------------------------
+        */
+
         return redirect()
             ->route('login')
             ->with(
                 'success',
-                'Registrasi berhasil! Silakan login.'
+                'Email berhasil diverifikasi. Silakan login dengan akun Anda.'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | KIRIM ULANG OTP REGISTER
+    |--------------------------------------------------------------------------
+    */
+
+    public function resendRegisterOtp()
+    {
+        $email = session('register_email');
+
+        if (!$email) {
+            return redirect()
+                ->route('register')
+                ->with(
+                    'error',
+                    'Sesi registrasi sudah berakhir. Silakan registrasi kembali.'
+                );
+        }
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return redirect()
+                ->route('register')
+                ->with(
+                    'error',
+                    'Akun tidak ditemukan. Silakan registrasi kembali.'
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | HAPUS OTP LAMA
+        |--------------------------------------------------------------------------
+        */
+
+        OtpVerification::where('email', $email)
+            ->where('type', 'register')
+            ->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | BUAT OTP BARU
+        |--------------------------------------------------------------------------
+        */
+
+        $otp = (string) random_int(100000, 999999);
+
+        /*
+        |--------------------------------------------------------------------------
+        | SIMPAN OTP BARU
+        |--------------------------------------------------------------------------
+        */
+
+        OtpVerification::create([
+            'email' => $email,
+            'code' => Hash::make($otp),
+            'type' => 'register',
+            'expires_at' => now()->addMinutes(5),
+            'attempts' => 0,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | KIRIM ULANG EMAIL
+        |--------------------------------------------------------------------------
+        */
+
+        Mail::to($email)->send(
+            new OtpMail($otp, 'register')
+        );
+
+        return back()
+            ->with(
+                'success',
+                'Kode OTP baru berhasil dikirim ke email Anda.'
             );
     }
 
@@ -175,12 +491,6 @@ class AuthController extends Controller
 
     public function sendResetOtp(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDASI EMAIL
-        |--------------------------------------------------------------------------
-        */
-
         $request->validate([
             'email' => 'required|email',
         ], [
@@ -218,7 +528,7 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | BUAT OTP BARU
+        | BUAT OTP
         |--------------------------------------------------------------------------
         */
 
@@ -228,9 +538,6 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         | SIMPAN OTP
         |--------------------------------------------------------------------------
-        |
-        | OTP disimpan dalam bentuk HASH.
-        |
         */
 
         OtpVerification::create([
@@ -245,10 +552,6 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         | SIMPAN EMAIL KE SESSION
         |--------------------------------------------------------------------------
-        |
-        | Ini penting karena halaman OTP mengambil email
-        | dari session reset_password_email.
-        |
         */
 
         session([
@@ -257,7 +560,7 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | KIRIM EMAIL OTP
+        | KIRIM OTP
         |--------------------------------------------------------------------------
         */
 
@@ -267,7 +570,7 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | KE HALAMAN OTP
+        | KE HALAMAN OTP RESET
         |--------------------------------------------------------------------------
         */
 
@@ -282,7 +585,7 @@ class AuthController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | HALAMAN VERIFIKASI OTP
+    | HALAMAN OTP RESET PASSWORD
     |--------------------------------------------------------------------------
     */
 
@@ -308,18 +611,12 @@ class AuthController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI OTP
+    | VERIFIKASI OTP RESET PASSWORD
     |--------------------------------------------------------------------------
     */
 
     public function verifyResetOtp(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDASI OTP
-        |--------------------------------------------------------------------------
-        */
-
         $request->validate([
             'otp' => 'required|digits:6',
         ], [
@@ -329,7 +626,7 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | AMBIL EMAIL DARI SESSION
+        | AMBIL EMAIL
         |--------------------------------------------------------------------------
         */
 
@@ -368,6 +665,8 @@ class AuthController extends Controller
         */
 
         if ($verification->expires_at->isPast()) {
+            $verification->delete();
+
             return back()
                 ->withErrors([
                     'otp' => 'Kode OTP sudah kedaluwarsa. Silakan kirim ulang OTP.',
@@ -378,10 +677,6 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         | CEK OTP
         |--------------------------------------------------------------------------
-        |
-        | Karena OTP di database di-HASH,
-        | gunakan Hash::check().
-        |
         */
 
         if (!Hash::check($request->otp, $verification->code)) {
@@ -404,7 +699,7 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | SIMPAN STATUS VERIFIKASI
+        | SIMPAN STATUS RESET PASSWORD
         |--------------------------------------------------------------------------
         */
 
@@ -415,7 +710,7 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | KE HALAMAN BUAT PASSWORD BARU
+        | KE HALAMAN PASSWORD BARU
         |--------------------------------------------------------------------------
         */
 

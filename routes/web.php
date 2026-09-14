@@ -66,12 +66,15 @@ Route::middleware('guest')->group(function () {
     // ---- Register ----
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-    Route::get('/register/verify-otp', [AuthController::class, 'showVerifyOtp'])
-        ->name('register.verify');
-    Route::post('/register/verify-otp', [AuthController::class, 'verifyOtp'])
-        ->name('register.verify.otp');
-    Route::post('/register/resend-otp', [AuthController::class, 'resendOtp'])
-        ->name('register.resend');
+   Route::get('/register/verify', [AuthController::class, 'showRegisterOtp'])
+    ->name('register.verify');
+
+Route::post('/register/verify', [AuthController::class, 'verifyRegisterOtp'])
+    ->name('register.verify.submit');
+
+Route::post('/register/resend', [AuthController::class, 'resendRegisterOtp'])
+    ->name('register.resend');
+
 });
 
 /*
@@ -248,8 +251,11 @@ Route::post('/laporan-keuangan/kirim-email', [LaporanController::class, 'kirimEm
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::get('/register', [AuthController::class, 'showRegister'])
+    ->name('register');
+
 Route::post('/register', [AuthController::class, 'register']);
+
 
 
 // 3. Proteksi semua halaman dashboard, anggota, DAN profile baru milik mereka
