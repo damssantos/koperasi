@@ -146,6 +146,12 @@
                     </div>
                 </div>
 
+                 <div class="text-right">
+                    <a href="{{ route('password.request') }}"
+                       class="text-xs text-[#2f54eb] hover:text-[#1d39c4] font-semibold hover:underline transition-colors">
+                        Lupa Password?
+                    </a>
+                </div>
                 <!-- Action Button -->
                 <button type="submit" class="w-full bg-[#2f54eb] hover:bg-[#1d39c4] text-white font-bold py-2.5 rounded-xl text-sm transition-all duration-150 shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 active:scale-[0.99] cursor-pointer mt-2">
                     Masuk
