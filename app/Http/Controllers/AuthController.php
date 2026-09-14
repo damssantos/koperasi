@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\AnggotaKoperasi;
 use App\Models\User;
 use App\Models\OtpVerification;
 use App\Mail\OtpMail;
@@ -358,6 +358,34 @@ class AuthController extends Controller
             'email_verified_at' => now(),
         ]);
 
+                // Buat data anggota koperasi otomatis untuk customer baru
+if ($user->role === 'customer' && !$user->anggota) {
+
+    // Ambil nomor AGT terakhir
+    $lastAnggota = AnggotaKoperasi::whereNotNull('id_anggota')
+        ->where('id_anggota', 'like', 'AGT-%')
+        ->get()
+        ->map(function ($anggota) {
+            return (int) str_replace('AGT-', '', $anggota->id_anggota);
+        })
+        ->max();
+
+    $nextNumber = ($lastAnggota ?? 0) + 1;
+
+    $idAnggota = 'AGT-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+    AnggotaKoperasi::create([
+        'user_id' => $user->id,
+        'id_anggota' => $idAnggota,
+        'nama' => $user->nama_lengkap,
+        'no_hp' => $user->no_hp,
+        'tanggal_join' => now()->toDateString(),
+        'simpanan_pokok' => 0,
+        'simpanan_wajib' => 0,
+        'simpanan_sukarela' => 0,
+        'total_saldo' => 0,
+    ]);
+}
         /*
         |--------------------------------------------------------------------------
         | HAPUS OTP
