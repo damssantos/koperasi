@@ -54,6 +54,14 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
+
+        input::placeholder {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            letter-spacing: normal !important;
+            font-size: 0.875rem !important;
+            font-weight: 400 !important;
+            color: #64748b !important;
+        }
     </style>
 </head>
 
@@ -186,8 +194,9 @@
             placeholder="Masukkan 6 digit OTP"
             class="w-full bg-black/30 border
                 border-white/10 rounded-xl
-                px-4 py-3 text-center text-xl
+                px-4 py-3 text-center text-xl font-bold
                 tracking-[0.5em] text-white
+                placeholder:tracking-normal placeholder:font-normal placeholder:text-sm placeholder:text-slate-500
                 focus:outline-none focus:border-blue-500
                 transition"
             required

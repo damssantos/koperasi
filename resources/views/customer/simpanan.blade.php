@@ -21,31 +21,43 @@
         }
 
         .saving-card {
-            background: white;
+            background: #FFFFFF;
             border-radius: 14px;
             padding: 22px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .saving-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
         }
 
         .saving-card .label {
-            color: #777;
-            font-size: 13px;
+            color: #64748B;
+            font-size: 12px;
+            font-weight: 600;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .saving-card .amount {
             font-size: 23px;
-            font-weight: 700;
-            color: #222;
+            font-weight: 800;
+            color: #1F2937;
         }
 
         .saving-card.total {
-            background: #111;
+            background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%);
             color: white;
+            border: none;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
         }
 
         .saving-card.total .label {
-            color: #aaa;
+            color: rgba(255, 255, 255, 0.85);
         }
 
         .saving-card.total .amount {
@@ -58,11 +70,12 @@
         ========================= */
 
         .section {
-            background: white;
-            border-radius: 14px;
+            background: #FFFFFF;
+            border-radius: 16px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.03);
         }
 
         .section-header {
@@ -70,12 +83,14 @@
         }
 
         .section-header h2 {
-            font-size: 19px;
-            margin-bottom: 5px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 4px;
         }
 
         .section-header p {
-            color: #777;
+            color: #64748B;
             font-size: 13px;
         }
 
@@ -86,25 +101,37 @@
 
         .member-info {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
         }
 
+        @media (max-width: 900px) {
+            .member-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         .member-item {
-            background: #f5f6f8;
+            background: #F8FAFC;
             padding: 16px;
-            border-radius: 10px;
+            border-radius: 12px;
+            border: 1px solid #F1F5F9;
         }
 
         .member-item span {
             display: block;
-            color: #777;
+            color: #64748B;
             font-size: 12px;
-            margin-bottom: 7px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .member-item strong {
             font-size: 14px;
+            font-weight: 700;
+            color: #1F2937;
         }
 
 
@@ -122,22 +149,26 @@
         }
 
         th {
-            padding: 13px;
+            padding: 14px 16px;
             text-align: left;
-            border-bottom: 1px solid #eee;
-            color: #777;
+            border-bottom: 1px solid #E2E8F0;
+            background: #F8FAFC;
+            color: #64748B;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 14px 13px;
-            border-bottom: 1px solid #eee;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
             font-size: 14px;
+            color: #1F2937;
         }
 
         tbody tr:hover {
-            background: #fafafa;
+            background: #F8FAFC;
         }
 
 
@@ -147,20 +178,20 @@
 
         .badge {
             display: inline-block;
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .badge-success {
-            background: #e8f7ee;
-            color: #18794e;
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
         }
 
         .badge-danger {
-            background: #fdecec;
-            color: #b42318;
+            background: rgba(239, 68, 68, 0.12);
+            color: #B91C1C;
         }
 
 
@@ -171,7 +202,7 @@
         .empty {
             text-align: center;
             padding: 30px;
-            color: #888;
+            color: #64748B;
             font-size: 14px;
         }
 
@@ -202,34 +233,37 @@
 
         .btn-primary {
             border: none;
-            background: #111;
+            background: #2563EB;
             color: white;
-            padding: 11px 18px;
-            border-radius: 9px;
+            padding: 11px 20px;
+            border-radius: 10px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
             white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
 
         .btn-primary:hover {
-            background: #333;
+            background: #1D4ED8;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
         }
 
         .btn-secondary {
-            border: none;
-            background: #eee;
-            color: #333;
-            padding: 11px 18px;
-            border-radius: 9px;
+            border: 1px solid #E2E8F0;
+            background: #F8FAFC;
+            color: #1F2937;
+            padding: 11px 20px;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .btn-secondary:hover {
-            background: #ddd;
+            background: #E2E8F0;
         }
 
 
@@ -238,21 +272,23 @@
         ========================= */
 
         .saving-alert {
-            padding: 14px 16px;
-            border-radius: 10px;
+            padding: 14px 18px;
+            border-radius: 12px;
             margin-bottom: 20px;
             font-size: 14px;
             font-weight: 600;
         }
 
         .saving-alert-success {
-            background: #e8f7ee;
-            color: #18794e;
+            background: rgba(16, 185, 129, 0.1);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.25);
         }
 
         .saving-alert-error {
-            background: #fdecec;
-            color: #b42318;
+            background: rgba(239, 68, 68, 0.1);
+            color: #B91C1C;
+            border: 1px solid rgba(239, 68, 68, 0.25);
         }
 
 
@@ -263,7 +299,8 @@
         .saving-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
 
             display: none;
 
@@ -283,13 +320,14 @@
             width: 100%;
             max-width: 520px;
 
-            background: white;
+            background: #FFFFFF;
 
-            border-radius: 16px;
+            border-radius: 20px;
 
-            padding: 25px;
+            padding: 28px;
 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid #E2E8F0;
         }
 
 
@@ -308,18 +346,20 @@
         .saving-modal-header h3 {
             margin: 0;
             font-size: 20px;
+            font-weight: 800;
+            color: #1F2937;
         }
 
         .saving-modal-header p {
             margin: 5px 0 0;
-            font-size: 12px;
-            color: #777;
+            font-size: 13px;
+            color: #64748B;
         }
 
         .saving-modal-close {
             border: none;
 
-            background: #f1f1f1;
+            background: #F1F5F9;
 
             width: 34px;
             height: 34px;
@@ -330,11 +370,13 @@
 
             font-size: 18px;
 
-            color: #333;
+            color: #64748B;
+            transition: all 0.2s ease;
         }
 
         .saving-modal-close:hover {
-            background: #e5e5e5;
+            background: #E2E8F0;
+            color: #1F2937;
         }
 
 
@@ -343,7 +385,7 @@
         ========================= */
 
         .saving-form-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .saving-form-group label {
@@ -351,9 +393,10 @@
 
             font-size: 13px;
 
-            font-weight: 600;
+            font-weight: 700;
 
             margin-bottom: 7px;
+            color: #1F2937;
         }
 
         .saving-form-group input,
@@ -361,11 +404,11 @@
         .saving-form-group textarea {
             width: 100%;
 
-            border: 1px solid #ddd;
+            border: 1px solid #E2E8F0;
 
-            border-radius: 9px;
+            border-radius: 10px;
 
-            padding: 11px 12px;
+            padding: 12px 14px;
 
             font-size: 14px;
 
@@ -373,13 +416,17 @@
 
             box-sizing: border-box;
 
-            background: white;
+            background: #F8FAFC;
+            color: #1F2937;
+            transition: all 0.2s ease;
         }
 
         .saving-form-group input:focus,
         .saving-form-group select:focus,
         .saving-form-group textarea:focus {
-            border-color: #111;
+            border-color: #2563EB;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
         }
 
         .saving-form-group textarea {
@@ -393,13 +440,13 @@
 
             margin-top: 6px;
 
-            color: #888;
+            color: #64748B;
 
             font-size: 11px;
         }
 
         .saving-error {
-            color: #b42318;
+            color: #DC2626;
 
             font-size: 12px;
 
@@ -418,7 +465,7 @@
 
             gap: 10px;
 
-            margin-top: 20px;
+            margin-top: 24px;
         }
 
 
@@ -674,6 +721,27 @@
 
                         -
 
+                    @endif
+
+                </strong>
+
+            </div>
+
+
+            {{-- NO. REKENING --}}
+
+            <div class="member-item">
+
+                <span>
+                    No. Rekening
+                </span>
+
+                <strong>
+
+                    @if(auth()->user()->no_rekening)
+                        {{ auth()->user()->nama_bank ? auth()->user()->nama_bank . ' - ' : '' }}{{ auth()->user()->no_rekening }}
+                    @else
+                        -
                     @endif
 
                 </strong>

@@ -21,30 +21,43 @@
         }
 
         .loan-card {
-            background: white;
+            background: #FFFFFF;
             border-radius: 14px;
             padding: 22px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .loan-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
         }
 
         .loan-card.dark {
-            background: #111;
+            background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%);
             color: white;
+            border: none;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
         }
 
         .loan-card .label {
-            font-size: 13px;
-            color: #777;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748B;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .loan-card.dark .label {
-            color: #aaa;
+            color: rgba(255, 255, 255, 0.85);
         }
 
         .loan-card .value {
             font-size: 23px;
-            font-weight: 700;
+            font-weight: 800;
+            color: #1F2937;
         }
 
         .loan-card.dark .value {
@@ -57,11 +70,12 @@
         ========================= */
 
         .section {
-            background: white;
-            border-radius: 14px;
+            background: #FFFFFF;
+            border-radius: 16px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.03);
         }
 
         .section-header {
@@ -69,12 +83,14 @@
         }
 
         .section-header h2 {
-            font-size: 19px;
-            margin-bottom: 5px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 4px;
         }
 
         .section-header p {
-            color: #777;
+            color: #64748B;
             font-size: 13px;
         }
 
@@ -100,18 +116,21 @@
 
         .btn-primary {
             border: none;
-            background: #111;
+            background: #2563EB;
             color: white;
-            padding: 11px 18px;
-            border-radius: 9px;
+            padding: 11px 20px;
+            border-radius: 10px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
 
         .btn-primary:hover {
-            background: #333;
+            background: #1D4ED8;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
         }
 
 
@@ -130,22 +149,26 @@
         }
 
         th {
-            padding: 13px;
+            padding: 14px 16px;
             text-align: left;
-            border-bottom: 1px solid #eee;
-            color: #777;
+            border-bottom: 1px solid #E2E8F0;
+            background: #F8FAFC;
+            color: #64748B;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 14px 13px;
-            border-bottom: 1px solid #eee;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
             font-size: 14px;
+            color: #1F2937;
         }
 
         tbody tr:hover {
-            background: #fafafa;
+            background: #F8FAFC;
         }
 
 
@@ -155,30 +178,30 @@
 
         .badge {
             display: inline-block;
-            padding: 6px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .badge-warning {
-            background: #fff4d6;
-            color: #9a6700;
+            background: rgba(245, 158, 11, 0.12);
+            color: #D97706;
         }
 
         .badge-success {
-            background: #e8f7ee;
-            color: #18794e;
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
         }
 
         .badge-danger {
-            background: #fdecec;
-            color: #b42318;
+            background: rgba(239, 68, 68, 0.12);
+            color: #B91C1C;
         }
 
         .badge-info {
-            background: #eaf2ff;
-            color: #175cd3;
+            background: rgba(14, 165, 233, 0.12);
+            color: #0284C7;
         }
 
 
@@ -189,7 +212,7 @@
         .empty {
             text-align: center;
             padding: 30px;
-            color: #888;
+            color: #64748B;
             font-size: 14px;
         }
 
@@ -205,20 +228,26 @@
         }
 
         .detail-item {
-            background: #f5f6f8;
+            background: #F8FAFC;
             padding: 16px;
-            border-radius: 10px;
+            border-radius: 12px;
+            border: 1px solid #F1F5F9;
         }
 
         .detail-item span {
             display: block;
-            color: #777;
+            color: #64748B;
             font-size: 12px;
-            margin-bottom: 7px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .detail-item strong {
             font-size: 15px;
+            font-weight: 700;
+            color: #1F2937;
         }
 
 
@@ -227,21 +256,23 @@
         ========================= */
 
         .loan-alert {
-            padding: 14px 16px;
-            border-radius: 10px;
+            padding: 14px 18px;
+            border-radius: 12px;
             margin-bottom: 20px;
             font-size: 14px;
             font-weight: 600;
         }
 
         .loan-alert-success {
-            background: #e8f7ee;
-            color: #18794e;
+            background: rgba(16, 185, 129, 0.1);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.25);
         }
 
         .loan-alert-error {
-            background: #fdecec;
-            color: #b42318;
+            background: rgba(239, 68, 68, 0.1);
+            color: #B91C1C;
+            border: 1px solid rgba(239, 68, 68, 0.25);
         }
 
 
@@ -252,7 +283,8 @@
         .loan-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -267,10 +299,11 @@
         .loan-modal-box {
             width: 100%;
             max-width: 520px;
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid #E2E8F0;
         }
 
         .loan-modal-header {
@@ -283,27 +316,31 @@
         .loan-modal-header h3 {
             margin: 0;
             font-size: 20px;
+            font-weight: 800;
+            color: #1F2937;
         }
 
         .loan-modal-header p {
             margin: 5px 0 0;
-            font-size: 12px;
-            color: #777;
+            font-size: 13px;
+            color: #64748B;
         }
 
         .loan-modal-close {
             border: none;
-            background: #f1f1f1;
+            background: #F1F5F9;
             width: 34px;
             height: 34px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 18px;
-            color: #333;
+            color: #64748B;
+            transition: all 0.2s ease;
         }
 
         .loan-modal-close:hover {
-            background: #e5e5e5;
+            background: #E2E8F0;
+            color: #1F2937;
         }
 
 
@@ -312,33 +349,38 @@
         ========================= */
 
         .loan-form-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .loan-form-group label {
             display: block;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 7px;
+            color: #1F2937;
         }
 
         .loan-form-group input,
         .loan-form-group select,
         .loan-form-group textarea {
             width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 9px;
-            padding: 11px 12px;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 12px 14px;
             font-size: 14px;
             outline: none;
             box-sizing: border-box;
-            background: white;
+            background: #F8FAFC;
+            color: #1F2937;
+            transition: all 0.2s ease;
         }
 
         .loan-form-group input:focus,
         .loan-form-group select:focus,
         .loan-form-group textarea:focus {
-            border-color: #111;
+            border-color: #2563EB;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
         }
 
         .loan-form-group textarea {
@@ -349,12 +391,12 @@
         .loan-form-help {
             display: block;
             margin-top: 6px;
-            color: #888;
+            color: #64748B;
             font-size: 11px;
         }
 
         .loan-error {
-            color: #b42318;
+            color: #DC2626;
             font-size: 12px;
             margin-top: 5px;
         }
@@ -368,22 +410,23 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 24px;
         }
 
         .btn-secondary {
-            border: none;
-            background: #eee;
-            color: #333;
-            padding: 11px 18px;
-            border-radius: 9px;
+            border: 1px solid #E2E8F0;
+            background: #F8FAFC;
+            color: #1F2937;
+            padding: 11px 20px;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .btn-secondary:hover {
-            background: #ddd;
+            background: #E2E8F0;
         }
 
 

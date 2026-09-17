@@ -89,8 +89,9 @@ Route::middleware('role:customer')->group(function () {
 
     Route::get('/customer/dashboard', function () {
         $anggota = auth()->user()->anggota;
+        $transaksi = $anggota ? $anggota->transactions()->latest()->take(5)->get() : collect();
 
-        return view('customer.dashboard', compact('anggota'));
+        return view('customer.dashboard', compact('anggota', 'transaksi'));
     })->name('customer.dashboard');
 
     Route::get('/customer/simpanan', function () {

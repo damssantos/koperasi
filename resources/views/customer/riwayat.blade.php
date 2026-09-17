@@ -10,10 +10,11 @@
 
     <style>
         .history-card {
-            background: white;
-            border-radius: 14px;
+            background: #FFFFFF;
+            border-radius: 16px;
             padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.03);
         }
 
         .history-header {
@@ -21,12 +22,14 @@
         }
 
         .history-header h2 {
-            font-size: 19px;
-            margin-bottom: 5px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 4px;
         }
 
         .history-header p {
-            color: #777;
+            color: #64748B;
             font-size: 13px;
         }
 
@@ -41,60 +44,50 @@
         }
 
         th {
-            padding: 13px;
-
+            padding: 14px 16px;
             text-align: left;
-
-            border-bottom: 1px solid #eee;
-
-            color: #777;
-
+            border-bottom: 1px solid #E2E8F0;
+            background: #F8FAFC;
+            color: #64748B;
             font-size: 12px;
-
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 14px 13px;
-
-            border-bottom: 1px solid #eee;
-
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
             font-size: 14px;
+            color: #1F2937;
         }
 
         tbody tr:hover {
-            background: #fafafa;
+            background: #F8FAFC;
         }
 
         .badge {
             display: inline-block;
-
-            padding: 6px 10px;
-
+            padding: 5px 12px;
             border-radius: 20px;
-
             font-size: 11px;
-
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .badge-success {
-            background: #e8f7ee;
-            color: #18794e;
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
         }
 
         .badge-danger {
-            background: #fdecec;
-            color: #b42318;
+            background: rgba(239, 68, 68, 0.12);
+            color: #B91C1C;
         }
 
         .empty {
             text-align: center;
-
             padding: 40px 20px;
-
-            color: #888;
-
+            color: #64748B;
             font-size: 14px;
         }
     </style>

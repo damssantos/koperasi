@@ -93,7 +93,7 @@
             <i data-lucide="user" class="w-4 h-4 text-[#8f9bb3]"></i>
             <h3 class="text-sm font-bold text-white tracking-wide" style="text-align: left;">Informasi Anggota</h3>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 mt-4" style="text-align: left;">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-8 mt-4" style="text-align: left;">
             <!-- Column 1 -->
             <div class="space-y-6" style="text-align: left;">
                 <div style="text-align: left;">
@@ -114,6 +114,19 @@
                 <div style="text-align: left;">
                     <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Tanggal Bergabung</p>
                     <p class="text-sm font-semibold text-white mt-1">{{ $formattedDate }}</p>
+                </div>
+            </div>
+            <!-- Column 3 -->
+            <div class="space-y-6" style="text-align: left;">
+                <div style="text-align: left;">
+                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">No. Rekening / Bank</p>
+                    <p class="text-sm font-semibold text-white mt-1">
+                        @if(optional($anggota->user)->no_rekening)
+                            {{ $anggota->user->nama_bank ? $anggota->user->nama_bank . ' - ' : '' }}{{ $anggota->user->no_rekening }}
+                        @else
+                            -
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>

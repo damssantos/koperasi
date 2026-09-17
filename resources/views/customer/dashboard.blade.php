@@ -2,106 +2,180 @@
 
 @section('title', 'Dashboard')
 
-@section('page-title', 'Dashboard')
+@section('page-title', 'Dasbor')
 
-@section('page-description', 'Ringkasan aktivitas koperasi Anda')
+@section('page-description', 'Sistem Operasional Yayasan YPIK - Ringkasan & Pemantauan')
 
 @section('content')
 
     <style>
-        /* ================= CARDS ================= */
-
-        .cards {
+        /* ================= STAT CARDS ================= */
+        .stat-card-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
 
-        .card {
-            background: white;
-            border-radius: 12px;
+        .stat-card {
+            background: #FFFFFF;
+            border-radius: 16px;
             padding: 22px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .card h3 {
-            font-size: 14px;
-            color: #777;
-            margin-bottom: 10px;
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
         }
 
-        .card .value {
-            font-size: 25px;
-            font-weight: bold;
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .stat-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #EFF6FF;
+            color: #2563EB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0F172A;
+            margin-bottom: 6px;
+        }
+
+        .stat-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #64748B;
+            border-top: 1px dashed #E2E8F0;
+            padding-top: 10px;
+            margin-top: 8px;
+        }
+
+        .stat-link {
+            color: #2563EB;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-link:hover {
+            color: #1D4ED8;
+            text-decoration: underline;
         }
 
         /* ================= SECTION ================= */
-
         .section {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
         }
 
-        .section h2 {
-            margin-bottom: 20px;
-            font-size: 19px;
+        .section-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0F172A;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        /* ================= INFORMATION ================= */
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
         }
-
-        .info-item {
-            background: #f5f6f8;
-            padding: 18px;
-            border-radius: 10px;
-        }
-
-        .info-item span {
-            display: block;
-            color: #777;
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-
-        .info-item strong {
-            font-size: 16px;
-        }
-
-        /* ================= SAVING ================= */
 
         .saving-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 14px;
         }
 
-        .saving-item {
-            background: #f5f6f8;
-            padding: 18px;
-            border-radius: 10px;
+        @media (max-width: 900px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .saving-item span {
+        .info-item, .saving-item {
+            background: #F8FAFC;
+            padding: 16px 18px;
+            border-radius: 12px;
+            border: 1px solid #F1F5F9;
+        }
+
+        .info-item span, .saving-item span {
             display: block;
-            color: #777;
-            font-size: 13px;
-            margin-bottom: 8px;
+            color: #64748B;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item strong {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0F172A;
         }
 
         .saving-item strong {
-            font-size: 18px;
+            font-size: 17px;
+            font-weight: 800;
+            color: #2563EB;
         }
 
-        /* ================= TABLE ================= */
+        .section-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .badge-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+        }
 
         .table-wrapper {
             overflow-x: auto;
@@ -112,263 +186,248 @@
             border-collapse: collapse;
         }
 
-        th,
-        td {
-            padding: 13px;
-            border-bottom: 1px solid #eee;
+        th, td {
+            padding: 13px 16px;
+            border-bottom: 1px solid #E2E8F0;
             text-align: left;
         }
 
         th {
-            color: #777;
-            font-size: 13px;
-            font-weight: 600;
+            background: #F8FAFC;
+            color: #64748B;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         td {
-            font-size: 14px;
+            font-size: 13.5px;
+            color: #0F172A;
         }
 
-        /* ================= EMPTY ================= */
+        tbody tr:hover {
+            background: #F8FAFC;
+        }
 
         .empty {
             text-align: center;
-            padding: 25px;
-            color: #888;
+            padding: 30px;
+            color: #64748B;
             font-size: 14px;
         }
 
-        /* ================= RESPONSIVE ================= */
-
         @media (max-width: 900px) {
-            .cards {
+            .stat-card-grid {
                 grid-template-columns: 1fr;
             }
-
-            .info-grid,
-            .saving-grid {
+            .info-grid, .saving-grid {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 
 
-    {{-- =========================================================
-    SUMMARY CARDS
-    ========================================================= --}}
 
-    <div class="cards">
+    {{-- STAT CARDS GRID --}}
+    <div class="stat-card-grid">
 
-        <div class="card">
-            <h3>Total Saldo Simpanan</h3>
-
-            <div class="value">
-                Rp{{ number_format($anggota->total_saldo ?? 0, 0, ',', '.') }}
+        {{-- CARD 1: SALDO SIMPANAN --}}
+        <div class="stat-card">
+            <div>
+                <div class="stat-card-header">
+                    <div class="stat-icon-box">
+                        <i data-lucide="wallet"></i>
+                    </div>
+                    <div class="stat-label">• Total Saldo Simpanan</div>
+                </div>
+                <div class="stat-value">
+                    Rp{{ number_format($anggota->total_saldo ?? 0, 0, ',', '.') }}
+                </div>
+            </div>
+            <div class="stat-footer">
+                <span>Diperbarui: {{ date('d/m/Y') }}</span>
+                <a href="{{ route('customer.simpanan') }}" class="stat-link">
+                    Lihat Cuplikan Keuangan →
+                </a>
             </div>
         </div>
 
-
-        <div class="card">
-            <h3>Total Pinjaman</h3>
-
-            <div class="value">
-                Rp0
+        {{-- CARD 2: PINJAMAN --}}
+        <div class="stat-card">
+            <div>
+                <div class="stat-card-header">
+                    <div class="stat-icon-box">
+                        <i data-lucide="credit-card"></i>
+                    </div>
+                    <div class="stat-label">• Total Pinjaman</div>
+                </div>
+                <div class="stat-value">
+                    Rp0
+                </div>
+            </div>
+            <div class="stat-footer">
+                <span>Status: Aktif</span>
+                <a href="{{ route('customer.pinjaman') }}" class="stat-link">
+                    Detail Pinjaman →
+                </a>
             </div>
         </div>
 
-
-        <div class="card">
-            <h3>Status Keanggotaan</h3>
-
-            <div class="value">
-                Aktif
+        {{-- CARD 3: STATUS KEANGGOTAAN --}}
+        <div class="stat-card">
+            <div>
+                <div class="stat-card-header">
+                    <div class="stat-icon-box">
+                        <i data-lucide="user-check"></i>
+                    </div>
+                    <div class="stat-label">• Status Keanggotaan</div>
+                </div>
+                <div class="stat-value text-emerald-600">
+                    Aktif
+                </div>
+            </div>
+            <div class="stat-footer">
+                <span>ID: {{ $anggota->id_anggota ?? 'N/A' }}</span>
+                <a href="{{ route('customer.profil') }}" class="stat-link">
+                    Profil Saya →
+                </a>
             </div>
         </div>
 
     </div>
 
-
-    {{-- =========================================================
-    INFORMASI ANGGOTA
-    ========================================================= --}}
-
+    {{-- INFORMASI ANGGOTA --}}
     <div class="section">
-
-        <h2>Informasi Anggota</h2>
+        <h2 class="section-title">
+            <i data-lucide="user-check" class="w-5 h-5 text-blue-600"></i>
+            <span>Informasi Anggota</span>
+        </h2>
 
         @if($anggota)
-
             <div class="info-grid">
-
                 <div class="info-item">
                     <span>ID Anggota</span>
-
-                    <strong>
-                        {{ $anggota->id_anggota ?? '-' }}
-                    </strong>
+                    <strong>{{ $anggota->id_anggota ?? '-' }}</strong>
                 </div>
-
 
                 <div class="info-item">
-                    <span>Nama</span>
-
-                    <strong>
-                        {{ $anggota->nama ?? auth()->user()->nama_lengkap }}
-                    </strong>
+                    <span>Nama Lengkap</span>
+                    <strong>{{ $anggota->nama ?? auth()->user()->nama_lengkap }}</strong>
                 </div>
-
 
                 <div class="info-item">
                     <span>No. HP</span>
-
-                    <strong>
-                        {{ $anggota->no_hp ?? '-' }}
-                    </strong>
+                    <strong>{{ $anggota->no_hp ?? '-' }}</strong>
                 </div>
 
+                <div class="info-item" style="{{ !auth()->user()->no_rekening ? 'border-color: #BFDBFE; background: #EFF6FF;' : '' }}">
+                    <span>No. Rekening</span>
+                    <strong>
+                        @if(auth()->user()->no_rekening)
+                            {{ auth()->user()->nama_bank ? auth()->user()->nama_bank . ' - ' : '' }}{{ auth()->user()->no_rekening }}
+                        @else
+                            <a href="{{ route('customer.profil') }}" style="color: #2563EB; font-size: 13px; font-weight: 700; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;">
+                                <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
+                                <span>Belum Diisi</span>
+                            </a>
+                        @endif
+                    </strong>
+                </div>
             </div>
-
         @else
-
             <div class="empty">
                 Data anggota belum terhubung dengan akun Anda.
             </div>
-
         @endif
-
     </div>
 
-
-    {{-- =========================================================
-    RINGKASAN SIMPANAN
-    ========================================================= --}}
-
+    {{-- RINGKASAN SIMPANAN --}}
     <div class="section">
-
-        <h2>Ringkasan Simpanan</h2>
+        <h2 class="section-title">
+            <i data-lucide="vault" class="w-5 h-5 text-blue-600"></i>
+            <span>Ringkasan Simpanan</span>
+        </h2>
 
         @if($anggota)
-
             <div class="saving-grid">
-
                 <div class="saving-item">
-
                     <span>Simpanan Pokok</span>
-
-                    <strong>
-                        Rp{{ number_format($anggota->simpanan_pokok ?? 0, 0, ',', '.') }}
-                    </strong>
-
+                    <strong>Rp{{ number_format($anggota->simpanan_pokok ?? 0, 0, ',', '.') }}</strong>
                 </div>
 
-
                 <div class="saving-item">
-
                     <span>Simpanan Wajib</span>
-
-                    <strong>
-                        Rp{{ number_format($anggota->simpanan_wajib ?? 0, 0, ',', '.') }}
-                    </strong>
-
+                    <strong>Rp{{ number_format($anggota->simpanan_wajib ?? 0, 0, ',', '.') }}</strong>
                 </div>
-
 
                 <div class="saving-item">
-
                     <span>Simpanan Sukarela</span>
-
-                    <strong>
-                        Rp{{ number_format($anggota->simpanan_sukarela ?? 0, 0, ',', '.') }}
-                    </strong>
-
+                    <strong>Rp{{ number_format($anggota->simpanan_sukarela ?? 0, 0, ',', '.') }}</strong>
                 </div>
-
             </div>
-
         @else
-
             <div class="empty">
                 Data simpanan belum tersedia.
             </div>
-
         @endif
-
     </div>
 
-
-    {{-- =========================================================
-    PINJAMAN
-    ========================================================= --}}
-
+    {{-- RIWAYAT TRANSAKSI TERBARU --}}
     <div class="section">
-
-        <h2>Pinjaman Saya</h2>
-
-        <div class="table-wrapper">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>Nominal</th>
-                        <th>Status</th>
-                        <th>Approval</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>-</td>
-                        <td>Rp0</td>
-                        <td>Belum ada</td>
-                        <td>-</td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
+        <div class="section-header-row">
+            <h2 class="section-title" style="margin-bottom: 0;">
+                <i data-lucide="history" class="w-5 h-5 text-blue-600"></i>
+                <span>Riwayat Transaksi Terbaru</span>
+            </h2>
+            <a href="{{ route('customer.riwayat') }}" class="stat-link">
+                Lihat Semua →
+            </a>
         </div>
 
-    </div>
-
-
-    {{-- =========================================================
-    AKTIVITAS TERBARU
-    ========================================================= --}}
-
-    <div class="section">
-
-        <h2>Aktivitas Terbaru</h2>
-
-        <div class="table-wrapper">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>Aktivitas</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>-</td>
-                        <td>Belum ada aktivitas</td>
-                        <td>-</td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+        @if(isset($transaksi) && $transaksi->count() > 0)
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Jenis Transaksi</th>
+                            <th>Nominal</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($transaksi as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    @php
+                                        $tgl = $item->tanggal_transaksi ?? $item->tanggal ?? $item->created_at;
+                                    @endphp
+                                    {{ $tgl ? \Carbon\Carbon::parse($tgl)->format('d-m-Y H:i') : '-' }}
+                                </td>
+                                <td>
+                                    <strong>{{ $item->jenis_simpanan ?? $item->jenis ?? 'Simpanan' }}</strong>
+                                </td>
+                                <td>
+                                    <strong style="color: #2563EB;">Rp{{ number_format($item->nominal ?? 0, 0, ',', '.') }}</strong>
+                                </td>
+                                <td>
+                                    <span class="badge-status">
+                                        {{ $item->status ?? 'Berhasil' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div class="empty">
+                Belum ada riwayat transaksi.
+            </div>
+        @endif
     </div>
 
 @endsection
