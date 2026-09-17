@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="en" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Pengawas') - SOY YPIK PAM JAYA</title>
+    <meta name="csrf-token" content="">
+    <title>Laporan Koperasi - SOY YPIK PAM JAYA</title>
 
     <!-- Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,19 +93,12 @@
             padding: 1.5rem !important;
         }
     </style>
-    @stack('styles')
-</head>
+    </head>
 <body class="h-full antialiased bg-[#EEF3FB] text-[#1F2937]">
 
-    @php
-        $navUser = auth()->user();
-        $navAvatar = $navUser?->avatar;
-        $hasNavAvatar = $navAvatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($navAvatar);
-        $navInitial = strtoupper(substr(trim($navUser?->nama_lengkap ?: 'P'), 0, 1));
-    @endphp
-
+    
     <!-- TOP NAVBAR (#FFFFFF) -->
-    <header class="h-16 bg-[#FFFFFF] border-b border-[#E5E7EB] flex items-center justify-between px-6 fixed top-0 right-0 left-0 lg:left-64 z-30 shadow-sm">
+    <header class="h-16 bg-[#FFFFFF] border-b border-[#E5E7EB] flex items-center justify-between px-6 w-full fixed top-0 left-0 z-50 shadow-sm">
         
         <!-- Left Side: Mobile Toggle & Brand for Mobile -->
         <div class="flex items-center gap-3">
@@ -114,7 +107,7 @@
             </button>
             <div class="flex items-center gap-2.5 lg:hidden">
                 <div class="w-7 h-7 rounded-full overflow-hidden bg-white flex items-center justify-center border border-gray-200">
-                    <img src="{{ asset('images/logo-ypik.png') }}" alt="Logo YPIK" class="w-full h-full object-cover">
+                    <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK" class="w-full h-full object-cover">
                 </div>
                 <span class="text-xs font-bold tracking-wider text-gray-900 uppercase">SOY YPIK</span>
             </div>
@@ -131,15 +124,11 @@
             <!-- Profile Dropdown Button -->
             <div class="relative">
                 <button onclick="toggleProfileDropdown()" id="profileDropdownBtn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition duration-200 group">
-                    @if($hasNavAvatar)
-                        <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-8 h-8 rounded-full object-cover border border-gray-200 shadow-sm">
-                    @else
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
-                            {{ $navInitial }}
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                            P
                         </div>
-                    @endif
-                    <div class="hidden md:block text-left">
-                        <div class="text-xs font-bold text-gray-900 leading-none">{{ auth()->user()->nama_lengkap ?? 'Pengawas' }}</div>
+                                        <div class="hidden md:block text-left">
+                        <div class="text-xs font-bold text-gray-900 leading-none">Pengawas YPIK</div>
                         <span class="text-[10px] text-gray-500 font-medium leading-none">Pengawas Koperasi</span>
                     </div>
                     <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-700 transition-transform duration-200" id="profileChevron"></i>
@@ -149,15 +138,11 @@
                 <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-[100] animate-dropdown">
                     <div class="px-4 py-3.5 border-b border-gray-100 bg-[#F9FAFB]">
                         <div class="flex items-center gap-3">
-                            @if($hasNavAvatar)
-                                <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-10 h-10 rounded-full object-cover border border-gray-200">
-                            @else
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
-                                    {{ $navInitial }}
+                                                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                                    P
                                 </div>
-                            @endif
-                            <div class="min-w-0">
-                                <p class="text-sm font-bold text-gray-900 truncate">{{ auth()->user()->nama_lengkap ?? 'Pengawas' }}</p>
+                                                        <div class="min-w-0">
+                                <p class="text-sm font-bold text-gray-900 truncate">Pengawas YPIK</p>
                                 <span class="inline-block mt-0.5 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                                     Pengawas Koperasi
                                 </span>
@@ -186,7 +171,7 @@
         <!-- Sidebar Brand Header -->
         <div class="h-16 flex items-center gap-3 px-5 border-b border-gray-700/60 bg-[#1F2937]">
             <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm shrink-0">
-                <img src="{{ asset('images/logo-ypik.png') }}" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
+                <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
             </div>
             <div class="min-w-0">
                 <div class="text-xs font-bold tracking-wider text-white uppercase truncate">SOY YPIK PAM JAYA</div>
@@ -202,29 +187,29 @@
             </div>
 
             <!-- Dashboard -->
-            <a href="{{ route('pengawas.dashboard') }}"
-                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 {{ request()->routeIs('pengawas.dashboard') ? 'bg-[#2563EB] text-white font-bold shadow-sm shadow-blue-500/20' : 'text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold' }}">
+            <a href="http://localhost/pengawas"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
                 <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                 <span>Dashboard</span>
             </a>
 
             <!-- Laporan Simpanan -->
-            <a href="{{ route('pengawas.laporan.simpanan') }}"
-                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 {{ request()->routeIs('pengawas.laporan.simpanan') ? 'bg-[#2563EB] text-white font-bold shadow-sm shadow-blue-500/20' : 'text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold' }}">
+            <a href="http://localhost/pengawas/laporan/simpanan"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
                 <i data-lucide="wallet" class="w-4 h-4"></i>
                 <span>Simpanan</span>
             </a>
 
             <!-- Laporan Pinjaman -->
-            <a href="{{ route('pengawas.laporan.pinjaman') }}"
-                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 {{ request()->routeIs('pengawas.laporan.pinjaman') ? 'bg-[#2563EB] text-white font-bold shadow-sm shadow-blue-500/20' : 'text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold' }}">
+            <a href="http://localhost/pengawas/laporan/pinjaman"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
                 <i data-lucide="hand-coins" class="w-4 h-4"></i>
                 <span>Pinjaman</span>
             </a>
 
             <!-- Kas Usaha -->
-            <a href="{{ route('pengawas.laporan.kas-usaha') }}"
-                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 {{ request()->routeIs('pengawas.laporan.kas-usaha') ? 'bg-[#2563EB] text-white font-bold shadow-sm shadow-blue-500/20' : 'text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold' }}">
+            <a href="http://localhost/pengawas/laporan/kas-usaha"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
                 <i data-lucide="briefcase" class="w-4 h-4"></i>
                 <span>Kas Usaha</span>
             </a>
@@ -249,9 +234,8 @@
     </aside>
 
     <!-- Hidden Logout Form -->
-    <form id="logoutForm" method="POST" action="{{ route('logout') }}" class="hidden">
-        @csrf
-    </form>
+    <form id="logoutForm" method="POST" action="http://localhost/logout" class="hidden">
+        <input type="hidden" name="_token" value="" autocomplete="off">    </form>
 
     <!-- Backdrop for mobile sidebar -->
     <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
@@ -262,22 +246,87 @@
         <main class="flex-1 p-6 lg:p-8 space-y-6 w-full max-w-7xl mx-auto">
             
             <!-- Success Alert -->
-            @if(session('success'))
-                <div class="rounded-xl px-4 py-3.5 text-xs font-semibold flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 shadow-sm animate-fade-in">
-                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0"></i>
-                    <span>{{ session('success') }}</span>
-                </div>
-            @endif
-
+            
             <!-- Error Alert -->
-            @if(session('error') || (isset($errors) && $errors->any()))
-                <div class="rounded-xl px-4 py-3.5 text-xs font-semibold flex items-center gap-2.5 bg-rose-50 border border-rose-200 text-rose-800 shadow-sm animate-fade-in">
-                    <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600 shrink-0"></i>
-                    <span>{{ session('error') ?? ($errors->first() ?? '') }}</span>
-                </div>
-            @endif
+            
+            
+    <!-- Page Header Title -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Pusat Laporan</h1>
+            <p class="text-xs text-gray-500 mt-1">Ringkasan berkas dan rekapitulasi data operasional koperasi.</p>
+        </div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
+            <i data-lucide="shield-check" class="w-4 h-4 text-[#2563EB]"></i>
+            <span>Mode View Only</span>
+        </div>
+    </div>
 
-            @yield('content')
+    <!-- Quick Navigation to Reports -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <!-- Laporan Simpanan -->
+        <a href="http://localhost/pengawas/laporan/simpanan"
+            class="group bg-white border border-gray-200/80 rounded-2xl p-6 hover:border-[#2563EB] hover:shadow-md transition duration-200 flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] mb-4 group-hover:scale-105 transition-transform">
+                    <i data-lucide="wallet" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-bold text-gray-900 text-base group-hover:text-[#2563EB] transition-colors">
+                    Laporan Simpanan
+                </h3>
+                <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                    Data simpanan pokok, simpanan wajib, simpanan sukarela, serta total saldo seluruh anggota koperasi.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#2563EB] group-hover:translate-x-1 transition-transform">
+                <span>Lihat Laporan</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
+        </a>
+
+        <!-- Laporan Pinjaman -->
+        <a href="http://localhost/pengawas/laporan/pinjaman"
+            class="group bg-white border border-gray-200/80 rounded-2xl p-6 hover:border-[#0EA5E9] hover:shadow-md transition duration-200 flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-[#0EA5E9] mb-4 group-hover:scale-105 transition-transform">
+                    <i data-lucide="hand-coins" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-bold text-gray-900 text-base group-hover:text-[#0EA5E9] transition-colors">
+                    Laporan Pinjaman
+                </h3>
+                <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                    Data pinjaman, plafon pembiayaan, tenor angsuran, cicilan, serta sisa pinjaman anggota.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#0EA5E9] group-hover:translate-x-1 transition-transform">
+                <span>Lihat Laporan</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
+        </a>
+
+        <!-- Kas Usaha -->
+        <a href="http://localhost/pengawas/laporan/kas-usaha"
+            class="group bg-white border border-gray-200/80 rounded-2xl p-6 hover:border-[#10B981] hover:shadow-md transition duration-200 flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#10B981] mb-4 group-hover:scale-105 transition-transform">
+                    <i data-lucide="briefcase" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-bold text-gray-900 text-base group-hover:text-[#10B981] transition-colors">
+                    Kas Usaha
+                </h3>
+                <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                    Monitoring arus kas operasional: seluruh penerimaan, pengeluaran, dan saldo kas terkini.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#10B981] group-hover:translate-x-1 transition-transform">
+                <span>Lihat Kas Usaha</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
+        </a>
+
+    </div>
+
 
         </main>
 
@@ -345,6 +394,5 @@
             });
         }
     </script>
-    @stack('scripts')
-</body>
+    </body>
 </html>

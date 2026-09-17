@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="">
+    <title>Dashboard Pengawas - SOY YPIK PAM JAYA</title>
+
+    <!-- Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#2563EB',
+                            secondary: '#0EA5E9',
+                            accent: '#10B981',
+                            sidebar: '#1F2937',
+                            bg: '#EEF3FB',
+                            panel: '#FFFFFF',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #EEF3FB;
+            color: #1F2937;
+        }
+
+        /* Sidebar & Container transitions */
+        aside {
+            transition: transform 0.3s ease, width 0.3s ease;
+        }
+        #main-container {
+            transition: padding-left 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #EEF3FB;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Profile Dropdown Animation */
+        @keyframes dropdownIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .animate-dropdown {
+            animation: dropdownIn 0.2s ease-out;
+        }
+
+        /* SweetAlert2 Styling */
+        .swal2-popup {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            border-radius: 1rem !important;
+            padding: 1.5rem !important;
+        }
+    </style>
+    </head>
+<body class="h-full antialiased bg-[#EEF3FB] text-[#1F2937]">
+
+    
+    <!-- TOP NAVBAR (#FFFFFF) -->
+    <header class="h-16 bg-[#FFFFFF] border-b border-[#E5E7EB] flex items-center justify-between px-6 fixed top-0 right-0 left-0 lg:left-64 z-30 shadow-sm">
+        
+        <!-- Left Side: Mobile Toggle & Brand for Mobile -->
+        <div class="flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Toggle Sidebar">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2.5 lg:hidden">
+                <div class="w-7 h-7 rounded-full overflow-hidden bg-white flex items-center justify-center border border-gray-200">
+                    <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK" class="w-full h-full object-cover">
+                </div>
+                <span class="text-xs font-bold tracking-wider text-gray-900 uppercase">SOY YPIK</span>
+            </div>
+        </div>
+
+        <!-- Right Side: Status Badge, Mode & User Profile -->
+        <div class="flex items-center gap-4">
+            
+            <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-100 text-[11px] font-bold text-blue-700">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>PORTAL PENGAWAS</span>
+            </div>
+
+            <!-- Profile Dropdown Button -->
+            <div class="relative">
+                <button onclick="toggleProfileDropdown()" id="profileDropdownBtn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition duration-200 group">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                            P
+                        </div>
+                                        <div class="hidden md:block text-left">
+                        <div class="text-xs font-bold text-gray-900 leading-none">Pengawas YPIK</div>
+                        <span class="text-[10px] text-gray-500 font-medium leading-none">Pengawas Koperasi</span>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-700 transition-transform duration-200" id="profileChevron"></i>
+                </button>
+
+                <!-- Profile Dropdown Menu -->
+                <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-[100] animate-dropdown">
+                    <div class="px-4 py-3.5 border-b border-gray-100 bg-[#F9FAFB]">
+                        <div class="flex items-center gap-3">
+                                                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                                    P
+                                </div>
+                                                        <div class="min-w-0">
+                                <p class="text-sm font-bold text-gray-900 truncate">Pengawas YPIK</p>
+                                <span class="inline-block mt-0.5 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                                    Pengawas Koperasi
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="py-1.5">
+                        <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 transition duration-150">
+                            <div class="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center">
+                                <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-600"></i>
+                            </div>
+                            <span class="font-semibold">Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- SIDEBAR (#1F2937) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#1F2937] border-r border-[#374151] transition-transform duration-300 -translate-x-full lg:translate-x-0">
+        
+        <!-- Sidebar Brand Header -->
+        <div class="h-16 flex items-center gap-3 px-5 border-b border-gray-700/60 bg-[#1F2937]">
+            <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm shrink-0">
+                <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
+            </div>
+            <div class="min-w-0">
+                <div class="text-xs font-bold tracking-wider text-white uppercase truncate">SOY YPIK PAM JAYA</div>
+                <div class="text-[10px] font-semibold text-gray-400">Sistem Informasi Koperasi</div>
+            </div>
+        </div>
+
+        <!-- Sidebar Navigation Menu -->
+        <nav class="flex-1 space-y-1.5 px-3 py-6 overflow-y-auto">
+            
+            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 pb-2">
+                Menu Monitoring
+            </div>
+
+            <!-- Dashboard -->
+            <a href="http://localhost/pengawas"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <!-- Laporan Simpanan -->
+            <a href="http://localhost/pengawas/laporan/simpanan"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="wallet" class="w-4 h-4"></i>
+                <span>Simpanan</span>
+            </a>
+
+            <!-- Laporan Pinjaman -->
+            <a href="http://localhost/pengawas/laporan/pinjaman"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="hand-coins" class="w-4 h-4"></i>
+                <span>Pinjaman</span>
+            </a>
+
+            <!-- Kas Usaha -->
+            <a href="http://localhost/pengawas/laporan/kas-usaha"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                <span>Kas Usaha</span>
+            </a>
+
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-gray-700/60 bg-[#1F2937]/90 space-y-3">
+            <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-gray-300 hover:text-rose-400 hover:bg-rose-500/10 transition duration-150">
+                <div class="w-6 h-6 rounded-md bg-rose-500/10 flex items-center justify-center">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-400"></i>
+                </div>
+                <span class="font-bold text-xs uppercase tracking-wider">Keluar</span>
+            </button>
+
+            <div class="px-2 pt-1 border-t border-gray-700/40 flex items-center justify-between text-[10px] text-gray-400">
+                <span class="font-bold uppercase tracking-wider">VERSI WEB 1.1</span>
+                <span class="font-bold text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">PENGAWAS</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- Hidden Logout Form -->
+    <form id="logoutForm" method="POST" action="http://localhost/logout" class="hidden">
+        <input type="hidden" name="_token" value="" autocomplete="off">    </form>
+
+    <!-- Backdrop for mobile sidebar -->
+    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- MAIN CONTAINER (#EEF3FB) -->
+    <div id="main-container" class="flex-grow flex flex-col min-w-0 lg:pl-64 pt-16 min-h-screen bg-[#EEF3FB]">
+        
+        <main class="flex-1 p-6 lg:p-8 space-y-6 w-full max-w-7xl mx-auto">
+            
+            <!-- Success Alert -->
+            
+            <!-- Error Alert -->
+            
+            
+    <!-- Page Header Title -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Dashboard Pengawas</h1>
+            <p class="text-xs text-gray-500 mt-1">Monitoring kondisi operasional dan kesehatan keuangan koperasi.</p>
+        </div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Akses Audit & View Only</span>
+        </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- RINGKASAN DATA STATS GRID     -->
+    <!-- ============================= -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <!-- Card 1: Total Anggota -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-blue-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">ANGGOTA</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Total Anggota</p>
+                <h3 class="text-2xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    51
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1.5">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                    <span>Seluruh anggota terdaftar</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 2: Total Simpanan -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-emerald-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#10B981] shrink-0">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">SIMPANAN</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Total Simpanan</p>
+                <h3 class="text-2xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 238.106.789
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1.5">
+                    <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#10B981]"></i>
+                    <span>Total saldo simpanan anggota</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 3: Total Pinjaman Aktif -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-sky-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-[#0EA5E9] shrink-0">
+                    <i data-lucide="hand-coins" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">OUTSTANDING</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Total Pinjaman Aktif</p>
+                <h3 class="text-2xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 378.031.232
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1.5">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-[#0EA5E9]"></i>
+                    <span>Sisa pinjaman berjalan</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 4: Jumlah Pinjaman Aktif -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-purple-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 shrink-0">
+                    <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">DEBITUR</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Pinjaman Aktif</p>
+                <h3 class="text-2xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    42
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1.5">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-purple-600"></i>
+                    <span>Pinjaman sedang berjalan</span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================= -->
+    <!-- MENU LAPORAN UTAMA            -->
+    <!-- ============================= -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl overflow-hidden shadow-sm">
+        
+        <div class="px-6 py-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+                <h3 class="text-base font-bold text-gray-900 tracking-tight">Pusat Laporan Koperasi</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Pilih modul laporan yang ingin Anda periksa dan analisis.</p>
+            </div>
+            <span class="text-[11px] font-bold text-[#2563EB] bg-blue-50 border border-blue-100 px-3 py-1 rounded-md self-start sm:self-auto uppercase tracking-wider">
+                Monitoring Aktif
+            </span>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+
+            <!-- Card 1: Laporan Simpanan -->
+            <a href="http://localhost/pengawas/laporan/simpanan"
+                class="group bg-[#F8FAFC] border border-gray-200 rounded-xl p-5 hover:border-[#2563EB] hover:bg-white hover:shadow-md transition duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] mb-4 group-hover:scale-105 transition-transform">
+                        <i data-lucide="wallet" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900 text-base group-hover:text-[#2563EB] transition-colors">
+                        Laporan Simpanan
+                    </h4>
+                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                        Data rincian simpanan pokok, wajib, sukarela, dan total saldo simpanan seluruh anggota.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-xs font-bold text-[#2563EB] group-hover:translate-x-1 transition-transform">
+                    <span>Lihat Laporan</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </div>
+            </a>
+
+            <!-- Card 2: Laporan Pinjaman -->
+            <a href="http://localhost/pengawas/laporan/pinjaman"
+                class="group bg-[#F8FAFC] border border-gray-200 rounded-xl p-5 hover:border-[#0EA5E9] hover:bg-white hover:shadow-md transition duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-[#0EA5E9] mb-4 group-hover:scale-105 transition-transform">
+                        <i data-lucide="hand-coins" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900 text-base group-hover:text-[#0EA5E9] transition-colors">
+                        Laporan Pinjaman
+                    </h4>
+                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                        Data plafon pinjaman, tenor angsuran, cicilan berjalan, sisa pinjaman, dan status kelancaran.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-xs font-bold text-[#0EA5E9] group-hover:translate-x-1 transition-transform">
+                    <span>Lihat Laporan</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </div>
+            </a>
+
+            <!-- Card 3: Kas Usaha -->
+            <a href="http://localhost/pengawas/laporan/kas-usaha"
+                class="group bg-[#F8FAFC] border border-gray-200 rounded-xl p-5 hover:border-[#10B981] hover:bg-white hover:shadow-md transition duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#10B981] mb-4 group-hover:scale-105 transition-transform">
+                        <i data-lucide="briefcase" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900 text-base group-hover:text-[#10B981] transition-colors">
+                        Kas Usaha
+                    </h4>
+                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                        Monitoring mutasi kas operasional: pencatatan penerimaan, pengeluaran, dan saldo kas terkini.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-xs font-bold text-[#10B981] group-hover:translate-x-1 transition-transform">
+                    <span>Lihat Kas Usaha</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </div>
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- ============================= -->
+    <!-- INFORMASI AKSES PENGAWAS      -->
+    <!-- ============================= -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm flex items-start gap-4">
+        <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
+            <i data-lucide="shield" class="w-5 h-5"></i>
+        </div>
+        <div>
+            <h4 class="text-sm font-bold text-gray-900 tracking-wide">
+                Hak Akses Pengawasan (Audit & Read-Only)
+            </h4>
+            <p class="text-xs text-gray-500 mt-1.5 leading-relaxed">
+                Akun Pengawas memiliki hak akses untuk memantau seluruh transaksi dan rekapitulasi keuangan koperasi secara transparan. Sistem secara otomatis mengunci tindakan penambahan, pengubahan, atau penghapusan data untuk menjaga independensi pengawasan.
+            </p>
+        </div>
+    </div>
+
+
+        </main>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (sidebar && backdrop) {
+                sidebar.classList.toggle('-translate-x-full');
+                backdrop.classList.toggle('hidden');
+            }
+        }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+            if (chevron) {
+                chevron.classList.toggle('rotate-180');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('profileDropdown');
+            const btn = document.getElementById('profileDropdownBtn');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
+            }
+        });
+
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Konfirmasi Keluar',
+                text: 'Apakah Anda yakin ingin keluar dari portal Pengawas?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#9CA3AF',
+                confirmButtonText: 'Ya, Keluar',
+                cancelButtonText: 'Batal',
+                background: '#FFFFFF',
+                color: '#1F2937',
+                customClass: {
+                    popup: 'border border-gray-200 shadow-xl rounded-2xl',
+                    confirmButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider',
+                    cancelButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+        }
+    </script>
+    </body>
+</html>

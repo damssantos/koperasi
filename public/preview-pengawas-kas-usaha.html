@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="">
+    <title>Laporan Kas Usaha - SOY YPIK PAM JAYA</title>
+
+    <!-- Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#2563EB',
+                            secondary: '#0EA5E9',
+                            accent: '#10B981',
+                            sidebar: '#1F2937',
+                            bg: '#EEF3FB',
+                            panel: '#FFFFFF',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #EEF3FB;
+            color: #1F2937;
+        }
+
+        /* Sidebar & Container transitions */
+        aside {
+            transition: transform 0.3s ease, width 0.3s ease;
+        }
+        #main-container {
+            transition: padding-left 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #EEF3FB;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Profile Dropdown Animation */
+        @keyframes dropdownIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .animate-dropdown {
+            animation: dropdownIn 0.2s ease-out;
+        }
+
+        /* SweetAlert2 Styling */
+        .swal2-popup {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            border-radius: 1rem !important;
+            padding: 1.5rem !important;
+        }
+    </style>
+    </head>
+<body class="h-full antialiased bg-[#EEF3FB] text-[#1F2937]">
+
+    
+    <!-- TOP NAVBAR (#FFFFFF) -->
+    <header class="h-16 bg-[#FFFFFF] border-b border-[#E5E7EB] flex items-center justify-between px-6 w-full fixed top-0 left-0 z-50 shadow-sm">
+        
+        <!-- Left Side: Mobile Toggle & Brand for Mobile -->
+        <div class="flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Toggle Sidebar">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2.5 lg:hidden">
+                <div class="w-7 h-7 rounded-full overflow-hidden bg-white flex items-center justify-center border border-gray-200">
+                    <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK" class="w-full h-full object-cover">
+                </div>
+                <span class="text-xs font-bold tracking-wider text-gray-900 uppercase">SOY YPIK</span>
+            </div>
+        </div>
+
+        <!-- Right Side: Status Badge, Mode & User Profile -->
+        <div class="flex items-center gap-4">
+            
+            <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-100 text-[11px] font-bold text-blue-700">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>PORTAL PENGAWAS</span>
+            </div>
+
+            <!-- Profile Dropdown Button -->
+            <div class="relative">
+                <button onclick="toggleProfileDropdown()" id="profileDropdownBtn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition duration-200 group">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                            P
+                        </div>
+                                        <div class="hidden md:block text-left">
+                        <div class="text-xs font-bold text-gray-900 leading-none">Pengawas YPIK</div>
+                        <span class="text-[10px] text-gray-500 font-medium leading-none">Pengawas Koperasi</span>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-700 transition-transform duration-200" id="profileChevron"></i>
+                </button>
+
+                <!-- Profile Dropdown Menu -->
+                <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-[100] animate-dropdown">
+                    <div class="px-4 py-3.5 border-b border-gray-100 bg-[#F9FAFB]">
+                        <div class="flex items-center gap-3">
+                                                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                                    P
+                                </div>
+                                                        <div class="min-w-0">
+                                <p class="text-sm font-bold text-gray-900 truncate">Pengawas YPIK</p>
+                                <span class="inline-block mt-0.5 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                                    Pengawas Koperasi
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="py-1.5">
+                        <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 transition duration-150">
+                            <div class="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center">
+                                <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-600"></i>
+                            </div>
+                            <span class="font-semibold">Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- SIDEBAR (#1F2937) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#1F2937] border-r border-[#374151] transition-transform duration-300 -translate-x-full lg:translate-x-0">
+        
+        <!-- Sidebar Brand Header -->
+        <div class="h-16 flex items-center gap-3 px-5 border-b border-gray-700/60 bg-[#1F2937]">
+            <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm shrink-0">
+                <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
+            </div>
+            <div class="min-w-0">
+                <div class="text-xs font-bold tracking-wider text-white uppercase truncate">SOY YPIK PAM JAYA</div>
+                <div class="text-[10px] font-semibold text-gray-400">Sistem Informasi Koperasi</div>
+            </div>
+        </div>
+
+        <!-- Sidebar Navigation Menu -->
+        <nav class="flex-1 space-y-1.5 px-3 py-6 overflow-y-auto">
+            
+            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 pb-2">
+                Menu Monitoring
+            </div>
+
+            <!-- Dashboard -->
+            <a href="http://localhost/pengawas"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <!-- Laporan Simpanan -->
+            <a href="http://localhost/pengawas/laporan/simpanan"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="wallet" class="w-4 h-4"></i>
+                <span>Simpanan</span>
+            </a>
+
+            <!-- Laporan Pinjaman -->
+            <a href="http://localhost/pengawas/laporan/pinjaman"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="hand-coins" class="w-4 h-4"></i>
+                <span>Pinjaman</span>
+            </a>
+
+            <!-- Kas Usaha -->
+            <a href="http://localhost/pengawas/laporan/kas-usaha"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                <span>Kas Usaha</span>
+            </a>
+
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-gray-700/60 bg-[#1F2937]/90 space-y-3">
+            <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-gray-300 hover:text-rose-400 hover:bg-rose-500/10 transition duration-150">
+                <div class="w-6 h-6 rounded-md bg-rose-500/10 flex items-center justify-center">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-400"></i>
+                </div>
+                <span class="font-bold text-xs uppercase tracking-wider">Keluar</span>
+            </button>
+
+            <div class="px-2 pt-1 border-t border-gray-700/40 flex items-center justify-between text-[10px] text-gray-400">
+                <span class="font-bold uppercase tracking-wider">VERSI WEB 1.1</span>
+                <span class="font-bold text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">PENGAWAS</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- Hidden Logout Form -->
+    <form id="logoutForm" method="POST" action="http://localhost/logout" class="hidden">
+        <input type="hidden" name="_token" value="" autocomplete="off">    </form>
+
+    <!-- Backdrop for mobile sidebar -->
+    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- MAIN CONTAINER (#EEF3FB) -->
+    <div id="main-container" class="flex-grow flex flex-col min-w-0 lg:pl-64 pt-16 min-h-screen bg-[#EEF3FB]">
+        
+        <main class="flex-1 p-6 lg:p-8 space-y-6 w-full max-w-7xl mx-auto">
+            
+            <!-- Success Alert -->
+            
+            <!-- Error Alert -->
+            
+            
+    <!-- Page Header Title -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Kas Usaha</h1>
+            <p class="text-xs text-gray-500 mt-1">Monitoring arus kas operasional, penerimaan pendapatan, dan pengeluaran usaha.</p>
+        </div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
+            <i data-lucide="shield-check" class="w-4 h-4 text-[#2563EB]"></i>
+            <span>Mode View Only</span>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TOP SUMMARY METRICS                        -->
+    <!-- ========================================== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <!-- Card 1: Total Pemasukan -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-emerald-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#10B981] shrink-0">
+                    <i data-lucide="arrow-down-right" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">PEMASUKAN</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Total Pemasukan</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 36.550.000
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-[#10B981]"></i>
+                    <span>5 transaksi penerimaan</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 2: Total Pengeluaran -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-rose-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shrink-0">
+                    <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">PENGELUARAN</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Total Pengeluaran</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 2.900.000
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-rose-500"></i>
+                    <span>5 transaksi pengeluaran</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 3: Saldo Kas -->
+        <div class="bg-white border-2 border-blue-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-blue-400 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 tracking-wider uppercase">SALDO BERSIH</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Saldo Kas Usaha</p>
+                <h3 class="text-xl font-extrabold text-blue-700 mt-1 tracking-tight">
+                    Rp 33.650.000
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="scale" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                    <span>Net akumulasi kas usaha</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 4: Total Transaksi -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-purple-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 shrink-0">
+                    <i data-lucide="receipt" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">MUTASI</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Total Transaksi</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    10
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="activity" class="w-3.5 h-3.5 text-purple-600"></i>
+                    <span>Arus kas operasional tercatat</span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TABEL RIWAYAT TRANSAKSI KAS                -->
+    <!-- ========================================== -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl overflow-hidden shadow-sm">
+        
+        <!-- Header & Search -->
+        <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-gray-900 tracking-tight">Riwayat Arus Kas Usaha</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Daftar mutasi penerimaan dan pengeluaran kas usaha koperasi.</p>
+            </div>
+
+            <div class="relative w-full md:w-72">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input
+                    type="text"
+                    id="searchKas"
+                    placeholder="Cari jenis atau keterangan..."
+                    class="w-full bg-[#F8FAFC] border border-gray-200 rounded-lg pl-10 pr-4 py-2 text-xs text-gray-900 placeholder-gray-400 focus:bg-white focus:border-[#2563EB] focus:outline-none transition"
+                >
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-[#F8FAFC] border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">No</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">Tanggal</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">Jenis Transaksi</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">Keterangan</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-right">Nominal</th>
+                    </tr>
+                </thead>
+                <tbody id="kasTable" class="divide-y divide-gray-100 text-gray-700">
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="penerimaan iuran bulanan anggota">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                1
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                24 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <i data-lucide="arrow-down-left" class="w-3 h-3 text-emerald-600"></i>
+                                        PENERIMAAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Iuran bulanan anggota
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-emerald-600 font-mono text-sm">
+                                        + Rp 1.500.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="pengeluaran operasional kantor harian">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                2
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                24 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <i data-lucide="arrow-up-right" class="w-3 h-3 text-rose-600"></i>
+                                        PENGELUARAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Operasional kantor harian
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-rose-600 font-mono text-sm">
+                                        - Rp 450.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="penerimaan setoran modal dari pusat">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                3
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                23 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <i data-lucide="arrow-down-left" class="w-3 h-3 text-emerald-600"></i>
+                                        PENERIMAAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Setoran modal dari pusat
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-emerald-600 font-mono text-sm">
+                                        + Rp 10.000.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="pengeluaran biaya konsumsi rapat">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                4
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                22 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <i data-lucide="arrow-up-right" class="w-3 h-3 text-rose-600"></i>
+                                        PENGELUARAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Biaya konsumsi rapat
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-rose-600 font-mono text-sm">
+                                        - Rp 750.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="penerimaan penerimaan donasi sukarela">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                5
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                21 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <i data-lucide="arrow-down-left" class="w-3 h-3 text-emerald-600"></i>
+                                        PENERIMAAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Penerimaan donasi sukarela
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-emerald-600 font-mono text-sm">
+                                        + Rp 5.000.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="pengeluaran pembayaran tagihan listrik dan air">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                6
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                20 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <i data-lucide="arrow-up-right" class="w-3 h-3 text-rose-600"></i>
+                                        PENGELUARAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Pembayaran tagihan listrik dan air
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-rose-600 font-mono text-sm">
+                                        - Rp 1.200.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="penerimaan setoran awal pembukaan kas">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                7
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                19 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <i data-lucide="arrow-down-left" class="w-3 h-3 text-emerald-600"></i>
+                                        PENERIMAAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Setoran awal pembukaan kas
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-emerald-600 font-mono text-sm">
+                                        + Rp 20.000.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="pengeluaran biaya transportasi dinas">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                8
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                18 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <i data-lucide="arrow-up-right" class="w-3 h-3 text-rose-600"></i>
+                                        PENGELUARAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Biaya transportasi dinas
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-rose-600 font-mono text-sm">
+                                        - Rp 150.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="penerimaan bunga bank bulanan">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                9
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                17 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <i data-lucide="arrow-down-left" class="w-3 h-3 text-emerald-600"></i>
+                                        PENERIMAAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Bunga bank bulanan
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-emerald-600 font-mono text-sm">
+                                        + Rp 50.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                                            <tr class="kas-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="pengeluaran biaya pemeliharaan rutin">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                10
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                                16 Oct 2023
+                            </td>
+
+                            <!-- Jenis -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <i data-lucide="arrow-up-right" class="w-3 h-3 text-rose-600"></i>
+                                        PENGELUARAN
+                                    </span>
+                                                            </td>
+
+                            <!-- Keterangan -->
+                            <td class="px-6 py-4 font-medium text-gray-900 max-w-md">
+                                Biaya pemeliharaan rutin
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-bold">
+                                                                    <span class="text-rose-600 font-mono text-sm">
+                                        - Rp 350.000
+                                    </span>
+                                                            </td>
+                        </tr>
+                    
+                    <!-- Search Empty State -->
+                    <tr id="kasSearchEmpty" style="display: none;">
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                            <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mx-auto mb-3 text-gray-400">
+                                <i data-lucide="search-x" class="w-6 h-6"></i>
+                            </div>
+                            <p class="font-bold text-gray-800 text-sm">Data Tidak Ditemukan</p>
+                            <p class="text-xs text-gray-400 mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Footer -->
+        <div class="p-4 border-t border-gray-100 bg-[#F8FAFC] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-gray-500">
+            <p>
+                Total Transaksi: <span class="font-bold text-gray-900">10</span> mutasi kas
+            </p>
+            <p class="text-[11px] flex items-center gap-1.5">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                <span>Data bersifat read-only untuk Pengawas</span>
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Info Box -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm flex items-start gap-3.5">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
+            <i data-lucide="info" class="w-4 h-4"></i>
+        </div>
+        <p class="text-xs text-gray-600 leading-relaxed">
+            Pencatatan kas usaha mencakup seluruh pemasukan dari operasional koperasi serta pengeluaran yang telah diverifikasi oleh bagian keuangan.
+        </p>
+    </div>
+
+
+        </main>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (sidebar && backdrop) {
+                sidebar.classList.toggle('-translate-x-full');
+                backdrop.classList.toggle('hidden');
+            }
+        }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+            if (chevron) {
+                chevron.classList.toggle('rotate-180');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('profileDropdown');
+            const btn = document.getElementById('profileDropdownBtn');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
+            }
+        });
+
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Konfirmasi Keluar',
+                text: 'Apakah Anda yakin ingin keluar dari portal Pengawas?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#9CA3AF',
+                confirmButtonText: 'Ya, Keluar',
+                cancelButtonText: 'Batal',
+                background: '#FFFFFF',
+                color: '#1F2937',
+                customClass: {
+                    popup: 'border border-gray-200 shadow-xl rounded-2xl',
+                    confirmButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider',
+                    cancelButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+        }
+    </script>
+    <script>
+    const searchKas = document.getElementById('searchKas');
+    const kasRows = document.querySelectorAll('.kas-row');
+    const kasSearchEmpty = document.getElementById('kasSearchEmpty');
+
+    if (searchKas) {
+        searchKas.addEventListener('input', function () {
+            const keyword = this.value.toLowerCase().trim();
+            let visible = 0;
+
+            kasRows.forEach(row => {
+                const text = row.dataset.search || '';
+                if (keyword === '' || text.includes(keyword)) {
+                    row.style.display = '';
+                    visible++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (kasSearchEmpty) {
+                kasSearchEmpty.style.display = (visible === 0 && keyword !== '') ? '' : 'none';
+            }
+        });
+    }
+</script>
+</body>
+</html>

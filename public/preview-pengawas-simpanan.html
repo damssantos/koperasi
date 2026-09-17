@@ -1,0 +1,2869 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="">
+    <title>Laporan Simpanan - SOY YPIK PAM JAYA</title>
+
+    <!-- Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#2563EB',
+                            secondary: '#0EA5E9',
+                            accent: '#10B981',
+                            sidebar: '#1F2937',
+                            bg: '#EEF3FB',
+                            panel: '#FFFFFF',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #EEF3FB;
+            color: #1F2937;
+        }
+
+        /* Sidebar & Container transitions */
+        aside {
+            transition: transform 0.3s ease, width 0.3s ease;
+        }
+        #main-container {
+            transition: padding-left 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #EEF3FB;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Profile Dropdown Animation */
+        @keyframes dropdownIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .animate-dropdown {
+            animation: dropdownIn 0.2s ease-out;
+        }
+
+        /* SweetAlert2 Styling */
+        .swal2-popup {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            border-radius: 1rem !important;
+            padding: 1.5rem !important;
+        }
+    </style>
+    </head>
+<body class="h-full antialiased bg-[#EEF3FB] text-[#1F2937]">
+
+    
+    <!-- TOP NAVBAR (#FFFFFF) -->
+    <header class="h-16 bg-[#FFFFFF] border-b border-[#E5E7EB] flex items-center justify-between px-6 fixed top-0 right-0 left-0 lg:left-64 z-30 shadow-sm">
+        
+        <!-- Left Side: Mobile Toggle & Brand for Mobile -->
+        <div class="flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Toggle Sidebar">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2.5 lg:hidden">
+                <div class="w-7 h-7 rounded-full overflow-hidden bg-white flex items-center justify-center border border-gray-200">
+                    <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK" class="w-full h-full object-cover">
+                </div>
+                <span class="text-xs font-bold tracking-wider text-gray-900 uppercase">SOY YPIK</span>
+            </div>
+        </div>
+
+        <!-- Right Side: Status Badge, Mode & User Profile -->
+        <div class="flex items-center gap-4">
+            
+            <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-100 text-[11px] font-bold text-blue-700">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>PORTAL PENGAWAS</span>
+            </div>
+
+            <!-- Profile Dropdown Button -->
+            <div class="relative">
+                <button onclick="toggleProfileDropdown()" id="profileDropdownBtn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition duration-200 group">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                            P
+                        </div>
+                                        <div class="hidden md:block text-left">
+                        <div class="text-xs font-bold text-gray-900 leading-none">Pengawas YPIK</div>
+                        <span class="text-[10px] text-gray-500 font-medium leading-none">Pengawas Koperasi</span>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-700 transition-transform duration-200" id="profileChevron"></i>
+                </button>
+
+                <!-- Profile Dropdown Menu -->
+                <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-[100] animate-dropdown">
+                    <div class="px-4 py-3.5 border-b border-gray-100 bg-[#F9FAFB]">
+                        <div class="flex items-center gap-3">
+                                                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                                    P
+                                </div>
+                                                        <div class="min-w-0">
+                                <p class="text-sm font-bold text-gray-900 truncate">Pengawas YPIK</p>
+                                <span class="inline-block mt-0.5 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                                    Pengawas Koperasi
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="py-1.5">
+                        <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 transition duration-150">
+                            <div class="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center">
+                                <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-600"></i>
+                            </div>
+                            <span class="font-semibold">Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- SIDEBAR (#1F2937) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#1F2937] border-r border-[#374151] transition-transform duration-300 -translate-x-full lg:translate-x-0">
+        
+        <!-- Sidebar Brand Header -->
+        <div class="h-16 flex items-center gap-3 px-5 border-b border-gray-700/60 bg-[#1F2937]">
+            <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm shrink-0">
+                <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
+            </div>
+            <div class="min-w-0">
+                <div class="text-xs font-bold tracking-wider text-white uppercase truncate">SOY YPIK PAM JAYA</div>
+                <div class="text-[10px] font-semibold text-gray-400">Sistem Informasi Koperasi</div>
+            </div>
+        </div>
+
+        <!-- Sidebar Navigation Menu -->
+        <nav class="flex-1 space-y-1.5 px-3 py-6 overflow-y-auto">
+            
+            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 pb-2">
+                Menu Monitoring
+            </div>
+
+            <!-- Dashboard -->
+            <a href="http://localhost/pengawas"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <!-- Laporan Simpanan -->
+            <a href="http://localhost/pengawas/laporan/simpanan"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="wallet" class="w-4 h-4"></i>
+                <span>Simpanan</span>
+            </a>
+
+            <!-- Laporan Pinjaman -->
+            <a href="http://localhost/pengawas/laporan/pinjaman"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="hand-coins" class="w-4 h-4"></i>
+                <span>Pinjaman</span>
+            </a>
+
+            <!-- Kas Usaha -->
+            <a href="http://localhost/pengawas/laporan/kas-usaha"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                <span>Kas Usaha</span>
+            </a>
+
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-gray-700/60 bg-[#1F2937]/90 space-y-3">
+            <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-gray-300 hover:text-rose-400 hover:bg-rose-500/10 transition duration-150">
+                <div class="w-6 h-6 rounded-md bg-rose-500/10 flex items-center justify-center">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-400"></i>
+                </div>
+                <span class="font-bold text-xs uppercase tracking-wider">Keluar</span>
+            </button>
+
+            <div class="px-2 pt-1 border-t border-gray-700/40 flex items-center justify-between text-[10px] text-gray-400">
+                <span class="font-bold uppercase tracking-wider">VERSI WEB 1.1</span>
+                <span class="font-bold text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">PENGAWAS</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- Hidden Logout Form -->
+    <form id="logoutForm" method="POST" action="http://localhost/logout" class="hidden">
+        <input type="hidden" name="_token" value="" autocomplete="off">    </form>
+
+    <!-- Backdrop for mobile sidebar -->
+    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- MAIN CONTAINER (#EEF3FB) -->
+    <div id="main-container" class="flex-grow flex flex-col min-w-0 lg:pl-64 pt-16 min-h-screen bg-[#EEF3FB]">
+        
+        <main class="flex-1 p-6 lg:p-8 space-y-6 w-full max-w-7xl mx-auto">
+            
+            <!-- Success Alert -->
+            
+            <!-- Error Alert -->
+            
+            
+    <!-- Page Header Title -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Laporan Simpanan</h1>
+            <p class="text-xs text-gray-500 mt-1">Ringkasan dan data rincian saldo simpanan seluruh anggota koperasi.</p>
+        </div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
+            <i data-lucide="shield-check" class="w-4 h-4 text-[#2563EB]"></i>
+            <span>Mode View Only</span>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SUMMARY STATS CARDS                        -->
+    <!-- ========================================== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <!-- Simpanan Pokok -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-blue-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">POKOK</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Simpanan Pokok</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 220.306.789
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                    <span>Total simpanan pokok anggota</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Simpanan Wajib -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-sky-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-[#0EA5E9] shrink-0">
+                    <i data-lucide="arrow-down-circle" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">WAJIB</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Simpanan Wajib</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 8.525.000
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-[#0EA5E9]"></i>
+                    <span>Total simpanan wajib anggota</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Simpanan Sukarela -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-emerald-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#10B981] shrink-0">
+                    <i data-lucide="banknote" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">SUKARELA</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Simpanan Sukarela</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 9.275.000
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-[#10B981]"></i>
+                    <span>Total simpanan sukarela anggota</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Total Simpanan -->
+        <div class="bg-white border-2 border-blue-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-blue-400 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                    <i data-lucide="landmark" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 tracking-wider uppercase">TOTAL SALDO</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Total Simpanan</p>
+                <h3 class="text-xl font-extrabold text-blue-700 mt-1 tracking-tight">
+                    Rp 238.106.789
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="check-check" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                    <span>Total seluruh simpanan anggota</span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TABEL DATA SIMPANAN                        -->
+    <!-- ========================================== -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl overflow-hidden shadow-sm">
+        
+        <!-- Header & Search Input -->
+        <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-gray-900 tracking-tight">Data Simpanan Anggota</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Daftar saldo simpanan seluruh anggota koperasi.</p>
+            </div>
+
+            <!-- Search Field -->
+            <div class="relative w-full md:w-72">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input
+                    type="text"
+                    id="searchAnggota"
+                    placeholder="Cari ID, nama, atau no HP..."
+                    class="w-full bg-[#F8FAFC] border border-gray-200 rounded-lg pl-10 pr-4 py-2 text-xs text-gray-900 placeholder-gray-400 focus:bg-white focus:border-[#2563EB] focus:outline-none transition"
+                >
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-[#F8FAFC] border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">No</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">ID Anggota</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">Nama Anggota</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-right">Simpanan Pokok</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-right">Simpanan Wajib</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-right">Simpanan Sukarela</th>
+                        <th class="px-6 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-right">Total Saldo</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody" class="divide-y divide-gray-100 text-gray-700">
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-037 agus utami 08126140141">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                1
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-037
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Agus Utami</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08126140141</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 125.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 375.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-045 andi utami 08504558530">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                2
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-045
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Andi Utami</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08504558530</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 300.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-032 ani kusuma 08324273167">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                3
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-032
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Ani Kusuma</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08324273167</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 350.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-039 arief kusuma 08183124023">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                4
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-039
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Arief Kusuma</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08183124023</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 1.000.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 1.175.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-016 asep sanjaya 08138528084">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                5
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-016
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Asep Sanjaya</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08138528084</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 300.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-018 bambang setiawan 08236338750">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                6
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-018
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Bambang Setiawan</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08236338750</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 400.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-044 bayu saputra 08584934072">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                7
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-044
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Bayu Saputra</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08584934072</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 175.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-015 budi permata 08574121547">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                8
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-015
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Budi Permata</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08574121547</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 123.656.789
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 123.756.789
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-003 dedi lestari 08557491186">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                9
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-003
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Dedi Lestari</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08557491186</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 400.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-046 dewi nugroho 08320561748">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                10
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-046
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Dewi Nugroho</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08320561748</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 25.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 375.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-027 diah kusuma 08227918058">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                11
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-027
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Diah Kusuma</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08227918058</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 25.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 225.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-020 dian pratama 08273537990">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                12
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-020
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Dian Pratama</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08273537990</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 500.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 700.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-014 eko anggraini 08524595711">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                13
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-014
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Eko Anggraini</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08524595711</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 200.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-001 fajar hartono 08181909378">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                14
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-001
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Fajar Hartono</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08181909378</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 90.100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 6.025.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 96.125.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-007 fitri gunawan 08134236671">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                15
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-007
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Fitri Gunawan</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08134236671</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 25.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 375.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-031 gunawan pratama 08575136134">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                16
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-031
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Gunawan Pratama</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08575136134</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 300.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-050 hadi sanjaya 08193100251">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                17
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-050
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Hadi Sanjaya</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08193100251</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 125.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 375.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-029 hasan permata 08117598983">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                18
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-029
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Hasan Permata</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08117598983</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 275.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-005 hendra anggraini 08597114710">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                19
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-005
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Hendra Anggraini</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08597114710</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 300.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 450.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-017 indah saputra 08385253888">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                20
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-017
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Indah Saputra</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08385253888</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 200.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-011 irfan sanjaya 08178666617">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                21
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-011
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Irfan Sanjaya</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08178666617</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 350.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 500.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-034 iwan hartono 08158770658">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                22
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-034
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Iwan Hartono</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08158770658</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 200.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-043 joko kusuma 08550201462">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                23
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-043
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Joko Kusuma</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08550201462</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 225.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-004 kartika wibowo 08276018955">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                24
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-004
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Kartika Wibowo</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08276018955</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 300.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 575.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-030 lestari permata 08583848372">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                25
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-030
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Lestari Permata</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08583848372</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 250.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 500.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-002 lina wibowo 08597543231">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                26
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-002
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Lina Wibowo</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08597543231</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 225.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-042 maya susanto 08586843353">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                27
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-042
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Maya Susanto</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08586843353</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 350.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-040 melati lestari 08247824504">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                28
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-040
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Melati Lestari</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08247824504</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 550.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 750.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-019 nita utami 08543957551">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                29
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-019
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Nita Utami</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08543957551</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 250.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-047 novi nugroho 08280141269">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                30
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-047
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Novi Nugroho</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08280141269</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 650.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 850.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-051 pradama 0811576383838">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                31
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-051
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">pradama</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>0811576383838</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 0
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-010 puji utami 08302685995">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                32
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-010
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Puji Utami</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08302685995</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 25.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 125.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-021 putri hartono 08116372651">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                33
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-021
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Putri Hartono</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08116372651</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 25.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 125.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-041 rahma santoso 08188387371">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                34
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-041
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Rahma Santoso</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08188387371</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 25.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 300.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 475.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-048 ratna rahayu 08144319829">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                35
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-048
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Ratna Rahayu</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08144319829</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 150.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-036 rina kusuma 08546288975">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                36
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-036
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Rina Kusuma</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08546288975</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 300.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-033 rio setiawan 08268656355">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                37
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-033
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Rio Setiawan</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08268656355</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 175.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-022 rizal permata 08512220297">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                38
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-022
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Rizal Permata</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08512220297</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 150.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-008 rudi permata 08584268465">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                39
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-008
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Rudi Permata</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08584268465</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 350.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-023 sinta kusuma 08552882001">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                40
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-023
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Sinta Kusuma</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08552882001</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 150.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 425.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-028 siti purnama 08518033401">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                41
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-028
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Siti Purnama</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08518033401</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 275.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-009 slamet setiawan 08212233079">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                42
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-009
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Slamet Setiawan</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08212233079</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 450.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-024 sri kusuma 08533043483">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                43
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-024
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Sri Kusuma</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08533043483</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 25.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 425.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-012 tono rahayu 08131372159">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                44
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-012
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Tono Rahayu</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08131372159</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 150.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-006 wahyu handoko 08546507529">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                45
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-006
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Wahyu Handoko</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08546507529</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 225.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-049 wati wibowo 08524920868">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                46
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-049
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Wati Wibowo</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08524920868</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 200.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 325.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-026 wawan sanjaya 08282880729">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                47
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-026
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Wawan Sanjaya</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08282880729</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 0
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 175.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-025 wulan wibowo 08386205798">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                48
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-025
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Wulan Wibowo</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08386205798</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 25.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 175.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-035 yanti lestari 08113114402">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                49
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-035
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Yanti Lestari</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08113114402</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 750.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 900.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-013 yudi pratama 08192815901">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                50
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-013
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Yudi Pratama</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08192815901</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 75.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 650.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 825.000
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="member-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-038 yuni setiawan 08141705864">
+                            
+                            <!-- No -->
+                            <td class="px-6 py-4 text-gray-400 font-medium">
+                                51
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-6 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-038
+                                </span>
+                            </td>
+
+                            <!-- Nama Anggota -->
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900 text-xs">Yuni Setiawan</div>
+                                                                    <div class="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3 text-gray-400"></i>
+                                        <span>08141705864</span>
+                                    </div>
+                                                            </td>
+
+                            <!-- Pokok -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 100.000
+                            </td>
+
+                            <!-- Wajib -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 50.000
+                            </td>
+
+                            <!-- Sukarela -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap font-medium text-gray-600">
+                                Rp 500.000
+                            </td>
+
+                            <!-- Total -->
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <span class="font-bold text-gray-900 text-sm">
+                                    Rp 650.000
+                                </span>
+                            </td>
+                        </tr>
+                    
+                    <!-- Search Empty State -->
+                    <tr id="searchEmpty" style="display: none;">
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mx-auto mb-3 text-gray-400">
+                                <i data-lucide="search-x" class="w-6 h-6"></i>
+                            </div>
+                            <p class="font-bold text-gray-800 text-sm">Data Tidak Ditemukan</p>
+                            <p class="text-xs text-gray-400 mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Footer -->
+        <div class="p-4 border-t border-gray-100 bg-[#F8FAFC] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-gray-500">
+            <p>
+                Total Anggota: <span class="font-bold text-gray-900">51</span>
+            </p>
+            <p class="text-[11px] flex items-center gap-1.5">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                <span>Data bersifat read-only untuk Pengawas</span>
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Info Box -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm flex items-start gap-3.5">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
+            <i data-lucide="info" class="w-4 h-4"></i>
+        </div>
+        <p class="text-xs text-gray-600 leading-relaxed">
+            Laporan ini merepresentasikan saldo simpanan secara langsung berdasarkan buku catatan kas anggota. Hak akses Pengawas diperuntukkan khusus tujuan pemeriksaan dan pengawasan.
+        </p>
+    </div>
+
+
+        </main>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (sidebar && backdrop) {
+                sidebar.classList.toggle('-translate-x-full');
+                backdrop.classList.toggle('hidden');
+            }
+        }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+            if (chevron) {
+                chevron.classList.toggle('rotate-180');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('profileDropdown');
+            const btn = document.getElementById('profileDropdownBtn');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
+            }
+        });
+
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Konfirmasi Keluar',
+                text: 'Apakah Anda yakin ingin keluar dari portal Pengawas?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#9CA3AF',
+                confirmButtonText: 'Ya, Keluar',
+                cancelButtonText: 'Batal',
+                background: '#FFFFFF',
+                color: '#1F2937',
+                customClass: {
+                    popup: 'border border-gray-200 shadow-xl rounded-2xl',
+                    confirmButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider',
+                    cancelButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+        }
+    </script>
+    <script>
+    const searchInput = document.getElementById('searchAnggota');
+    const rows = document.querySelectorAll('.member-row');
+    const searchEmpty = document.getElementById('searchEmpty');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            const keyword = this.value.toLowerCase().trim();
+            let visibleRows = 0;
+
+            rows.forEach(row => {
+                const searchText = row.dataset.search || '';
+                if (keyword === '' || searchText.includes(keyword)) {
+                    row.style.display = '';
+                    visibleRows++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (searchEmpty) {
+                searchEmpty.style.display = (visibleRows === 0 && keyword !== '') ? '' : 'none';
+            }
+        });
+    }
+</script>
+</body>
+</html>

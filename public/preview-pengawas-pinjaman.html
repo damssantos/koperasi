@@ -1,0 +1,3240 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="">
+    <title>Laporan Pinjaman - SOY YPIK PAM JAYA</title>
+
+    <!-- Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#2563EB',
+                            secondary: '#0EA5E9',
+                            accent: '#10B981',
+                            sidebar: '#1F2937',
+                            bg: '#EEF3FB',
+                            panel: '#FFFFFF',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #EEF3FB;
+            color: #1F2937;
+        }
+
+        /* Sidebar & Container transitions */
+        aside {
+            transition: transform 0.3s ease, width 0.3s ease;
+        }
+        #main-container {
+            transition: padding-left 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #EEF3FB;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Profile Dropdown Animation */
+        @keyframes dropdownIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .animate-dropdown {
+            animation: dropdownIn 0.2s ease-out;
+        }
+
+        /* SweetAlert2 Styling */
+        .swal2-popup {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            border-radius: 1rem !important;
+            padding: 1.5rem !important;
+        }
+    </style>
+    </head>
+<body class="h-full antialiased bg-[#EEF3FB] text-[#1F2937]">
+
+    
+    <!-- TOP NAVBAR (#FFFFFF) -->
+    <header class="h-16 bg-[#FFFFFF] border-b border-[#E5E7EB] flex items-center justify-between px-6 w-full fixed top-0 left-0 z-50 shadow-sm">
+        
+        <!-- Left Side: Mobile Toggle & Brand for Mobile -->
+        <div class="flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Toggle Sidebar">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2.5 lg:hidden">
+                <div class="w-7 h-7 rounded-full overflow-hidden bg-white flex items-center justify-center border border-gray-200">
+                    <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK" class="w-full h-full object-cover">
+                </div>
+                <span class="text-xs font-bold tracking-wider text-gray-900 uppercase">SOY YPIK</span>
+            </div>
+        </div>
+
+        <!-- Right Side: Status Badge, Mode & User Profile -->
+        <div class="flex items-center gap-4">
+            
+            <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-100 text-[11px] font-bold text-blue-700">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>PORTAL PENGAWAS</span>
+            </div>
+
+            <!-- Profile Dropdown Button -->
+            <div class="relative">
+                <button onclick="toggleProfileDropdown()" id="profileDropdownBtn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition duration-200 group">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                            P
+                        </div>
+                                        <div class="hidden md:block text-left">
+                        <div class="text-xs font-bold text-gray-900 leading-none">Pengawas YPIK</div>
+                        <span class="text-[10px] text-gray-500 font-medium leading-none">Pengawas Koperasi</span>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-700 transition-transform duration-200" id="profileChevron"></i>
+                </button>
+
+                <!-- Profile Dropdown Menu -->
+                <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-[100] animate-dropdown">
+                    <div class="px-4 py-3.5 border-b border-gray-100 bg-[#F9FAFB]">
+                        <div class="flex items-center gap-3">
+                                                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                                    P
+                                </div>
+                                                        <div class="min-w-0">
+                                <p class="text-sm font-bold text-gray-900 truncate">Pengawas YPIK</p>
+                                <span class="inline-block mt-0.5 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                                    Pengawas Koperasi
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="py-1.5">
+                        <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 transition duration-150">
+                            <div class="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center">
+                                <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-600"></i>
+                            </div>
+                            <span class="font-semibold">Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- SIDEBAR (#1F2937) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#1F2937] border-r border-[#374151] transition-transform duration-300 -translate-x-full lg:translate-x-0">
+        
+        <!-- Sidebar Brand Header -->
+        <div class="h-16 flex items-center gap-3 px-5 border-b border-gray-700/60 bg-[#1F2937]">
+            <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm shrink-0">
+                <img src="http://localhost/images/logo-ypik.png" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
+            </div>
+            <div class="min-w-0">
+                <div class="text-xs font-bold tracking-wider text-white uppercase truncate">SOY YPIK PAM JAYA</div>
+                <div class="text-[10px] font-semibold text-gray-400">Sistem Informasi Koperasi</div>
+            </div>
+        </div>
+
+        <!-- Sidebar Navigation Menu -->
+        <nav class="flex-1 space-y-1.5 px-3 py-6 overflow-y-auto">
+            
+            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 pb-2">
+                Menu Monitoring
+            </div>
+
+            <!-- Dashboard -->
+            <a href="http://localhost/pengawas"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <!-- Laporan Simpanan -->
+            <a href="http://localhost/pengawas/laporan/simpanan"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="wallet" class="w-4 h-4"></i>
+                <span>Simpanan</span>
+            </a>
+
+            <!-- Laporan Pinjaman -->
+            <a href="http://localhost/pengawas/laporan/pinjaman"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="hand-coins" class="w-4 h-4"></i>
+                <span>Pinjaman</span>
+            </a>
+
+            <!-- Kas Usaha -->
+            <a href="http://localhost/pengawas/laporan/kas-usaha"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold">
+                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                <span>Kas Usaha</span>
+            </a>
+
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-gray-700/60 bg-[#1F2937]/90 space-y-3">
+            <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-gray-300 hover:text-rose-400 hover:bg-rose-500/10 transition duration-150">
+                <div class="w-6 h-6 rounded-md bg-rose-500/10 flex items-center justify-center">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-400"></i>
+                </div>
+                <span class="font-bold text-xs uppercase tracking-wider">Keluar</span>
+            </button>
+
+            <div class="px-2 pt-1 border-t border-gray-700/40 flex items-center justify-between text-[10px] text-gray-400">
+                <span class="font-bold uppercase tracking-wider">VERSI WEB 1.1</span>
+                <span class="font-bold text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">PENGAWAS</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- Hidden Logout Form -->
+    <form id="logoutForm" method="POST" action="http://localhost/logout" class="hidden">
+        <input type="hidden" name="_token" value="" autocomplete="off">    </form>
+
+    <!-- Backdrop for mobile sidebar -->
+    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- MAIN CONTAINER (#EEF3FB) -->
+    <div id="main-container" class="flex-grow flex flex-col min-w-0 lg:pl-64 pt-16 min-h-screen bg-[#EEF3FB]">
+        
+        <main class="flex-1 p-6 lg:p-8 space-y-6 w-full max-w-7xl mx-auto">
+            
+            <!-- Success Alert -->
+            
+            <!-- Error Alert -->
+            
+            
+    <!-- Page Header Title -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Laporan Pinjaman</h1>
+            <p class="text-xs text-gray-500 mt-1">Monitoring portofolio pembiayaan, riwayat angsuran, dan sisa tagihan anggota.</p>
+        </div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
+            <i data-lucide="shield-check" class="w-4 h-4 text-[#2563EB]"></i>
+            <span>Mode View Only</span>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TOP SUMMARY METRICS                        -->
+    <!-- ========================================== -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <!-- Card 1: Total Plafon -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-blue-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
+                    <i data-lucide="hand-coins" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">PLAFON</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Total Plafon Pinjaman</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 381.832.466
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                    <span>Total nominal seluruh pinjaman</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 2: Sisa Pinjaman -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-sky-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-[#0EA5E9] shrink-0">
+                    <i data-lucide="hourglass" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">OUTSTANDING</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Sisa Pinjaman Berjalan</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    Rp 378.031.232
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-[#0EA5E9]"></i>
+                    <span>Pinjaman aktif & menunggak</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 3: Pinjaman Aktif -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-emerald-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#10B981] shrink-0">
+                    <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">LANCAR</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Pinjaman Aktif</p>
+                <h3 class="text-xl font-extrabold text-gray-900 mt-1 tracking-tight">
+                    42
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#10B981]"></i>
+                    <span>Status pembayaran berjalan lancar</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 4: Pinjaman Menunggak -->
+        <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-rose-300 transition duration-200">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shrink-0">
+                    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100 tracking-wider uppercase">PERHATIAN</span>
+            </div>
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-gray-500">Pinjaman Menunggak</p>
+                <h3 class="text-xl font-extrabold text-rose-600 mt-1 tracking-tight">
+                    0
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-2 flex items-center gap-1">
+                    <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-rose-500"></i>
+                    <span>Membutuhkan tindak lanjut</span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- STATUS DISTRIBUTION BREAKDOWN              -->
+    <!-- ========================================== -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm">
+        <div class="mb-4">
+            <h3 class="text-base font-bold text-gray-900 tracking-tight">Distribusi Status Pinjaman</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Klasifikasi seluruh berkas pengajuan dan pinjaman anggota.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Pengajuan -->
+            <div class="bg-amber-50/60 border border-amber-100 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-amber-800">Pengajuan</span>
+                    <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i>
+                </div>
+                <h4 class="text-xl font-extrabold text-gray-900 mt-2">
+                    1
+                </h4>
+                <p class="text-[10px] text-amber-700 mt-1">Menunggu persetujuan</p>
+            </div>
+
+            <!-- Aktif -->
+            <div class="bg-emerald-50/60 border border-emerald-100 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-emerald-800">Aktif</span>
+                    <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
+                </div>
+                <h4 class="text-xl font-extrabold text-gray-900 mt-2">
+                    42
+                </h4>
+                <p class="text-[10px] text-emerald-700 mt-1">Sedang diangsur</p>
+            </div>
+
+            <!-- Menunggak -->
+            <div class="bg-rose-50/60 border border-rose-100 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-rose-800">Menunggak</span>
+                    <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-600"></i>
+                </div>
+                <h4 class="text-xl font-extrabold text-gray-900 mt-2">
+                    0
+                </h4>
+                <p class="text-[10px] text-rose-700 mt-1">Melebihi jatuh tempo</p>
+            </div>
+
+            <!-- Lunas -->
+            <div class="bg-blue-50/60 border border-blue-100 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-blue-800">Lunas</span>
+                    <i data-lucide="award" class="w-4 h-4 text-blue-600"></i>
+                </div>
+                <h4 class="text-xl font-extrabold text-gray-900 mt-2">
+                    0
+                </h4>
+                <p class="text-[10px] text-blue-700 mt-1">Kewajiban selesai</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TABEL DATA PINJAMAN                        -->
+    <!-- ========================================== -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl overflow-hidden shadow-sm">
+        
+        <!-- Header & Search -->
+        <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-gray-900 tracking-tight">Daftar Pinjaman Anggota</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Rincian data nominal pinjaman, tenor, cicilan, serta status anggota.</p>
+            </div>
+
+            <div class="relative w-full md:w-72">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input
+                    type="text"
+                    id="searchPinjaman"
+                    placeholder="Cari ID atau nama peminjam..."
+                    class="w-full bg-[#F8FAFC] border border-gray-200 rounded-lg pl-10 pr-4 py-2 text-xs text-gray-900 placeholder-gray-400 focus:bg-white focus:border-[#2563EB] focus:outline-none transition"
+                >
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-[#F8FAFC] border-b border-gray-200">
+                    <tr>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">No</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">ID Anggota</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">Nama</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px]">Tgl Pengajuan</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-right">Nominal</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-center">Tenor</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-center">Cicilan</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-right">Sisa Pinjaman</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-center">Status</th>
+                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-center">Approval</th>
+                    </tr>
+                </thead>
+                <tbody id="pinjamanTable" class="divide-y divide-gray-100 text-gray-700">
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-013 yudi pratama">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                1
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-013
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Yudi Pratama
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                13 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 10.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                1 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 1
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 10.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-034 iwan hartono">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                2
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-034
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Iwan Hartono
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                13 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                3 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 3
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                                    Ditolak
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                                    Ditolak
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-001 fajar hartono">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                3
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-001
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Fajar Hartono
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                13 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 100.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                9 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 9
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 100.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-001 fajar hartono">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                4
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-001
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Fajar Hartono
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                13 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 800.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 800.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Pengajuan
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-033 rio setiawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                5
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-033
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Rio Setiawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                12 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 19.999
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                1 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 1
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 19.999
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-045 andi utami">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                6
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-045
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Andi Utami
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                12 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 1.233
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                1 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 1
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 1.233
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-001 fajar hartono">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                7
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-001
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Fajar Hartono
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                11 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-001 fajar hartono">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                8
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-001
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Fajar Hartono
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                11 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-032 ani kusuma">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                9
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-032
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Ani Kusuma
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                11 Sep 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 1.234
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                1 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 1
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 1.234
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                                    Ditolak
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                                    Ditolak
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-030 lestari permata">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                10
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-030
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Lestari Permata
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                25 Aug 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-030 lestari permata">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                11
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-030
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Lestari Permata
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                25 Aug 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-024 sri kusuma">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                12
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-024
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Sri Kusuma
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                30 May 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-024 sri kusuma">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                13
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-024
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Sri Kusuma
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                30 May 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-008 rudi permata">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                14
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-008
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Rudi Permata
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                12 Mar 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-008 rudi permata">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                15
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-008
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Rudi Permata
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                12 Mar 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-025 wulan wibowo">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                16
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-025
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Wulan Wibowo
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                23 Feb 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 7.500.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 7.500.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-025 wulan wibowo">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                17
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-025
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Wulan Wibowo
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                23 Feb 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 7.500.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 7.500.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-009 slamet setiawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                18
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-009
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Slamet Setiawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                11 Feb 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-009 slamet setiawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                19
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-009
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Slamet Setiawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                11 Feb 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-029 hasan permata">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                20
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-029
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Hasan Permata
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                20 Jan 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-029 hasan permata">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                21
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-029
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Hasan Permata
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                20 Jan 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-045 andi utami">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                22
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-045
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Andi Utami
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                16 Jan 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 20.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 20.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-045 andi utami">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                23
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-045
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Andi Utami
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                16 Jan 2026
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 20.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 20.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-007 fitri gunawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                24
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-007
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Fitri Gunawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                09 Dec 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 15.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 15.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-007 fitri gunawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                25
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-007
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Fitri Gunawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                09 Dec 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 15.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 15.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-005 hendra anggraini">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                26
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-005
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Hendra Anggraini
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                05 Dec 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-005 hendra anggraini">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                27
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-005
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Hendra Anggraini
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                05 Dec 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-003 dedi lestari">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                28
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-003
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Dedi Lestari
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                20 Sep 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 20.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                6 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 6
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 20.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-003 dedi lestari">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                29
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-003
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Dedi Lestari
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                20 Sep 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 20.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                6 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 6
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 20.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-006 wahyu handoko">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                30
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-006
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Wahyu Handoko
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                01 Jun 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 15.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                6 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 6
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 15.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-006 wahyu handoko">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                31
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-006
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Wahyu Handoko
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                01 Jun 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 15.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                6 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 6
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 15.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-040 melati lestari">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                32
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-040
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Melati Lestari
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                11 May 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-040 melati lestari">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                33
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-040
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Melati Lestari
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                11 May 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-044 bayu saputra">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                34
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-044
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Bayu Saputra
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                31 Mar 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                6 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 6
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-044 bayu saputra">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                35
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-044
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Bayu Saputra
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                31 Mar 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                6 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 6
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-013 yudi pratama">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                36
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-013
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Yudi Pratama
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                15 Feb 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-013 yudi pratama">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                37
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-013
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Yudi Pratama
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                15 Feb 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                18 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 18
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 3.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-033 rio setiawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                38
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-033
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Rio Setiawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                14 Feb 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-033 rio setiawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                39
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-033
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Rio Setiawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                14 Feb 2025
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 5.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-049 wati wibowo">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                40
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-049
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Wati Wibowo
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                01 Dec 2023
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 7.500.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                6 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 6
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 7.500.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-049 wati wibowo">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                41
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-049
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Wati Wibowo
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                01 Dec 2023
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 7.500.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                6 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 6
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 7.500.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-018 bambang setiawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                42
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-018
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Bambang Setiawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                26 Aug 2023
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 10.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 10.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-018 bambang setiawan">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                43
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-018
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Bambang Setiawan
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                26 Aug 2023
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 10.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                12 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 12
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 10.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-026 wawan sanjaya">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                44
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-026
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Wawan Sanjaya
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                23 May 2023
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                24 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 24
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Disetujui
+                                </span>
+                            </td>
+                        </tr>
+                                            <tr class="loan-row hover:bg-blue-50/40 transition duration-150"
+                            data-search="agt-026 wawan sanjaya">
+                            
+                            <!-- No -->
+                            <td class="px-5 py-4 text-gray-400 font-medium">
+                                45
+                            </td>
+
+                            <!-- ID Anggota -->
+                            <td class="px-5 py-4 font-semibold">
+                                <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded border border-gray-200 font-mono text-[11px]">
+                                    AGT-026
+                                </span>
+                            </td>
+
+                            <!-- Nama -->
+                            <td class="px-5 py-4 font-bold text-gray-900">
+                                Wawan Sanjaya
+                            </td>
+
+                            <!-- Tanggal -->
+                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
+                                23 May 2023
+                            </td>
+
+                            <!-- Nominal -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-medium text-gray-800">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Tenor -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap text-gray-600">
+                                24 bln
+                            </td>
+
+                            <!-- Cicilan -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap font-mono text-gray-700 font-semibold">
+                                0 / 24
+                            </td>
+
+                            <!-- Sisa Pinjaman -->
+                            <td class="px-5 py-4 text-right whitespace-nowrap font-bold text-gray-900">
+                                Rp 2.000.000
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <!-- Approval -->
+                            <td class="px-5 py-4 text-center whitespace-nowrap">
+                                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                                    Menunggu
+                                </span>
+                            </td>
+                        </tr>
+                    
+                    <!-- Search Empty State -->
+                    <tr id="loanSearchEmpty" style="display: none;">
+                        <td colspan="10" class="px-6 py-12 text-center text-gray-500">
+                            <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mx-auto mb-3 text-gray-400">
+                                <i data-lucide="search-x" class="w-6 h-6"></i>
+                            </div>
+                            <p class="font-bold text-gray-800 text-sm">Data Tidak Ditemukan</p>
+                            <p class="text-xs text-gray-400 mt-1">Coba gunakan nama atau ID anggota lain.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Footer -->
+        <div class="p-4 border-t border-gray-100 bg-[#F8FAFC] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-gray-500">
+            <p>
+                Total Data: <span class="font-bold text-gray-900">45</span> pinjaman
+            </p>
+            <p class="text-[11px] flex items-center gap-1.5">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-[#2563EB]"></i>
+                <span>Data bersifat read-only untuk Pengawas</span>
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Info Box -->
+    <div class="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm flex items-start gap-3.5">
+        <div class="w-9 h-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB] shrink-0">
+            <i data-lucide="info" class="w-4 h-4"></i>
+        </div>
+        <p class="text-xs text-gray-600 leading-relaxed">
+            Pengawas hanya memiliki izin membaca data pinjaman untuk memantau risiko kredit dan kelancaran pembayaran. Proses pencairan atau persetujuan pinjaman dilakukan oleh manajemen operasional.
+        </p>
+    </div>
+
+
+        </main>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (sidebar && backdrop) {
+                sidebar.classList.toggle('-translate-x-full');
+                backdrop.classList.toggle('hidden');
+            }
+        }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+            if (chevron) {
+                chevron.classList.toggle('rotate-180');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('profileDropdown');
+            const btn = document.getElementById('profileDropdownBtn');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
+            }
+        });
+
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Konfirmasi Keluar',
+                text: 'Apakah Anda yakin ingin keluar dari portal Pengawas?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#9CA3AF',
+                confirmButtonText: 'Ya, Keluar',
+                cancelButtonText: 'Batal',
+                background: '#FFFFFF',
+                color: '#1F2937',
+                customClass: {
+                    popup: 'border border-gray-200 shadow-xl rounded-2xl',
+                    confirmButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider',
+                    cancelButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+        }
+    </script>
+    <script>
+    const searchPinjaman = document.getElementById('searchPinjaman');
+    const loanRows = document.querySelectorAll('.loan-row');
+    const loanSearchEmpty = document.getElementById('loanSearchEmpty');
+
+    if (searchPinjaman) {
+        searchPinjaman.addEventListener('input', function () {
+            const keyword = this.value.toLowerCase().trim();
+            let visible = 0;
+
+            loanRows.forEach(row => {
+                const text = row.dataset.search || '';
+                if (keyword === '' || text.includes(keyword)) {
+                    row.style.display = '';
+                    visible++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (loanSearchEmpty) {
+                loanSearchEmpty.style.display = (visible === 0 && keyword !== '') ? '' : 'none';
+            }
+        });
+    }
+</script>
+</body>
+</html>
