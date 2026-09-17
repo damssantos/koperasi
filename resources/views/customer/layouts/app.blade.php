@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
 
     <meta charset="UTF-8">
@@ -11,7 +12,6 @@
     </title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -372,7 +372,6 @@
             }
 
         }
-
     </style>
 
 
@@ -384,297 +383,280 @@
 <body>
 
 
-<div class="layout">
+    <div class="layout">
 
 
-    <!-- =========================================
+        <!-- =========================================
          SIDEBAR
     ========================================== -->
 
-    <aside class="sidebar">
+        <aside class="sidebar">
 
 
-        <!-- LOGO -->
-
-        <div>
-
-            <div class="logo">
-
-                SOY YPIK
-
-                <span class="subtitle">
-                    PAM JAYA
-                </span>
-
-            </div>
-
-
-            <!-- MENU -->
-
-            <nav class="menu">
-
-
-                <div class="menu-title">
-                    Menu Utama
-                </div>
-
-
-                <!-- DASHBOARD -->
-
-                <a
-                    href="{{ route('customer.dashboard') }}"
-                    class="{{ request()->routeIs('customer.dashboard') ? 'active' : '' }}"
-                >
-
-                    <span class="icon">
-                        🏠
-                    </span>
-
-                    <span>
-                        Dashboard
-                    </span>
-
-                </a>
-
-
-                <!-- SIMPANAN -->
-
-                <a
-                    href="{{ route('customer.simpanan') }}"
-                    class="{{ request()->routeIs('customer.simpanan') ? 'active' : '' }}"
-                >
-
-                    <span class="icon">
-                        💰
-                    </span>
-
-                    <span>
-                        Simpanan
-                    </span>
-
-                </a>
-
-
-                <!-- PINJAMAN -->
-
-                <a
-                    href="{{ route('customer.pinjaman') }}"
-                    class="{{ request()->routeIs('customer.pinjaman') ? 'active' : '' }}"
-                >
-
-                    <span class="icon">
-                        💳
-                    </span>
-
-                    <span>
-                        Pinjaman
-                    </span>
-
-                </a>
-
-
-                <!-- RIWAYAT -->
-
-                <a
-                    href="{{ route('customer.riwayat') }}"
-                    class="{{ request()->routeIs('customer.riwayat') ? 'active' : '' }}"
-                >
-
-                    <span class="icon">
-                        📜
-                    </span>
-
-                    <span>
-                        Riwayat Transaksi
-                    </span>
-
-                </a>
-
-
-                <!-- ACCOUNT -->
-
-                <div class="menu-title">
-                    Akun
-                </div>
-
-
-                <!-- PROFIL -->
-
-                <a
-                    href="{{ route('customer.profil') }}"
-                    class="{{ request()->routeIs('customer.profil') ? 'active' : '' }}"
-                >
-
-                    <span class="icon">
-                        👤
-                    </span>
-
-                    <span>
-                        Profil
-                    </span>
-
-                </a>
-
-
-            </nav>
-
-        </div>
-
-
-        <!-- =========================================
-             SIDEBAR BOTTOM
-        ========================================== -->
-
-        <div class="sidebar-bottom">
-
-
-            <!-- LOGOUT -->
-
-            <form
-                action="{{ route('logout') }}"
-                method="POST"
-                class="logout-form"
-            >
-
-                @csrf
-
-                <button
-                    type="submit"
-                    class="logout-button"
-                >
-
-                    <span class="icon">
-                        🚪
-                    </span>
-
-                    <span>
-                        Logout
-                    </span>
-
-                </button>
-
-            </form>
-
-
-        </div>
-
-
-    </aside>
-
-
-    <!-- =========================================
-         MAIN CONTENT
-    ========================================== -->
-
-    <main class="content">
-
-
-        <!-- TOPBAR -->
-
-        <div class="topbar">
-
+            <!-- LOGO -->
 
             <div>
 
-                <h1>
-                    @yield('page-title', 'Dashboard')
-                </h1>
+                <div class="logo">
 
-                <p>
-                    @yield(
-                        'page-description',
-                        'Ringkasan aktivitas koperasi Anda'
-                    )
-                </p>
+                    SOY YPIK
+
+                    <span class="subtitle">
+                        PAM JAYA
+                    </span>
+
+                </div>
+
+
+                <!-- MENU -->
+
+                <nav class="menu">
+
+
+                    <div class="menu-title">
+                        Menu Utama
+                    </div>
+
+
+                    <!-- DASHBOARD -->
+
+                    <a href="{{ route('customer.dashboard') }}"
+                        class="{{ request()->routeIs('customer.dashboard') ? 'active' : '' }}">
+
+                        <span class="icon">
+                            🏠
+                        </span>
+
+                        <span>
+                            Dashboard
+                        </span>
+
+                    </a>
+
+
+                    <!-- SIMPANAN -->
+
+                    <a href="{{ route('customer.simpanan') }}"
+                        class="{{ request()->routeIs('customer.simpanan') ? 'active' : '' }}">
+
+                        <span class="icon">
+                            💰
+                        </span>
+
+                        <span>
+                            Simpanan
+                        </span>
+
+                    </a>
+
+
+                    <!-- PINJAMAN -->
+
+                    <a href="{{ route('customer.pinjaman') }}"
+                        class="{{ request()->routeIs('customer.pinjaman') ? 'active' : '' }}">
+
+                        <span class="icon">
+                            💳
+                        </span>
+
+                        <span>
+                            Pinjaman
+                        </span>
+
+                    </a>
+
+
+                    <!-- RIWAYAT -->
+
+                    <a href="{{ route('customer.riwayat') }}"
+                        class="{{ request()->routeIs('customer.riwayat') ? 'active' : '' }}">
+
+                        <span class="icon">
+                            📜
+                        </span>
+
+                        <span>
+                            Riwayat Transaksi
+                        </span>
+
+                    </a>
+
+
+                    <!-- ACCOUNT -->
+
+                    <div class="menu-title">
+                        Akun
+                    </div>
+
+
+                    <!-- PROFIL -->
+
+                    <a href="{{ route('customer.profil') }}"
+                        class="{{ request()->routeIs('customer.profil') ? 'active' : '' }}">
+
+                        <span class="icon">
+                            👤
+                        </span>
+
+                        <span>
+                            Profil
+                        </span>
+
+                    </a>
+
+
+                </nav>
 
             </div>
 
 
-            <!-- USER LOGIN -->
+            <!-- =========================================
+             SIDEBAR BOTTOM
+        ========================================== -->
 
-            <div class="user">
+            <div class="sidebar-bottom">
 
-                {{ auth()->user()->nama_lengkap }}
+
+                <!-- LOGOUT -->
+
+                <form action="{{ route('logout') }}" method="POST" class="logout-form">
+
+                    @csrf
+
+                    <button type="submit" class="logout-button">
+
+                        <span class="icon">
+                            🚪
+                        </span>
+
+                        <span>
+                            Logout
+                        </span>
+
+                    </button>
+
+                </form>
+
 
             </div>
 
 
-        </div>
+        </aside>
 
 
         <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+        <main class="content">
+
+
+            <!-- TOPBAR -->
+
+            <div class="topbar">
+
+
+                <div>
+
+                    <h1>
+                        @yield('page-title', 'Dashboard')
+                    </h1>
+
+                    <p>
+                        @yield(
+                            'page-description',
+                            'Ringkasan aktivitas koperasi Anda'
+                        )
+                    </p>
+
+                </div>
+
+
+                <!-- USER LOGIN -->
+
+                <div class="user">
+
+                    {{ auth()->user()->nama_lengkap }}
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =========================================
              SUCCESS MESSAGE
         ========================================== -->
 
-        @if(session('success'))
+            @if(session('success'))
 
-            <div class="alert alert-success">
+                <div class="alert alert-success">
 
-                {{ session('success') }}
+                    {{ session('success') }}
 
-            </div>
+                </div>
 
-        @endif
+            @endif
 
 
-        <!-- =========================================
+            <!-- =========================================
              ERROR MESSAGE
         ========================================== -->
 
-        @if(session('error'))
+            @if(session('error'))
 
-            <div class="alert alert-error">
+                <div class="alert alert-error">
 
-                {{ session('error') }}
+                    {{ session('error') }}
 
-            </div>
+                </div>
 
-        @endif
+            @endif
 
 
-        <!-- =========================================
+            <!-- =========================================
              VALIDATION ERRORS
         ========================================== -->
 
-        @if($errors->any())
+            @if($errors->any())
 
-            <div class="alert alert-error">
+                <div class="alert alert-error">
 
-                <ul class="validation-errors">
+                    <ul class="validation-errors">
 
-                    @foreach($errors->all() as $error)
+                        @foreach($errors->all() as $error)
 
-                        <li>
-                            {{ $error }}
-                        </li>
+                            <li>
+                                {{ $error }}
+                            </li>
 
-                    @endforeach
+                        @endforeach
 
-                </ul>
+                    </ul>
 
-            </div>
+                </div>
 
-        @endif
+            @endif
 
 
-        <!-- =========================================
+            <!-- =========================================
              PAGE CONTENT
         ========================================== -->
 
-        @yield('content')
+            @yield('content')
 
 
-    </main>
+        </main>
 
 
-</div>
+    </div>
 
 
-<!-- =========================================
+    <!-- =========================================
      JAVASCRIPT STACK
 ========================================== -->
 
-@stack('scripts')
+    @stack('scripts')
 
 
 </body>

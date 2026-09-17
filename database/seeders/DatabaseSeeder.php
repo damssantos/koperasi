@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\AnggotaKoperasi;
 use App\Models\Pinjaman;
 use App\Models\TransaksiSimpanan;

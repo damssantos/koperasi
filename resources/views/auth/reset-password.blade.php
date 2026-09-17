@@ -6,106 +6,535 @@
 
     <title>Buat Kata Sandi Baru - SOY YPIK PAM JAYA</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #080a12;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        /* Background glow */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: rgba(47, 84, 235, 0.12);
+            border-radius: 50%;
+            filter: blur(100px);
+            top: -220px;
+            left: -180px;
+            pointer-events: none;
         }
 
-        .auth-muted {
-            color: #64748b;
+        body::after {
+            content: "";
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            background: rgba(30, 64, 175, 0.10);
+            border-radius: 50%;
+            filter: blur(100px);
+            right: -180px;
+            bottom: -200px;
+            pointer-events: none;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 430px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =========================
+           CARD
+        ========================= */
+
+        .auth-card {
+            width: 100%;
+            background: #0f121e;
+            border: 1px solid #202538;
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.45),
+                0 10px 30px rgba(0, 0, 0, 0.20);
+        }
+
+        /* =========================
+           LOGO
+        ========================= */
+
+        .logo-container {
+            width: 78px;
+            height: 78px;
+            margin: 0 auto 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #151927;
+            border: 1px solid #252b40;
+            border-radius: 20px;
+        }
+
+        .logo-container img {
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header-icon {
+            width: 46px;
+            height: 46px;
+            margin: 0 auto 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(47, 84, 235, 0.10);
+            border: 1px solid rgba(47, 84, 235, 0.22);
+            border-radius: 13px;
+
+            color: #4f6ff5;
+        }
+
+        .header-icon svg {
+            width: 21px;
+            height: 21px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            line-height: 1.3;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+        }
+
+        .header p {
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #8993aa;
+        }
+
+        /* =========================
+           ALERTS
+        ========================= */
+
+        .alert {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+
+            padding: 13px 14px;
+            margin-bottom: 20px;
+
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .alert svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-error {
+            background: rgba(244, 63, 94, 0.08);
+            border: 1px solid rgba(244, 63, 94, 0.20);
+            color: #fda4af;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.20);
+            color: #6ee7b7;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+
+            color: #f1f5f9;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            color: #667085;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            pointer-events: none;
+        }
+
+        .input-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            background: none;
+            border: none;
+            color: #667085;
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .toggle-btn:hover {
+            color: #d1d5db;
+        }
+
+        .toggle-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 50px;
+
+            padding: 0 46px 0 45px;
+
+            background: #111522;
+            border: 1px solid #292f43;
+            border-radius: 12px;
+
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .form-input::placeholder {
+            color: #626c82;
+        }
+
+        .form-input:hover {
+            border-color: #343c54;
+        }
+
+        .form-input:focus {
+            border-color: #2f54eb;
+            background: #121625;
+            box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.12);
+        }
+
+        .form-input.has-error {
+            border-color: rgba(244, 63, 94, 0.5);
+        }
+
+        .input-error {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            margin-top: 7px;
+
+            color: #fb7185;
+            font-size: 11px;
+        }
+
+        .input-error svg {
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+        }
+
+        /* =========================
+           INFO BOX
+        ========================= */
+
+        .info-box {
+            width: 100%;
+
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+
+            padding: 12px 14px;
+            margin-bottom: 22px;
+
+            background: #111522;
+            border: 1px solid #20263a;
+            border-radius: 12px;
+        }
+
+        .info-icon {
+            width: 17px;
+            height: 17px;
+
+            flex-shrink: 0;
+            margin-top: 1px;
+
+            color: #4f6ff5;
+        }
+
+        .info-text {
+            color: #7f899f;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .info-text strong {
+            color: #dce2ef;
+            font-weight: 700;
+        }
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        .submit-button {
+            width: 100%;
+            height: 50px;
+
+            border: none;
+            border-radius: 12px;
+
+            background: #2f54eb;
+            color: #ffffff;
+
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            box-shadow: 0 10px 25px rgba(47, 84, 235, 0.20);
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .submit-button svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .submit-button:hover {
+            background: #1d39c4;
+            transform: translateY(-1px);
+            box-shadow: 0 14px 30px rgba(47, 84, 235, 0.28);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        /* =========================
+           DIVIDER
+        ========================= */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin: 24px 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #20263a;
+        }
+
+        .divider-text {
+            color: #596276;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           BACK LINK
+        ========================= */
+
+        .back-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+
+            color: #4f6ff5;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            text-decoration: none;
+
+            transition: color 0.2s ease;
+        }
+
+        .back-login:hover {
+            color: #7189ff;
+        }
+
+        .back-login svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            text-align: center;
+            margin-top: 22px;
+        }
+
+        .footer-main {
+            color: #596276;
+            font-size: 10px;
         }
     </style>
 </head>
+<body>
 
-<body class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 flex items-center justify-center p-6">
-
-    <div class="w-full max-w-md">
+    <div class="page-wrapper">
 
         <!-- Card -->
-        <div class="glass rounded-3xl p-8">
+        <div class="auth-card">
 
             <!-- Logo -->
-            <div class="flex justify-center mb-6">
+            <div class="logo-container">
                 <img
                     src="{{ asset('images/logo-ypik.png') }}"
                     alt="SOY YPIK PAM JAYA"
-                    class="h-20 object-contain"
                 >
             </div>
 
             <!-- Header -->
-            <div class="text-center mb-8">
-
-                <div class="mx-auto mb-5 w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center">
-                    <i data-lucide="lock-keyhole"
-                       class="w-7 h-7 text-green-600"></i>
+            <div class="header">
+                <div class="header-icon">
+                    <i data-lucide="lock-keyhole"></i>
                 </div>
 
-                <h1 class="text-2xl font-extrabold text-slate-900">
-                    Buat Kata Sandi Baru
-                </h1>
-
-                <p class="text-sm auth-muted mt-2 leading-relaxed">
-                    Buat kata sandi baru untuk mengamankan
-                    akun Anda.
-                </p>
-
+                <h1>Buat Kata Sandi Baru</h1>
+                <p>Buat kata sandi baru untuk mengamankan akun Anda.</p>
             </div>
 
-            <!-- Error -->
+            <!-- Alert Error -->
             @if(session('error'))
-                <div class="mb-5 rounded-xl bg-red-50 border border-red-200 px-4 py-3">
+                <div class="alert alert-error">
+                    <i data-lucide="alert-circle"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
 
-                    <div class="flex items-start gap-3">
-
-                        <i data-lucide="alert-circle"
-                           class="w-5 h-5 text-red-600 mt-0.5"></i>
-
-                        <p class="text-sm text-red-700">
-                            {{ session('error') }}
-                        </p>
-
-                    </div>
-
+            <!-- Alert Success -->
+            @if(session('status') || session('success'))
+                <div class="alert alert-success">
+                    <i data-lucide="check-circle"></i>
+                    <span>{{ session('status') ?? session('success') }}</span>
                 </div>
             @endif
 
             <!-- Form -->
-            <form
-                action="{{ route('password.update') }}"
-                method="POST"
-                class="space-y-5"
-            >
-
+            <form action="{{ route('password.update') }}" method="POST">
                 @csrf
 
-                <!-- Password -->
-                <div>
-
-                    <label
-                        for="password"
-                        class="block text-xs font-bold text-slate-700 mb-2"
-                    >
+                <!-- Kata Sandi Baru -->
+                <div class="form-group">
+                    <label for="password" class="form-label">
                         Kata Sandi Baru
                     </label>
 
-                    <div class="relative">
-
-                        <i data-lucide="lock"
-                           class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <i data-lucide="lock"></i>
+                        </span>
 
                         <input
                             type="password"
@@ -114,45 +543,37 @@
                             placeholder="Masukkan kata sandi baru"
                             required
                             minlength="6"
-                            class="w-full pl-12 pr-12 py-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                            class="form-input @error('password') has-error @enderror"
                         >
 
                         <button
                             type="button"
                             onclick="togglePassword('password', 'eye-password')"
-                            class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                            class="toggle-btn"
+                            aria-label="Toggle password visibility"
                         >
-                            <i
-                                id="eye-password"
-                                data-lucide="eye"
-                                class="w-5 h-5"
-                            ></i>
+                            <i id="eye-password" data-lucide="eye"></i>
                         </button>
-
                     </div>
 
                     @error('password')
-                        <p class="text-xs text-red-600 mt-2">
-                            {{ $message }}
-                        </p>
+                        <div class="input-error">
+                            <i data-lucide="alert-circle"></i>
+                            <span>{{ $message }}</span>
+                        </div>
                     @enderror
-
                 </div>
 
-                <!-- Confirm Password -->
-                <div>
-
-                    <label
-                        for="password_confirmation"
-                        class="block text-xs font-bold text-slate-700 mb-2"
-                    >
+                <!-- Konfirmasi Kata Sandi -->
+                <div class="form-group">
+                    <label for="password_confirmation" class="form-label">
                         Konfirmasi Kata Sandi
                     </label>
 
-                    <div class="relative">
-
-                        <i data-lucide="shield-check"
-                           class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <i data-lucide="shield-check"></i>
+                        </span>
 
                         <input
                             type="password"
@@ -161,95 +582,74 @@
                             placeholder="Ulangi kata sandi baru"
                             required
                             minlength="6"
-                            class="w-full pl-12 pr-12 py-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                            class="form-input"
                         >
 
                         <button
                             type="button"
                             onclick="togglePassword('password_confirmation', 'eye-confirm')"
-                            class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                            class="toggle-btn"
+                            aria-label="Toggle confirm password visibility"
                         >
-                            <i
-                                id="eye-confirm"
-                                data-lucide="eye"
-                                class="w-5 h-5"
-                            ></i>
+                            <i id="eye-confirm" data-lucide="eye"></i>
                         </button>
-
                     </div>
-
                 </div>
 
-                <!-- Password Info -->
-                <div class="flex items-start gap-3 rounded-xl bg-blue-50 border border-blue-100 p-4">
-
-                    <i data-lucide="info"
-                       class="w-5 h-5 text-[#2f54eb] mt-0.5"></i>
-
-                    <p class="text-xs text-blue-700 leading-relaxed">
-                        Kata sandi harus memiliki minimal
-                        <strong>6 karakter</strong>.
+                <!-- Info Box -->
+                <div class="info-box">
+                    <i data-lucide="info" class="info-icon"></i>
+                    <p class="info-text">
+                        Kata sandi harus memiliki minimal <strong>6 karakter</strong>.
                     </p>
-
                 </div>
 
-                <!-- Button -->
-                <button
-                    type="submit"
-                    class="w-full py-3.5 rounded-xl bg-[#2f54eb] hover:bg-[#1d39c4] text-white font-bold text-sm transition-all duration-200 shadow-lg shadow-blue-500/20"
-                >
-                    Simpan Kata Sandi Baru
+                <!-- Submit Button -->
+                <button type="submit" class="submit-button">
+                    <i data-lucide="check-circle"></i>
+                    <span>Simpan Kata Sandi Baru</span>
                 </button>
-
             </form>
 
-            <!-- Login -->
-            <div class="text-center mt-6">
-
-                <a
-                    href="{{ route('login') }}"
-                    class="inline-flex items-center gap-2 text-sm font-semibold text-[#2f54eb] hover:text-[#1d39c4] transition"
-                >
-                    Kembali ke Login
-                </a>
-
+            <!-- Divider -->
+            <div class="divider">
+                <span class="divider-line"></span>
+                <span class="divider-text">atau</span>
+                <span class="divider-line"></span>
             </div>
+
+            <!-- Back to Login -->
+            <a href="{{ route('login') }}" class="back-login">
+                <i data-lucide="arrow-left"></i>
+                <span>Kembali ke Login</span>
+            </a>
 
         </div>
 
         <!-- Footer -->
-        <p class="text-center text-xs text-slate-400 mt-6">
-            © {{ date('Y') }} SOY YPIK PAM JAYA
-        </p>
+        <div class="footer">
+            <p class="footer-main">© {{ date('Y') }} SOY YPIK PAM JAYA</p>
+        </div>
 
     </div>
 
     <script>
-
         lucide.createIcons();
 
         function togglePassword(inputId, iconId) {
-
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
 
             if (input.type === 'password') {
-
                 input.type = 'text';
-
                 icon.setAttribute('data-lucide', 'eye-off');
-
             } else {
-
                 input.type = 'password';
-
                 icon.setAttribute('data-lucide', 'eye');
-
             }
 
             lucide.createIcons();
         }
-
     </script>
 
 </body>

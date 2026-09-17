@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
         @yield('title', 'Pengawas') - SOY YPIK PAM JAYA
@@ -14,10 +12,8 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <style>
         * {
@@ -89,11 +85,7 @@
 
             <div class="flex items-center gap-3">
 
-                <img
-                    src="{{ asset('images/logo-ypik.png') }}"
-                    alt="SOY YPIK PAM JAYA"
-                    class="w-10 h-10 object-contain"
-                >
+                <img src="{{ asset('images/logo-ypik.png') }}" alt="SOY YPIK PAM JAYA" class="w-10 h-10 object-contain">
 
                 <div>
                     <div class="font-bold text-sm">
@@ -135,10 +127,8 @@
                 Monitoring
             </div>
 
-            <a
-                href="{{ route('pengawas.dashboard') }}"
-                class="menu-item {{ request()->routeIs('pengawas.dashboard') ? 'active' : '' }}"
-            >
+            <a href="{{ route('pengawas.dashboard') }}"
+                class="menu-item {{ request()->routeIs('pengawas.dashboard') ? 'active' : '' }}">
                 <span>📊</span>
                 <span>Laporan</span>
             </a>
@@ -149,17 +139,11 @@
         <!-- LOGOUT -->
         <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-zinc-800">
 
-            <form
-                method="POST"
-                action="{{ route('logout') }}"
-            >
+            <form method="POST" action="{{ route('logout') }}">
 
                 @csrf
 
-                <button
-                    type="submit"
-                    class="menu-item w-full text-left"
-                >
+                <button type="submit" class="menu-item w-full text-left">
                     <span>↪</span>
                     <span>Keluar</span>
                 </button>
@@ -226,4 +210,5 @@
     @stack('scripts')
 
 </body>
+
 </html>
