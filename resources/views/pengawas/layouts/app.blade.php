@@ -180,69 +180,63 @@
 
     </header>
 
-    <!-- SIDEBAR (#1F2937) -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#1F2937] border-r border-[#374151] transition-transform duration-300 -translate-x-full lg:translate-x-0">
+    <!-- SIDEBAR (#111524 - Matching Customer Design) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#111524] border-r border-white/[0.06] transition-transform duration-300 -translate-x-full lg:translate-x-0 px-4 py-[22px] overflow-y-auto">
         
-        <!-- Sidebar Brand Header -->
-        <div class="h-16 flex items-center gap-3 px-5 border-b border-gray-700/60 bg-[#1F2937]">
-            <div class="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-sm shrink-0">
-                <img src="{{ asset('images/logo-ypik.png') }}" alt="Logo YPIK PAM JAYA" class="w-full h-full object-cover">
+        <!-- LOGO BRAND -->
+        <div class="flex items-center gap-2.5 pb-6 border-b border-white/[0.08] mb-4.5 shrink-0 px-1.5 pt-1">
+            <div class="w-[34px] h-[34px] min-w-[34px] rounded-full bg-white flex items-center justify-center p-[2px] shadow-[0_4px_10px_rgba(0,0,0,0.2)] shrink-0" style="width: 34px; height: 34px; min-width: 34px; max-width: 34px; overflow: hidden;">
+                <img src="{{ asset('images/logo-ypik.png') }}" alt="Logo YPIK" class="w-full h-full object-contain rounded-full" style="width: 100%; height: 100%; max-width: 30px; max-height: 30px; object-fit: contain; display: block;">
             </div>
-            <div class="min-w-0">
-                <div class="text-xs font-bold tracking-wider text-white uppercase truncate">SOY YPIK PAM JAYA</div>
-                <div class="text-[10px] font-semibold text-gray-400">Sistem Informasi Koperasi</div>
-            </div>
+            <span class="text-[14px] font-extrabold text-white tracking-[-0.2px] whitespace-nowrap">SOY YPIK PAM JAYA</span>
         </div>
 
-        <!-- Sidebar Navigation Menu -->
-        <nav class="flex-1 space-y-1.5 px-3 py-6 overflow-y-auto">
+        <!-- MENU -->
+        <nav class="flex-1 flex flex-col gap-1 overflow-y-auto">
             
-            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 pb-2">
-                Menu Monitoring
+            <div class="text-[#64748B] text-[11px] font-bold uppercase tracking-[0.8px] px-3 pt-2.5 pb-1.5">
+                Menu Utama
             </div>
 
             <!-- Dashboard -->
             <a href="{{ route('pengawas.dashboard') }}"
-                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 {{ request()->routeIs('pengawas.dashboard') ? 'bg-[#2563EB] text-white font-bold shadow-sm shadow-blue-500/20' : 'text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold' }}">
-                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                class="flex items-center gap-3 px-3.5 py-[11px] rounded-xl text-[13.5px] transition-all duration-200 {{ request()->routeIs('pengawas.dashboard') ? 'bg-[#2563EB] text-white font-bold shadow-[0_4px_14px_rgba(37,99,235,0.4)]' : 'text-[#94A3B8] font-semibold hover:bg-white/[0.07] hover:text-white' }}">
+                <i data-lucide="layout-dashboard" class="w-[18px] h-[18px] shrink-0"></i>
                 <span>Dashboard</span>
             </a>
 
             <!-- Laporan Simpanan -->
             <a href="{{ route('pengawas.laporan.simpanan') }}"
-                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 {{ request()->routeIs('pengawas.laporan.simpanan') ? 'bg-[#2563EB] text-white font-bold shadow-sm shadow-blue-500/20' : 'text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold' }}">
-                <i data-lucide="wallet" class="w-4 h-4"></i>
+                class="flex items-center gap-3 px-3.5 py-[11px] rounded-xl text-[13.5px] transition-all duration-200 {{ request()->routeIs('pengawas.laporan.simpanan') ? 'bg-[#2563EB] text-white font-bold shadow-[0_4px_14px_rgba(37,99,235,0.4)]' : 'text-[#94A3B8] font-semibold hover:bg-white/[0.07] hover:text-white' }}">
+                <i data-lucide="wallet" class="w-[18px] h-[18px] shrink-0"></i>
                 <span>Simpanan</span>
             </a>
 
             <!-- Laporan Pinjaman -->
             <a href="{{ route('pengawas.laporan.pinjaman') }}"
-                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 {{ request()->routeIs('pengawas.laporan.pinjaman') ? 'bg-[#2563EB] text-white font-bold shadow-sm shadow-blue-500/20' : 'text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold' }}">
-                <i data-lucide="hand-coins" class="w-4 h-4"></i>
+                class="flex items-center gap-3 px-3.5 py-[11px] rounded-xl text-[13.5px] transition-all duration-200 {{ request()->routeIs('pengawas.laporan.pinjaman') ? 'bg-[#2563EB] text-white font-bold shadow-[0_4px_14px_rgba(37,99,235,0.4)]' : 'text-[#94A3B8] font-semibold hover:bg-white/[0.07] hover:text-white' }}">
+                <i data-lucide="credit-card" class="w-[18px] h-[18px] shrink-0"></i>
                 <span>Pinjaman</span>
             </a>
 
             <!-- Kas Usaha -->
             <a href="{{ route('pengawas.laporan.kas-usaha') }}"
-                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition duration-150 {{ request()->routeIs('pengawas.laporan.kas-usaha') ? 'bg-[#2563EB] text-white font-bold shadow-sm shadow-blue-500/20' : 'text-gray-300 hover:text-white hover:bg-gray-700/50 font-semibold' }}">
-                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                class="flex items-center gap-3 px-3.5 py-[11px] rounded-xl text-[13.5px] transition-all duration-200 {{ request()->routeIs('pengawas.laporan.kas-usaha') ? 'bg-[#2563EB] text-white font-bold shadow-[0_4px_14px_rgba(37,99,235,0.4)]' : 'text-[#94A3B8] font-semibold hover:bg-white/[0.07] hover:text-white' }}">
+                <i data-lucide="briefcase" class="w-[18px] h-[18px] shrink-0"></i>
                 <span>Kas Usaha</span>
             </a>
 
         </nav>
 
-        <!-- Sidebar Footer -->
-        <div class="p-4 border-t border-gray-700/60 bg-[#1F2937]/90 space-y-3">
-            <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-gray-300 hover:text-rose-400 hover:bg-rose-500/10 transition duration-150">
-                <div class="w-6 h-6 rounded-md bg-rose-500/10 flex items-center justify-center">
-                    <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-400"></i>
-                </div>
-                <span class="font-bold text-xs uppercase tracking-wider">Keluar</span>
+        <!-- SIDEBAR BOTTOM -->
+        <div class="mt-auto pt-4 border-t border-white/[0.08] shrink-0">
+            <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-3.5 py-[11px] rounded-xl text-[#94A3B8] hover:bg-red-500/15 hover:text-red-400 font-semibold text-[13.5px] transition-all duration-200 text-left">
+                <i data-lucide="log-out" class="w-[18px] h-[18px] shrink-0"></i>
+                <span>Keluar</span>
             </button>
 
-            <div class="px-2 pt-1 border-t border-gray-700/40 flex items-center justify-between text-[10px] text-gray-400">
-                <span class="font-bold uppercase tracking-wider">VERSI WEB 1.1</span>
-                <span class="font-bold text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">PENGAWAS</span>
+            <div class="text-center mt-3.5 text-[11px] font-semibold text-[#475569] tracking-[0.5px]">
+                Versi Web 1.1
             </div>
         </div>
 

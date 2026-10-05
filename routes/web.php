@@ -153,6 +153,12 @@ Route::middleware('role:customer')->group(function () {
             ->with('error', 'Data anggota belum terhubung dengan akun Anda.');
     }
 
+    // Bersihkan titik atau pemisah ribuan dari nominal pinjaman
+    if ($request->has('nominal_pinjaman') && is_string($request->nominal_pinjaman)) {
+        $cleanNominal = preg_replace('/[^0-9]/', '', $request->nominal_pinjaman);
+        $request->merge(['nominal_pinjaman' => $cleanNominal !== '' ? (int)$cleanNominal : null]);
+    }
+
     // 2. Validasi form pengajuan
     $data = $request->validate([
         'nominal_pinjaman' => [

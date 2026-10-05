@@ -377,6 +377,12 @@ public function customerStore(Request $request)
             ->with('error', 'Data anggota belum terhubung dengan akun Anda.');
     }
 
+    // Bersihkan titik atau pemisah ribuan dari input nominal
+    if ($request->has('nominal') && is_string($request->nominal)) {
+        $cleanNominal = preg_replace('/[^0-9]/', '', $request->nominal);
+        $request->merge(['nominal' => $cleanNominal !== '' ? (int)$cleanNominal : null]);
+    }
+
     // Validasi data dari Customer
     $data = $request->validate([
         'jenis_simpanan' => [

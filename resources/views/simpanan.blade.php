@@ -38,35 +38,35 @@
 @endsection
 
 @section('content')
-    <!-- Page Header Title and Action buttons -->
-    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 pb-6 border-b border-[#1f243d]">
-        <div>
-            <h2 class="text-2xl font-bold text-white tracking-tight">Simpanan</h2>
-            <p class="text-xs text-[#8f9bb3] mt-0.5">Kelola seluruh transaksi simpanan anggota koperasi secara terpadu.</p>
+    <!-- PAGE HEADER CARD (Matching Customer Design) -->
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-md shadow-blue-600/25 shrink-0">
+                <i data-lucide="wallet" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">Transaksi Simpanan</h1>
+                <p class="text-xs sm:text-sm text-[#64748B] mt-0.5">Kelola seluruh transaksi simpanan anggota koperasi secara terpadu.</p>
+            </div>
         </div>
         
         <!-- Action Buttons Group -->
-        <div class="flex items-center gap-3"
-        >
-         <a
-        href="{{ route('simpanan.export') }}"
-        class="inline-flex items-center gap-2 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10"
-    >
-        <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
-        <span>Export Excel</span>
-    </a>
-    
-    <button
-    type="button"
-    onclick="openImportSimpananModal()"
-    class="inline-flex items-center gap-2 px-3.5 py-2 bg-green-600 hover:bg-green-700 active:bg-green-800 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-green-500/10"
->
-    <i data-lucide="file-up" class="w-3.5 h-3.5"></i>
-    <span>Import Excel</span>
-</button>
+        <div class="flex items-center gap-2.5 flex-wrap">
+            <a href="{{ route('simpanan.export') }}"
+                class="inline-flex items-center gap-2 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl transition duration-150 text-xs font-bold shadow-md shadow-emerald-600/20">
+                <i data-lucide="file-down" class="w-4 h-4"></i>
+                <span>Export Excel</span>
+            </a>
+            
+            <button type="button" onclick="openImportSimpananModal()"
+                class="inline-flex items-center gap-2 px-3.5 py-2 border border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] rounded-xl transition duration-150 text-xs font-bold shadow-sm">
+                <i data-lucide="file-up" class="w-4 h-4 text-[#64748B]"></i>
+                <span>Import Excel</span>
+            </button>
 
-            <button onclick="openNewTransactionModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition duration-150 text-xs font-bold shadow-md shadow-blue-500/10">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <button type="button" onclick="openNewTransactionModal()" 
+                class="inline-flex items-center gap-2 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl transition duration-150 text-xs font-bold shadow-md shadow-blue-600/25">
+                <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>Tambah Simpanan</span>
             </button>
         </div>

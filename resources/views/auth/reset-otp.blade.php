@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Verifikasi OTP - SOY YPIK PAM JAYA</title>
 
-    <!-- Google Font -->
+    <!-- Google Font: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -26,566 +20,333 @@
             box-sizing: border-box;
         }
 
-        html,
         body {
-            width: 100%;
-            min-height: 100%;
-        }
-
-        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: #EEF2F6;
+            background-image: 
+                radial-gradient(at 10% 15%, rgba(37, 99, 235, 0.16) 0px, transparent 45%),
+                radial-gradient(at 90% 85%, rgba(56, 189, 248, 0.18) 0px, transparent 45%),
+                radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.12) 0px, transparent 40%),
+                radial-gradient(at 15% 90%, rgba(30, 58, 138, 0.14) 0px, transparent 40%),
+                radial-gradient(#CBD5E1 1.2px, transparent 1.2px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+            background-attachment: fixed;
             min-height: 100vh;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
-            padding: 24px;
-
-            font-family: 'Plus Jakarta Sans', sans-serif;
-
-            background:
-                radial-gradient(
-                    circle at 0% 0%,
-                    rgba(47, 84, 235, 0.14),
-                    transparent 38%
-                ),
-                radial-gradient(
-                    circle at 100% 100%,
-                    rgba(30, 64, 175, 0.12),
-                    transparent 38%
-                ),
-                #080a12;
-
-            color: #ffffff;
+            padding: 32px 20px;
+            position: relative;
+            overflow-x: hidden;
+            color: #1E293B;
         }
 
-        /* =========================
-           PAGE
-        ========================= */
+        /* Ambient Glowing Aurora Blobs in Background */
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.65;
+            animation: blobFloat 12s ease-in-out infinite alternate;
+        }
+
+        .bg-blob-1 {
+            width: 480px;
+            height: 480px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(99, 102, 241, 0.18));
+            top: -140px;
+            left: -120px;
+        }
+
+        .bg-blob-2 {
+            width: 440px;
+            height: 440px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(37, 99, 235, 0.2));
+            bottom: -120px;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        @keyframes blobFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(30px, 20px) scale(1.08);
+            }
+        }
 
         .page-wrapper {
             width: 100%;
-            max-width: 430px;
+            max-width: 440px;
+            position: relative;
+            z-index: 1;
         }
 
-        /* =========================
-           CARD
-        ========================= */
-
+        /* Auth Card */
         .auth-card {
             width: 100%;
-
-            background: #0f121e;
-
-            border: 1px solid #202538;
-
-            border-radius: 24px;
-
-            padding: 36px;
-
-            box-shadow:
-                0 25px 70px rgba(0, 0, 0, 0.45),
-                0 10px 30px rgba(0, 0, 0, 0.20);
+            background: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 38px 34px;
+            box-shadow: 0 25px 65px -15px rgba(15, 23, 42, 0.15), 0 10px 25px -10px rgba(37, 99, 235, 0.12);
         }
 
-        /* =========================
-           LOGO
-        ========================= */
-
+        /* Logo */
         .logo-wrapper {
-            width: 78px;
-            height: 78px;
-
-            margin: 0 auto 24px;
-
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            background: #151927;
-
-            border: 1px solid #252b40;
-
-            border-radius: 20px;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
         }
 
         .logo-wrapper img {
-            width: 58px;
-            height: 58px;
-
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-
-            display: block;
         }
 
-        /* =========================
-           HEADER
-        ========================= */
-
+        /* Header */
         .header {
             text-align: center;
-
-            margin-bottom: 26px;
-        }
-
-        .otp-icon {
-            width: 46px;
-            height: 46px;
-
-            margin: 0 auto 16px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: rgba(47, 84, 235, 0.10);
-
-            border: 1px solid rgba(47, 84, 235, 0.22);
-
-            border-radius: 13px;
-
-            color: #4f6ff5;
-        }
-
-        .otp-icon svg {
-            width: 21px;
-            height: 21px;
+            margin-bottom: 22px;
         }
 
         .header h1 {
             font-size: 24px;
-
             line-height: 1.3;
-
             font-weight: 800;
-
-            letter-spacing: -0.4px;
-
-            color: #ffffff;
+            color: #1E293B;
+            letter-spacing: -0.02em;
         }
 
         .header p {
-            margin-top: 9px;
-
-            font-size: 12px;
-
-            line-height: 1.7;
-
-            color: #8993aa;
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.55;
+            color: #94A3B8;
+            font-weight: 500;
         }
 
-        /* =========================
-           EMAIL
-        ========================= */
-
+        /* Email Box */
         .email-box {
-            width: 100%;
-
-            padding: 13px 15px;
-
-            margin-bottom: 22px;
-
-            text-align: center;
-
-            background: #111522;
-
-            border: 1px solid #20263a;
-
-            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
         }
 
         .email-label {
-            display: block;
-
-            margin-bottom: 5px;
-
-            color: #69748b;
-
-            font-size: 10px;
-
-            font-weight: 700;
-
+            font-size: 11px;
+            color: #94A3B8;
+            font-weight: 600;
             text-transform: uppercase;
-
-            letter-spacing: 0.7px;
+            letter-spacing: 0.5px;
         }
 
         .email-address {
-            display: block;
-
-            color: #e8ecf5;
-
-            font-size: 12px;
-
-            font-weight: 600;
-
-            word-break: break-word;
+            font-size: 13.5px;
+            color: #1E293B;
+            font-weight: 700;
+            margin-top: 2px;
         }
 
-        /* =========================
-           ALERT
-        ========================= */
-
+        /* Alerts */
         .alert {
             width: 100%;
-
             display: flex;
-
             align-items: flex-start;
-
             gap: 10px;
-
-            padding: 12px 13px;
-
+            padding: 12px 14px;
             margin-bottom: 18px;
-
-            border-radius: 12px;
-
-            font-size: 11px;
-
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
             line-height: 1.5;
         }
 
-        .alert svg {
-            width: 16px;
-            height: 16px;
-
-            flex-shrink: 0;
-
-            margin-top: 1px;
-        }
-
         .alert-success {
-            background: rgba(16, 185, 129, 0.08);
-
-            border: 1px solid rgba(16, 185, 129, 0.20);
-
-            color: #6ee7b7;
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            color: #065F46;
         }
 
         .alert-error {
-            background: rgba(244, 63, 94, 0.08);
-
-            border: 1px solid rgba(244, 63, 94, 0.20);
-
-            color: #fda4af;
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
         }
 
-        /* =========================
-           FORM
-        ========================= */
-
+        /* Form */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-label {
             display: block;
-
-            margin-bottom: 9px;
-
-            color: #e8ecf5;
-
-            font-size: 12px;
-
-            font-weight: 700;
-
+            margin-bottom: 8px;
+            color: #64748B;
+            font-size: 12.5px;
+            font-weight: 600;
             text-align: center;
         }
-
-        /* =========================
-           OTP INPUT
-        ========================= */
 
         .otp-input {
             width: 100%;
-
-            height: 58px;
-
-            padding: 0 18px;
-
-            background: #111522;
-
-            border: 1px solid #292f43;
-
-            border-radius: 13px;
-
-            outline: none;
-
-            color: #ffffff;
-
-            font-family: 'Plus Jakarta Sans', sans-serif;
-
-            font-size: 23px;
-
+            height: 52px;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 10px;
+            color: #1E293B;
+            font-family: inherit;
+            font-size: 24px;
             font-weight: 800;
-
-            letter-spacing: 0.55em;
-
+            letter-spacing: 8px;
             text-align: center;
-
-            transition:
-                border-color 0.2s ease,
-                box-shadow 0.2s ease,
-                background 0.2s ease;
+            outline: none;
+            transition: all 0.2s ease;
         }
 
         .otp-input::placeholder {
-            color: #4d566b;
-
-            font-size: 13px;
-
-            font-weight: 500;
-
-            letter-spacing: 0.15em;
-        }
-
-        .otp-input:hover {
-            border-color: #343c54;
+            color: #CBD5E1;
+            font-weight: 400;
+            letter-spacing: 6px;
         }
 
         .otp-input:focus {
-            border-color: #2f54eb;
-
-            background: #121625;
-
-            box-shadow:
-                0 0 0 3px rgba(47, 84, 235, 0.12);
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
         }
 
         .input-error {
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
-            gap: 6px;
-
-            margin-top: 8px;
-
-            color: #fb7185;
-
-            font-size: 11px;
+            gap: 5px;
+            margin-top: 6px;
+            color: #DC2626;
+            font-size: 11.5px;
+            font-weight: 600;
         }
 
-        .input-error svg {
-            width: 13px;
-            height: 13px;
-        }
-
-        /* =========================
-           INFO
-        ========================= */
-
+        /* Info Box */
         .info-box {
-            width: 100%;
-
             display: flex;
-
             align-items: flex-start;
-
             gap: 10px;
-
-            padding: 13px 14px;
-
+            padding: 12px 14px;
             margin-bottom: 20px;
-
-            background: #111522;
-
-            border: 1px solid #20263a;
-
-            border-radius: 12px;
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            border-radius: 10px;
         }
 
         .info-box svg {
-            width: 17px;
-            height: 17px;
-
+            color: #2563EB;
+            margin-top: 2px;
             flex-shrink: 0;
-
-            margin-top: 1px;
-
-            color: #4f6ff5;
+            width: 16px;
+            height: 16px;
         }
 
         .info-text {
-            color: #7f899f;
-
-            font-size: 11px;
-
-            line-height: 1.6;
+            color: #1E40AF;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
         .info-text strong {
-            color: #dce2ef;
-
+            color: #1D4ED8;
             font-weight: 700;
         }
 
-        /* =========================
-           BUTTON
-        ========================= */
-
+        /* Button */
         .verify-button {
             width: 100%;
-
-            height: 50px;
-
+            height: 46px;
             border: none;
-
-            border-radius: 12px;
-
-            background: #2f54eb;
-
-            color: #ffffff;
-
-            font-family: 'Plus Jakarta Sans', sans-serif;
-
-            font-size: 13px;
-
+            border-radius: 8px;
+            background: #2563EB;
+            color: #FFFFFF;
+            font-family: inherit;
+            font-size: 14.5px;
             font-weight: 700;
-
             cursor: pointer;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             gap: 8px;
-
-            box-shadow:
-                0 10px 25px rgba(47, 84, 235, 0.20);
-
-            transition:
-                background 0.2s ease,
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        .verify-button svg {
-            width: 17px;
-            height: 17px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            transition: all 0.2s ease;
         }
 
         .verify-button:hover {
-            background: #1d39c4;
-
+            background: #1D4ED8;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
             transform: translateY(-1px);
-
-            box-shadow:
-                0 14px 30px rgba(47, 84, 235, 0.28);
         }
 
         .verify-button:active {
             transform: translateY(0);
         }
 
-        /* =========================
-           BACK
-        ========================= */
-
+        /* Back Link */
         .back-link {
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
-            gap: 7px;
-
+            gap: 6px;
             margin-top: 22px;
-
-            color: #69748b;
-
-            font-size: 11px;
-
+            color: #64748B;
+            font-size: 12.5px;
             font-weight: 600;
-
             text-decoration: none;
-
-            transition: color 0.2s ease;
+            transition: color 0.15s ease;
         }
 
         .back-link:hover {
-            color: #ffffff;
+            color: #2563EB;
         }
 
-        .back-link svg {
-            width: 15px;
-            height: 15px;
-        }
-
-        /* =========================
-           FOOTER
-        ========================= */
-
+        /* Footer */
         .footer {
             text-align: center;
-
             margin-top: 20px;
         }
 
         .footer-main {
-            color: #596276;
-
-            font-size: 10px;
+            color: #94A3B8;
+            font-size: 11.5px;
+            font-weight: 500;
         }
 
         .footer-sub {
-            color: #3f4658;
-
-            font-size: 9px;
-
-            margin-top: 5px;
-        }
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 480px) {
-
-            body {
-                padding: 16px;
-            }
-
-            .auth-card {
-                padding: 28px 22px;
-
-                border-radius: 20px;
-            }
-
-            .logo-wrapper {
-                width: 70px;
-                height: 70px;
-            }
-
-            .logo-wrapper img {
-                width: 53px;
-                height: 53px;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-
-            .header p {
-                font-size: 11px;
-            }
-
-            .otp-input {
-                height: 54px;
-
-                font-size: 21px;
-            }
+            color: #CBD5E1;
+            font-size: 10.5px;
+            margin-top: 2px;
         }
     </style>
 </head>
-
 <body>
+
+    <!-- Ambient Glowing Aurora Blobs in Background -->
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
 
     <div class="page-wrapper">
 
@@ -593,94 +354,43 @@
 
             <!-- LOGO -->
             <div class="logo-wrapper">
-
-                <img
-                    src="{{ asset('images/logo-ypik.png') }}"
-                    alt="SOY YPIK PAM JAYA"
-                >
-
+                <img src="{{ asset('images/logo-ypik.png') }}" alt="SOY YPIK PAM JAYA">
             </div>
 
             <!-- HEADER -->
             <div class="header">
-
-                <div class="otp-icon">
-
-                    <i data-lucide="shield-check"></i>
-
-                </div>
-
-                <h1>
-                    Verifikasi OTP
-                </h1>
-
-                <p>
-                    Masukkan kode OTP yang telah
-                    dikirimkan ke email Anda.
-                </p>
-
+                <h1>Verifikasi OTP</h1>
+                <p>Masukkan kode OTP 6 digit yang telah dikirimkan ke email Anda.</p>
             </div>
 
             <!-- EMAIL -->
             <div class="email-box">
-
-                <span class="email-label">
-                    Kode dikirim ke
-                </span>
-
-                <span class="email-address">
-                    {{ $email }}
-                </span>
-
+                <span class="email-label">Kode dikirim ke</span>
+                <span class="email-address">{{ $email }}</span>
             </div>
 
             <!-- SUCCESS MESSAGE -->
             @if(session('success'))
-
                 <div class="alert alert-success">
-
-                    <i data-lucide="check-circle"></i>
-
-                    <span>
-                        {{ session('success') }}
-                    </span>
-
+                    <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                    <span>{{ session('success') }}</span>
                 </div>
-
             @endif
 
             <!-- ERROR MESSAGE -->
             @if(session('error'))
-
                 <div class="alert alert-error">
-
-                    <i data-lucide="alert-circle"></i>
-
-                    <span>
-                        {{ session('error') }}
-                    </span>
-
+                    <i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
+                    <span>{{ session('error') }}</span>
                 </div>
-
             @endif
 
             <!-- OTP FORM -->
-            <form
-                action="{{ route('password.verify.submit') }}"
-                method="POST"
-            >
-
+            <form action="{{ route('password.verify.submit') }}" method="POST">
                 @csrf
 
                 <div class="form-group">
-
-                    <label
-                        for="otp"
-                        class="form-label"
-                    >
-                        Kode OTP 6 Digit
-                    </label>
-
+                    <label for="otp" class="form-label">Kode OTP 6 Digit</label>
                     <input
                         type="text"
                         id="otp"
@@ -691,115 +401,59 @@
                         inputmode="numeric"
                         pattern="[0-9]{6}"
                         autocomplete="one-time-code"
-                        placeholder="000000"
+                        placeholder="••••••"
                         required
                         autofocus
                         class="otp-input"
                     >
 
                     @error('otp')
-
                         <div class="input-error">
-
-                            <i data-lucide="alert-circle"></i>
-
-                            <span>
-                                {{ $message }}
-                            </span>
-
+                            <i data-lucide="alert-circle" style="width: 13px; height: 13px;"></i>
+                            <span>{{ $message }}</span>
                         </div>
-
                     @enderror
-
                 </div>
 
                 <!-- INFO -->
                 <div class="info-box">
-
                     <i data-lucide="clock"></i>
-
                     <div class="info-text">
-
-                        Kode OTP berlaku selama
-                        <strong>5 menit</strong>.
-                        Jangan berikan kode OTP Anda
-                        kepada orang lain.
-
+                        Kode OTP berlaku selama <strong>5 menit</strong>. Jangan berikan kode OTP Anda kepada orang lain.
                     </div>
-
                 </div>
 
                 <!-- BUTTON -->
-                <button
-                    type="submit"
-                    class="verify-button"
-                >
-
-                    <i data-lucide="shield-check"></i>
-
-                    <span>
-                        Verifikasi OTP
-                    </span>
-
+                <button type="submit" class="verify-button">
+                    <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                    <span>Verifikasi OTP</span>
                 </button>
 
             </form>
 
             <!-- BACK -->
-            <a
-                href="{{ route('password.request') }}"
-                class="back-link"
-            >
-
-                <i data-lucide="arrow-left"></i>
-
-                <span>
-                    Gunakan Email Lain
-                </span>
-
+            <a href="{{ route('password.request') }}" class="back-link">
+                <i data-lucide="arrow-left" style="width: 15px; height: 15px;"></i>
+                <span>Kirim Ulang atau Ganti Email</span>
             </a>
 
         </div>
 
         <!-- FOOTER -->
         <div class="footer">
-
-            <p class="footer-main">
-                © {{ date('Y') }} SOY YPIK PAM JAYA
-            </p>
-
-            <p class="footer-sub">
-                Sistem Operasional Koperasi
-            </p>
-
+            <p class="footer-main">© {{ date('Y') }} SOY YPIK PAM JAYA</p>
+            <p class="footer-sub">Sistem Operasional Koperasi</p>
         </div>
 
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
-
-            const otpInput = document.getElementById('otp');
-
-            if (otpInput) {
-
-                otpInput.addEventListener('input', function () {
-
-                    this.value = this.value
-                        .replace(/\D/g, '')
-                        .slice(0, 6);
-
-                });
-
-            }
-
         });
     </script>
 
 </body>
-
 </html>

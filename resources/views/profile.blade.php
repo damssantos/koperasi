@@ -27,17 +27,19 @@
     }
 
     .profile-card {
-        background-color: #16192b;
-        border: 1px solid #1f243d;
+        background-color: #FFFFFF;
+        border: 1px solid #E2E8F0;
         border-radius: 16px;
         padding: 32px 24px;
         position: relative;
         overflow: hidden;
-        transition: border-color 0.3s ease;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .profile-card:hover {
-        border-color: rgba(143, 155, 179, 0.2);
+        border-color: #BFDBFE;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.06);
     }
 
     /* Flex stretch for the bottom card on desktop to line up exactly with right card */
@@ -59,9 +61,9 @@
         align-items: center;
         justify-content: center;
         margin: 0 auto;
-        border: 4px solid #16192b;
-        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25);
-        background: linear-gradient(135deg, #2563eb, #4338ca);
+        border: 4px solid #FFFFFF;
+        box-shadow: 0 10px 20px -3px rgba(37, 99, 235, 0.25);
+        background: #2563EB;
         z-index: 10;
         position: relative;
     }
@@ -82,10 +84,8 @@
     .info-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 24px !important;
-        row-gap: 24px !important;
-        column-gap: 24px !important;
-        margin-top: 28px; /* Breathing room below the header line */
+        gap: 20px !important;
+        margin-top: 24px;
     }
 
     @media (min-width: 768px) {
@@ -95,13 +95,13 @@
     }
 
     .info-item {
-        background-color: #1e2238; /* Soft navy slate */
-        border: 1px solid #2a2f4c; /* Softer border */
+        background-color: #F8FAFC;
+        border: 1px solid #E2E8F0;
         border-radius: 12px;
-        padding: 20px 24px;
+        padding: 18px 20px;
         display: flex;
         flex-direction: column;
-        gap: 12px !important;
+        gap: 10px !important;
     }
 
     .info-item-full {
@@ -109,9 +109,9 @@
     }
 
     .info-label {
-        font-size: 12px; /* Normal, legible label size */
+        font-size: 11px;
         font-weight: 700;
-        color: #8f9bb3;
+        color: #64748B;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-bottom: 2px;
@@ -119,71 +119,33 @@
 
     .info-input {
         width: 100%;
-        background-color: #111322; /* Soft input background */
-        border: 1px solid #252b48; /* Softer input borders */
-        border-radius: 8px;
-        padding: 12px 16px;
-        color: #ffffff;
-        font-size: 14.5px; /* Normal, user-friendly font size */
-        font-weight: 500;
+        background-color: #FFFFFF;
+        border: 1px solid #CBD5E1;
+        border-radius: 10px;
+        padding: 11px 14px;
+        color: #0F172A;
+        font-size: 14px;
+        font-weight: 600;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .info-input:focus {
         outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        border-color: #2563EB;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
     .info-input[readonly],
     .info-input[disabled] {
-        background-color: #161828; /* Softer readonly background */
-        color: #828fa9; /* Legible readonly text */
+        background-color: #F1F5F9;
+        color: #64748B;
         cursor: not-allowed;
-        border-color: #1d2136;
+        border-color: #E2E8F0;
     }
 
     .info-textarea {
         min-height: 100px;
         resize: vertical;
-    }
-
-    /* Light Mode Overrides */
-    body.light .profile-card {
-        background-color: #ffffff;
-        border-color: #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
-    }
-
-    body.light .profile-avatar-circle {
-        border-color: #ffffff;
-    }
-
-    body.light .info-item {
-        background-color: #f1f5f9;
-        border-color: #e2e8f0;
-    }
-
-    body.light .info-input {
-        background-color: #ffffff;
-        border-color: #cbd5e1;
-        color: #334155;
-    }
-
-    body.light .info-input:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-    }
-
-    body.light .info-input[readonly],
-    body.light .info-input[disabled] {
-        background-color: #f8fafc;
-        color: #64748b;
-        border-color: #e2e8f0;
-    }
-
-    body.light .info-label {
-        color: #64748b;
     }
 </style>
 @endsection
@@ -196,10 +158,17 @@
         $profileInitial = strtoupper(substr(trim($profileUser->nama_lengkap ?: 'A'), 0, 1));
     @endphp
     
-    <!-- Page Header Title -->
-    <div class="flex flex-col gap-1 pb-6 border-b border-[#1f243d]">
-        <h2 class="text-2xl font-bold text-white tracking-tight">Profil Saya</h2>
-        <p class="text-xs text-[#8f9bb3]">Informasi detail akun keanggotaan Anda di Koperasi.</p>
+    <!-- PAGE HEADER CARD (Matching Customer Design) -->
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-md shadow-blue-600/25 shrink-0">
+                <i data-lucide="user" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">Profil Saya</h1>
+                <p class="text-xs sm:text-sm text-[#64748B] mt-0.5">Informasi akun dan data keanggotaan Anda di Koperasi.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Main Profile Layout Container -->

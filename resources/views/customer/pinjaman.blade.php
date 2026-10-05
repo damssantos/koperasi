@@ -375,12 +375,175 @@
             transition: all 0.2s ease;
         }
 
-        .loan-form-group input:focus,
-        .loan-form-group select:focus,
-        .loan-form-group textarea:focus {
-            border-color: #2563EB;
+        .loan-form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 16px 16px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        /* =========================
+           CUSTOM SELECT COMPONENT
+        ========================= */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-select-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1F2937;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .custom-select-trigger:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+        }
+
+        .custom-select-trigger:focus,
+        .custom-select-wrapper.is-open .custom-select-trigger {
             background: #FFFFFF;
+            border-color: #2563EB;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .custom-select-value {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            color: #1F2937;
+        }
+
+        .custom-select-value.is-placeholder {
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        .custom-select-arrow {
+            color: #64748B;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .custom-select-wrapper.is-open .custom-select-arrow {
+            transform: rotate(180deg);
+            color: #2563EB;
+        }
+
+        .custom-select-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 6px;
+            box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.15), 0 10px 15px -5px rgba(15, 23, 42, 0.08);
+            z-index: 100;
+            max-height: 240px;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px) scale(0.98);
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .custom-select-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-select-dropdown::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        .custom-select-wrapper.is-open .custom-select-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .custom-select-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            gap: 12px;
+        }
+
+        .custom-select-option:hover {
+            background: #F1F5F9;
+        }
+
+        .custom-select-option.is-selected {
+            background: #EFF6FF;
+        }
+
+        .custom-select-option-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .custom-select-option-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #1E293B;
+            transition: color 0.15s ease;
+        }
+
+        .custom-select-option.is-selected .custom-select-option-title {
+            color: #2563EB;
+        }
+
+        .custom-select-check {
+            width: 18px;
+            height: 18px;
+            color: #2563EB;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .custom-select-option.is-selected .custom-select-check {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .visually-hidden-select {
+            position: absolute !important;
+            opacity: 0 !important;
+            width: 1px !important;
+            height: 1px !important;
+            top: 20px !important;
+            left: 20px !important;
+            pointer-events: none !important;
+            clip: rect(0, 0, 0, 0) !important;
         }
 
         .loan-form-group textarea {
@@ -399,6 +562,30 @@
             color: #DC2626;
             font-size: 12px;
             margin-top: 5px;
+        }
+
+        /* =========================
+           CURRENCY INPUT
+        ========================= */
+        .input-currency-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-currency-wrapper .currency-prefix {
+            position: absolute;
+            left: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748B;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .input-currency-wrapper input {
+            padding-left: 42px !important;
         }
 
 
@@ -1039,8 +1226,14 @@
                         Nominal Pinjaman
                     </label>
 
-                    <input type="number" id="nominal_pinjaman" name="nominal_pinjaman" min="1000" step="1000"
-                        placeholder="Contoh: 5000000" value="{{ old('nominal_pinjaman') }}" required>
+                    <div class="input-currency-wrapper">
+                        <span class="currency-prefix">Rp</span>
+                        <input type="text" id="nominal_pinjaman" name="nominal_pinjaman" inputmode="numeric"
+                            placeholder="Contoh: 5.000.000"
+                            value="{{ old('nominal_pinjaman') ? number_format((int)preg_replace('/[^0-9]/', '', old('nominal_pinjaman')), 0, ',', '.') : '' }}"
+                            oninput="this.value = this.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.')"
+                            required autocomplete="off">
+                    </div>
 
                     <small class="loan-form-help">
                         Minimal pinjaman Rp1.000.
@@ -1066,49 +1259,41 @@
                         Tenor
                     </label>
 
-                    <select id="tenor" name="tenor" required>
+                    <div class="custom-select-wrapper" id="customTenorWrapper">
 
-                        <option value="">
-                            Pilih tenor
-                        </option>
+                        <select id="tenor" name="tenor" required class="visually-hidden-select" tabindex="-1">
+                            <option value="">Pilih tenor</option>
+                            @foreach([3, 6, 9, 12, 18, 24, 36, 48, 60] as $bulan)
+                                <option value="{{ $bulan }}" {{ old('tenor') == $bulan ? 'selected' : '' }}>
+                                    {{ $bulan }} bulan
+                                </option>
+                            @endforeach
+                        </select>
 
-                        <option value="3" {{ old('tenor') == 3 ? 'selected' : '' }}>
-                            3 bulan
-                        </option>
+                        <button type="button" class="custom-select-trigger" id="customTenorTrigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="custom-select-value {{ old('tenor') ? '' : 'is-placeholder' }}" id="customTenorValue">
+                                {{ old('tenor') ? old('tenor') . ' bulan' : 'Pilih tenor' }}
+                            </span>
 
-                        <option value="6" {{ old('tenor') == 6 ? 'selected' : '' }}>
-                            6 bulan
-                        </option>
+                            <svg class="custom-select-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
 
-                        <option value="9" {{ old('tenor') == 9 ? 'selected' : '' }}>
-                            9 bulan
-                        </option>
+                        <div class="custom-select-dropdown" id="customTenorDropdown" role="listbox">
+                            @foreach([3, 6, 9, 12, 18, 24, 36, 48, 60] as $bulan)
+                                <div class="custom-select-option {{ old('tenor') == $bulan ? 'is-selected' : '' }}" data-value="{{ $bulan }}">
+                                    <div class="custom-select-option-info">
+                                        <span class="custom-select-option-title">{{ $bulan }} Bulan</span>
+                                    </div>
+                                    <svg class="custom-select-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                            @endforeach
+                        </div>
 
-                        <option value="12" {{ old('tenor') == 12 ? 'selected' : '' }}>
-                            12 bulan
-                        </option>
-
-                        <option value="18" {{ old('tenor') == 18 ? 'selected' : '' }}>
-                            18 bulan
-                        </option>
-
-                        <option value="24" {{ old('tenor') == 24 ? 'selected' : '' }}>
-                            24 bulan
-                        </option>
-
-                        <option value="36" {{ old('tenor') == 36 ? 'selected' : '' }}>
-                            36 bulan
-                        </option>
-
-                        <option value="48" {{ old('tenor') == 48 ? 'selected' : '' }}>
-                            48 bulan
-                        </option>
-
-                        <option value="60" {{ old('tenor') == 60 ? 'selected' : '' }}>
-                            60 bulan
-                        </option>
-
-                    </select>
+                    </div>
 
 
                     @error('tenor')
@@ -1192,6 +1377,19 @@
                 modal.classList.remove('active');
             }
 
+            closeTenorSelect();
+
+        }
+
+
+        function closeTenorSelect() {
+
+            const wrapper = document.getElementById('customTenorWrapper');
+            const trigger = document.getElementById('customTenorTrigger');
+
+            if (wrapper) wrapper.classList.remove('is-open');
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+
         }
 
 
@@ -1207,7 +1405,89 @@
         document.addEventListener('keydown', function (event) {
 
             if (event.key === 'Escape') {
+                closeTenorSelect();
                 closeLoanModal();
+            }
+
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const wrapper = document.getElementById('customTenorWrapper');
+            const select = document.getElementById('tenor');
+            const trigger = document.getElementById('customTenorTrigger');
+            const valueEl = document.getElementById('customTenorValue');
+            const dropdown = document.getElementById('customTenorDropdown');
+
+            if (wrapper && trigger && select && valueEl && dropdown) {
+
+                trigger.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const isOpen = wrapper.classList.toggle('is-open');
+                    trigger.setAttribute('aria-expanded', isOpen);
+                });
+
+                const options = dropdown.querySelectorAll('.custom-select-option');
+                options.forEach(function (opt) {
+                    opt.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        const val = this.getAttribute('data-value');
+                        const title = this.querySelector('.custom-select-option-title') ? this.querySelector('.custom-select-option-title').textContent.trim() : (val + ' bulan');
+
+                        select.value = val;
+                        valueEl.textContent = title;
+                        valueEl.classList.remove('is-placeholder');
+
+                        trigger.style.borderColor = '';
+                        trigger.style.boxShadow = '';
+
+                        options.forEach(function (o) { o.classList.remove('is-selected'); });
+                        this.classList.add('is-selected');
+
+                        closeTenorSelect();
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                    });
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!wrapper.contains(e.target)) {
+                        closeTenorSelect();
+                    }
+                });
+
+                // Auto format nominal pinjaman dengan titik ribuan
+                const nominalPinjamanInput = document.getElementById('nominal_pinjaman');
+                if (nominalPinjamanInput) {
+                    nominalPinjamanInput.addEventListener('input', function () {
+                        const clean = this.value.replace(/\D/g, '');
+                        if (!clean) {
+                            this.value = '';
+                            return;
+                        }
+                        this.value = clean.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                    });
+                }
+
+                const form = select.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function (e) {
+                        if (!select.value) {
+                            e.preventDefault();
+                            wrapper.classList.add('is-open');
+                            trigger.setAttribute('aria-expanded', 'true');
+                            trigger.style.borderColor = '#DC2626';
+                            trigger.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.15)';
+                            trigger.focus();
+                            return;
+                        }
+
+                        if (nominalPinjamanInput) {
+                            nominalPinjamanInput.value = nominalPinjamanInput.value.replace(/\D/g, '');
+                        }
+                    });
+                }
+
             }
 
         });

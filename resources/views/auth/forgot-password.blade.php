@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Lupa Kata Sandi - SOY YPIK PAM JAYA</title>
 
+    <!-- Google Font: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -23,480 +20,345 @@
             box-sizing: border-box;
         }
 
-        html,
         body {
-            width: 100%;
-            min-height: 100%;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #080a12;
-            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: #EEF2F6;
+            background-image: 
+                radial-gradient(at 10% 15%, rgba(37, 99, 235, 0.16) 0px, transparent 45%),
+                radial-gradient(at 90% 85%, rgba(56, 189, 248, 0.18) 0px, transparent 45%),
+                radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.12) 0px, transparent 40%),
+                radial-gradient(at 15% 90%, rgba(30, 58, 138, 0.14) 0px, transparent 40%),
+                radial-gradient(#CBD5E1 1.2px, transparent 1.2px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 32px 20px;
             position: relative;
             overflow-x: hidden;
+            color: #1E293B;
         }
 
-        /* Background glow */
-        body::before {
-            content: "";
+        /* Ambient Glowing Aurora Blobs in Background */
+        .bg-blob {
             position: fixed;
-            width: 500px;
-            height: 500px;
-            background: rgba(47, 84, 235, 0.10);
             border-radius: 50%;
-            filter: blur(100px);
-            top: -220px;
-            left: -180px;
+            filter: blur(80px);
             pointer-events: none;
+            z-index: 0;
+            opacity: 0.65;
+            animation: blobFloat 12s ease-in-out infinite alternate;
         }
 
-        body::after {
-            content: "";
-            position: fixed;
-            width: 450px;
-            height: 450px;
-            background: rgba(30, 64, 175, 0.08);
-            border-radius: 50%;
-            filter: blur(100px);
-            right: -180px;
-            bottom: -200px;
-            pointer-events: none;
+        .bg-blob-1 {
+            width: 480px;
+            height: 480px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(99, 102, 241, 0.18));
+            top: -140px;
+            left: -120px;
+        }
+
+        .bg-blob-2 {
+            width: 440px;
+            height: 440px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(37, 99, 235, 0.2));
+            bottom: -120px;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        @keyframes blobFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(30px, 20px) scale(1.08);
+            }
         }
 
         .page-wrapper {
             width: 100%;
-            max-width: 430px;
+            max-width: 440px;
             position: relative;
             z-index: 1;
         }
 
-        /* =========================
-           CARD
-        ========================= */
-
+        /* Auth Card */
         .auth-card {
             width: 100%;
-            background: #0f121e;
-            border: 1px solid #202538;
-            border-radius: 24px;
-            padding: 36px;
-            box-shadow:
-                0 25px 70px rgba(0, 0, 0, 0.45),
-                0 10px 30px rgba(0, 0, 0, 0.20);
+            background: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 38px 34px;
+            box-shadow: 0 25px 65px -15px rgba(15, 23, 42, 0.15), 0 10px 25px -10px rgba(37, 99, 235, 0.12);
         }
 
-        /* =========================
-           LOGO
-        ========================= */
-
+        /* Logo */
         .logo-container {
-            width: 82px;
-            height: 82px;
-            margin: 0 auto 26px;
-
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            background: #151927;
-            border: 1px solid #252b40;
-            border-radius: 20px;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
         }
 
         .logo-container img {
-            width: 62px;
-            height: 62px;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            display: block;
         }
 
-        /* =========================
-           HEADER
-        ========================= */
-
+        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .key-icon {
-            width: 46px;
-            height: 46px;
-            margin: 0 auto 16px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: rgba(47, 84, 235, 0.10);
-            border: 1px solid rgba(47, 84, 235, 0.22);
-            border-radius: 13px;
-
-            color: #4f6ff5;
-        }
-
-        .key-icon svg {
-            width: 21px;
-            height: 21px;
+            margin-bottom: 24px;
         }
 
         .header h1 {
-            font-size: 25px;
+            font-size: 24px;
             line-height: 1.3;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            color: #ffffff;
+            color: #1E293B;
+            letter-spacing: -0.02em;
         }
 
         .header p {
-            margin-top: 10px;
+            margin-top: 8px;
             font-size: 13px;
-            line-height: 1.7;
-            color: #8993aa;
+            line-height: 1.55;
+            color: #94A3B8;
+            font-weight: 500;
         }
 
-        /* =========================
-           ALERT
-        ========================= */
-
+        /* Alerts */
         .alert {
             width: 100%;
             display: flex;
             align-items: flex-start;
-            gap: 11px;
-
-            padding: 13px 14px;
-            margin-bottom: 20px;
-
-            border-radius: 12px;
-            font-size: 12px;
+            gap: 10px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
             line-height: 1.5;
         }
 
-        .alert svg {
-            width: 17px;
-            height: 17px;
-            flex-shrink: 0;
-            margin-top: 1px;
-        }
-
         .alert-success {
-            background: rgba(16, 185, 129, 0.08);
-            border: 1px solid rgba(16, 185, 129, 0.20);
-            color: #6ee7b7;
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            color: #065F46;
         }
 
         .alert-error {
-            background: rgba(244, 63, 94, 0.08);
-            border: 1px solid rgba(244, 63, 94, 0.20);
-            color: #fda4af;
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
         }
 
-        /* =========================
-           FORM
-        ========================= */
-
+        /* Form */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 8px;
-
-            color: #f1f5f9;
-            font-size: 12px;
-            font-weight: 700;
+            margin-bottom: 7px;
+            color: #64748B;
+            font-size: 12.5px;
+            font-weight: 600;
         }
 
         .input-wrapper {
             position: relative;
-            width: 100%;
+            display: flex;
+            align-items: center;
         }
 
         .input-icon {
             position: absolute;
             left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-
-            color: #667085;
-
+            color: #94A3B8;
+            pointer-events: none;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            pointer-events: none;
-        }
-
-        .input-icon svg {
-            width: 18px;
-            height: 18px;
         }
 
         .form-input {
             width: 100%;
-            height: 50px;
-
-            padding: 0 15px 0 45px;
-
-            background: #111522;
-            border: 1px solid #292f43;
-            border-radius: 12px;
-
-            color: #ffffff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 13px;
-
+            height: 44px;
+            padding: 0 14px 0 40px;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 8px;
+            color: #1E293B;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 500;
             outline: none;
-
-            transition:
-                border-color 0.2s ease,
-                box-shadow 0.2s ease,
-                background 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         .form-input::placeholder {
-            color: #626c82;
+            color: #CBD5E1;
+            font-weight: 400;
         }
 
         .form-input:hover {
-            border-color: #343c54;
+            border-color: #CBD5E1;
         }
 
         .form-input:focus {
-            border-color: #2f54eb;
-            background: #121625;
-            box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.12);
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .form-input.is-invalid {
+            border-color: #EF4444;
+            background-color: #FFF5F5;
         }
 
         .input-error {
             display: flex;
             align-items: center;
-            gap: 6px;
-
-            margin-top: 7px;
-
-            color: #fb7185;
-            font-size: 11px;
+            gap: 5px;
+            margin-top: 5px;
+            color: #DC2626;
+            font-size: 11.5px;
+            font-weight: 600;
         }
 
-        .input-error svg {
-            width: 13px;
-            height: 13px;
-            flex-shrink: 0;
-        }
-
-        /* =========================
-           INFO BOX
-        ========================= */
-
+        /* Info Box */
         .info-box {
-            width: 100%;
-
             display: flex;
             align-items: flex-start;
-            gap: 11px;
-
-            padding: 13px 14px;
+            gap: 10px;
+            padding: 12px 14px;
             margin-bottom: 20px;
-
-            background: #111522;
-            border: 1px solid #20263a;
-            border-radius: 12px;
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            border-radius: 10px;
         }
 
         .info-icon {
-            width: 17px;
-            height: 17px;
-
+            color: #2563EB;
+            margin-top: 2px;
             flex-shrink: 0;
-            margin-top: 1px;
-
-            color: #4f6ff5;
         }
 
         .info-text {
-            color: #7f899f;
-            font-size: 11px;
-            line-height: 1.6;
+            color: #1E40AF;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
         .info-text strong {
-            color: #dce2ef;
+            color: #1D4ED8;
             font-weight: 700;
         }
 
-        /* =========================
-           BUTTON
-        ========================= */
-
+        /* Submit Button */
         .submit-button {
             width: 100%;
-            height: 50px;
-
+            height: 46px;
             border: none;
-            border-radius: 12px;
-
-            background: #2f54eb;
-            color: #ffffff;
-
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 13px;
+            border-radius: 8px;
+            background: #2563EB;
+            color: #FFFFFF;
+            font-family: inherit;
+            font-size: 14.5px;
             font-weight: 700;
-
             cursor: pointer;
-
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-
-            box-shadow: 0 10px 25px rgba(47, 84, 235, 0.20);
-
-            transition:
-                background 0.2s ease,
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        .submit-button svg {
-            width: 17px;
-            height: 17px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            transition: all 0.2s ease;
         }
 
         .submit-button:hover {
-            background: #1d39c4;
+            background: #1D4ED8;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
             transform: translateY(-1px);
-            box-shadow: 0 14px 30px rgba(47, 84, 235, 0.28);
         }
 
         .submit-button:active {
             transform: translateY(0);
         }
 
-        /* =========================
-           DIVIDER
-        ========================= */
-
+        /* Divider */
         .divider {
             display: flex;
             align-items: center;
             gap: 12px;
-
-            margin: 26px 0;
+            margin: 22px 0;
         }
 
         .divider-line {
             flex: 1;
             height: 1px;
-            background: #20263a;
+            background: #E2E8F0;
         }
 
         .divider-text {
-            color: #596276;
-            font-size: 10px;
+            color: #94A3B8;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
-        /* =========================
-           BACK LINK
-        ========================= */
-
+        /* Back Link */
         .back-login {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 7px;
-
-            color: #4f6ff5;
-
-            font-size: 12px;
-            font-weight: 700;
-
+            gap: 6px;
+            color: #64748B;
+            font-size: 12.5px;
+            font-weight: 600;
             text-decoration: none;
-
-            transition: color 0.2s ease;
+            transition: color 0.15s ease;
         }
 
         .back-login:hover {
-            color: #7189ff;
+            color: #2563EB;
         }
 
-        .back-login svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        /* =========================
-           FOOTER
-        ========================= */
-
+        /* Footer */
         .footer {
             text-align: center;
-            margin-top: 22px;
+            margin-top: 20px;
         }
 
         .footer-main {
-            color: #596276;
-            font-size: 10px;
+            color: #94A3B8;
+            font-size: 11.5px;
+            font-weight: 500;
         }
 
         .footer-sub {
-            color: #3f4658;
-            font-size: 9px;
-            margin-top: 5px;
-        }
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 480px) {
-
-            body {
-                padding: 16px;
-            }
-
-            .auth-card {
-                padding: 28px 22px;
-                border-radius: 20px;
-            }
-
-            .logo-container {
-                width: 72px;
-                height: 72px;
-                margin-bottom: 22px;
-            }
-
-            .logo-container img {
-                width: 54px;
-                height: 54px;
-            }
-
-            .header {
-                margin-bottom: 24px;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-
-            .header p {
-                font-size: 12px;
-            }
+            color: #CBD5E1;
+            font-size: 10.5px;
+            margin-top: 2px;
         }
     </style>
 </head>
-
 <body>
+
+    <!-- Ambient Glowing Aurora Blobs in Background -->
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
 
     <div class="page-wrapper">
 
@@ -504,190 +366,98 @@
 
             <!-- LOGO -->
             <div class="logo-container">
-                <img
-                    src="{{ asset('images/logo-ypik.png') }}"
-                    alt="SOY YPIK PAM JAYA"
-                >
+                <img src="{{ asset('images/logo-ypik.png') }}" alt="SOY YPIK PAM JAYA">
             </div>
 
             <!-- HEADER -->
             <div class="header">
-
-                <div class="key-icon">
-                    <i data-lucide="key-round"></i>
-                </div>
-
-                <h1>
-                    Lupa Kata Sandi?
-                </h1>
-
-                <p>
-                    Jangan khawatir. Masukkan email yang
-                    terdaftar untuk mendapatkan kode OTP
-                    dan mengatur ulang kata sandi Anda.
-                </p>
-
+                <h1>Lupa Kata Sandi?</h1>
+                <p>Jangan khawatir. Masukkan email yang terdaftar untuk mendapatkan kode OTP dan mengatur ulang kata sandi Anda.</p>
             </div>
 
             <!-- SUCCESS -->
             @if(session('success'))
-
                 <div class="alert alert-success">
-
-                    <i data-lucide="check-circle"></i>
-
-                    <span>
-                        {{ session('success') }}
-                    </span>
-
+                    <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                    <span>{{ session('success') }}</span>
                 </div>
-
             @endif
 
             <!-- ERROR -->
             @if(session('error'))
-
                 <div class="alert alert-error">
-
-                    <i data-lucide="alert-circle"></i>
-
-                    <span>
-                        {{ session('error') }}
-                    </span>
-
+                    <i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
+                    <span>{{ session('error') }}</span>
                 </div>
-
             @endif
 
             <!-- FORM -->
-            <form
-                action="{{ route('password.email') }}"
-                method="POST"
-            >
-
+            <form action="{{ route('password.email') }}" method="POST">
                 @csrf
 
                 <!-- EMAIL -->
                 <div class="form-group">
-
-                    <label
-                        for="email"
-                        class="form-label"
-                    >
-                        Email Terdaftar
-                    </label>
-
+                    <label for="email" class="form-label">Email Terdaftar</label>
                     <div class="input-wrapper">
-
                         <div class="input-icon">
-                            <i data-lucide="mail"></i>
+                            <i data-lucide="mail" style="width: 16px; height: 16px;"></i>
                         </div>
-
                         <input
                             type="email"
                             id="email"
                             name="email"
                             value="{{ old('email') }}"
-                            placeholder="Masukkan email Anda"
+                            placeholder="nama@email.com"
                             autocomplete="email"
                             autofocus
                             required
-                            class="form-input"
+                            class="form-input @error('email') is-invalid @enderror"
                         >
-
                     </div>
 
                     @error('email')
-
                         <div class="input-error">
-
-                            <i data-lucide="alert-circle"></i>
-
-                            <span>
-                                {{ $message }}
-                            </span>
-
+                            <i data-lucide="alert-circle" style="width: 13px; height: 13px;"></i>
+                            <span>{{ $message }}</span>
                         </div>
-
                     @enderror
-
                 </div>
 
                 <!-- INFO -->
                 <div class="info-box">
-
-                    <i
-                        data-lucide="info"
-                        class="info-icon"
-                    ></i>
-
+                    <i data-lucide="info" class="info-icon" style="width: 16px; height: 16px;"></i>
                     <div class="info-text">
-
-                        Pastikan email yang Anda masukkan
-                        masih aktif. Kode OTP akan dikirim
-                        ke email tersebut dan berlaku selama
-                        <strong>5 menit</strong>.
-
+                        Pastikan email yang Anda masukkan masih aktif. Kode OTP akan dikirim ke email tersebut dan berlaku selama <strong>5 menit</strong>.
                     </div>
-
                 </div>
 
                 <!-- BUTTON -->
-                <button
-                    type="submit"
-                    class="submit-button"
-                >
-
-                    <i data-lucide="send"></i>
-
-                    <span>
-                        Kirim Kode OTP
-                    </span>
-
+                <button type="submit" class="submit-button">
+                    <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                    <span>Kirim Kode OTP</span>
                 </button>
 
             </form>
 
             <!-- DIVIDER -->
             <div class="divider">
-
                 <div class="divider-line"></div>
-
-                <span class="divider-text">
-                    atau
-                </span>
-
+                <span class="divider-text">atau</span>
                 <div class="divider-line"></div>
-
             </div>
 
             <!-- BACK -->
-            <a
-                href="{{ route('login') }}"
-                class="back-login"
-            >
-
-                <i data-lucide="arrow-left"></i>
-
-                <span>
-                    Kembali ke Login
-                </span>
-
+            <a href="{{ route('login') }}" class="back-login">
+                <i data-lucide="arrow-left" style="width: 15px; height: 15px;"></i>
+                <span>Kembali ke Login</span>
             </a>
 
         </div>
 
         <!-- FOOTER -->
         <div class="footer">
-
-            <p class="footer-main">
-                © {{ date('Y') }} SOY YPIK PAM JAYA
-            </p>
-
-            <p class="footer-sub">
-                Sistem Operasional Koperasi
-            </p>
-
+            <p class="footer-main">© {{ date('Y') }} SOY YPIK PAM JAYA</p>
+            <p class="footer-sub">Sistem Operasional Koperasi</p>
         </div>
 
     </div>

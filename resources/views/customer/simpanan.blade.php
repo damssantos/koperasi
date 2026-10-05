@@ -421,12 +421,173 @@
             transition: all 0.2s ease;
         }
 
-        .saving-form-group input:focus,
-        .saving-form-group select:focus,
-        .saving-form-group textarea:focus {
-            border-color: #2563EB;
+        .saving-form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 16px 16px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        /* =========================
+           CUSTOM SELECT COMPONENT
+        ========================= */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-select-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1F2937;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .custom-select-trigger:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+        }
+
+        .custom-select-trigger:focus,
+        .custom-select-wrapper.is-open .custom-select-trigger {
             background: #FFFFFF;
+            border-color: #2563EB;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .custom-select-value {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            color: #1F2937;
+        }
+
+        .custom-select-value.is-placeholder {
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        .custom-select-arrow {
+            color: #64748B;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .custom-select-wrapper.is-open .custom-select-arrow {
+            transform: rotate(180deg);
+            color: #2563EB;
+        }
+
+        .custom-select-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 6px;
+            box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.15), 0 10px 15px -5px rgba(15, 23, 42, 0.08);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px) scale(0.98);
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .custom-select-wrapper.is-open .custom-select-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .custom-select-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            gap: 12px;
+        }
+
+        .custom-select-option:hover {
+            background: #F1F5F9;
+        }
+
+        .custom-select-option.is-selected {
+            background: #EFF6FF;
+        }
+
+        .custom-select-option-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .custom-select-option-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #1E293B;
+            transition: color 0.15s ease;
+        }
+
+        .custom-select-option.is-selected .custom-select-option-title {
+            color: #2563EB;
+        }
+
+        .custom-select-option-desc {
+            font-size: 11.5px;
+            color: #64748B;
+        }
+
+        .custom-select-option.is-selected .custom-select-option-desc {
+            color: #3B82F6;
+        }
+
+        .custom-select-check {
+            width: 18px;
+            height: 18px;
+            color: #2563EB;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .custom-select-option.is-selected .custom-select-check {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .visually-hidden-select {
+            position: absolute !important;
+            opacity: 0 !important;
+            width: 1px !important;
+            height: 1px !important;
+            top: 20px !important;
+            left: 20px !important;
+            pointer-events: none !important;
+            clip: rect(0, 0, 0, 0) !important;
         }
 
         .saving-form-group textarea {
@@ -451,6 +612,213 @@
             font-size: 12px;
 
             margin-top: 5px;
+        }
+
+        /* =========================
+           CURRENCY INPUT
+        ========================= */
+        .input-currency-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-currency-wrapper .currency-prefix {
+            position: absolute;
+            left: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748B;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .input-currency-wrapper input {
+            padding-left: 42px !important;
+        }
+
+        /* =========================
+           DATEPICKER & FLATPICKR
+        ========================= */
+        .input-date-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .saving-date-alt-input {
+            width: 100%;
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 10px !important;
+            padding: 12px 42px 12px 14px !important;
+            font-size: 14px !important;
+            font-family: inherit !important;
+            outline: none !important;
+            box-sizing: border-box !important;
+            background: #F8FAFC !important;
+            color: #1F2937 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .saving-date-alt-input:focus {
+            border-color: #2563EB !important;
+            background: #FFFFFF !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+        }
+
+        .input-date-wrapper .date-icon {
+            position: absolute;
+            right: 14px;
+            color: #64748B;
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .input-date-wrapper:hover .date-icon {
+            color: #2563EB;
+        }
+
+        /* Flatpickr Custom Theme */
+        .flatpickr-calendar {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+            border-radius: 18px !important;
+            border: 1px solid #E2E8F0 !important;
+            box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.15), 0 10px 15px -5px rgba(15, 23, 42, 0.08) !important;
+            padding: 14px 16px !important;
+            background: #FFFFFF !important;
+            width: 310px !important;
+        }
+
+        .flatpickr-calendar::before,
+        .flatpickr-calendar::after {
+            display: none !important;
+        }
+
+        .flatpickr-months {
+            display: flex !important;
+            align-items: center !important;
+            padding-bottom: 8px !important;
+            margin-bottom: 6px !important;
+            border-bottom: 1px solid #F1F5F9 !important;
+        }
+
+        .flatpickr-months .flatpickr-month {
+            color: #1E293B !important;
+            height: 36px !important;
+        }
+
+        .flatpickr-current-month {
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .flatpickr-current-month .cur-month {
+            font-weight: 700 !important;
+            color: #0F172A !important;
+        }
+
+        .flatpickr-current-month input.cur-year {
+            font-weight: 700 !important;
+            color: #0F172A !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            padding: 6px !important;
+            height: 32px !important;
+            width: 32px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: #64748B !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month:hover,
+        .flatpickr-months .flatpickr-next-month:hover {
+            background: #F1F5F9 !important;
+            color: #0F172A !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month svg,
+        .flatpickr-months .flatpickr-next-month svg {
+            fill: currentColor !important;
+            width: 13px !important;
+            height: 13px !important;
+        }
+
+        .flatpickr-weekdays {
+            margin-bottom: 6px !important;
+        }
+
+        span.flatpickr-weekday {
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+            color: #94A3B8 !important;
+            text-transform: uppercase !important;
+        }
+
+        .flatpickr-days {
+            width: 100% !important;
+        }
+
+        .dayContainer {
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+            justify-content: space-around !important;
+        }
+
+        .flatpickr-day {
+            height: 36px !important;
+            line-height: 36px !important;
+            max-width: 36px !important;
+            border-radius: 10px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: #334155 !important;
+            border: none !important;
+            margin: 2px 0 !important;
+            transition: all 0.15s ease !important;
+        }
+
+        .flatpickr-day:hover {
+            background: #F1F5F9 !important;
+            color: #0F172A !important;
+        }
+
+        .flatpickr-day.today {
+            border: 1.5px solid #2563EB !important;
+            color: #2563EB !important;
+            background: transparent !important;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.selected:hover {
+            background: #2563EB !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+            border-color: #2563EB !important;
+        }
+
+        .flatpickr-day.prevMonthDay,
+        .flatpickr-day.nextMonthDay {
+            color: #CBD5E1 !important;
+        }
+
+        .flatpickr-day.prevMonthDay:hover,
+        .flatpickr-day.nextMonthDay:hover {
+            background: #F8FAFC !important;
+            color: #94A3B8 !important;
         }
 
 
@@ -955,25 +1323,68 @@
                         Jenis Simpanan
                     </label>
 
-                    <select id="jenis_simpanan" name="jenis_simpanan" required>
+                    <div class="custom-select-wrapper" id="customSelectWrapper">
 
-                        <option value="">
-                            Pilih jenis simpanan
-                        </option>
+                        <select id="jenis_simpanan" name="jenis_simpanan" required class="visually-hidden-select" tabindex="-1">
+                            <option value="">Pilih jenis simpanan</option>
+                            <option value="Pokok" {{ old('jenis_simpanan') == 'Pokok' ? 'selected' : '' }}>Simpanan Pokok</option>
+                            <option value="Wajib" {{ old('jenis_simpanan') == 'Wajib' ? 'selected' : '' }}>Simpanan Wajib</option>
+                            <option value="Sukarela" {{ old('jenis_simpanan') == 'Sukarela' ? 'selected' : '' }}>Simpanan Sukarela</option>
+                        </select>
 
-                        <option value="Pokok" {{ old('jenis_simpanan') == 'Pokok' ? 'selected' : '' }}>
-                            Simpanan Pokok
-                        </option>
+                        <button type="button" class="custom-select-trigger" id="customSelectTrigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="custom-select-value {{ old('jenis_simpanan') ? '' : 'is-placeholder' }}" id="customSelectValue">
+                                @if(old('jenis_simpanan') == 'Pokok')
+                                    Simpanan Pokok
+                                @elseif(old('jenis_simpanan') == 'Wajib')
+                                    Simpanan Wajib
+                                @elseif(old('jenis_simpanan') == 'Sukarela')
+                                    Simpanan Sukarela
+                                @else
+                                    Pilih jenis simpanan
+                                @endif
+                            </span>
 
-                        <option value="Wajib" {{ old('jenis_simpanan') == 'Wajib' ? 'selected' : '' }}>
-                            Simpanan Wajib
-                        </option>
+                            <svg class="custom-select-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
 
-                        <option value="Sukarela" {{ old('jenis_simpanan') == 'Sukarela' ? 'selected' : '' }}>
-                            Simpanan Sukarela
-                        </option>
+                        <div class="custom-select-dropdown" id="customSelectDropdown" role="listbox">
 
-                    </select>
+                            <div class="custom-select-option {{ old('jenis_simpanan') == 'Pokok' ? 'is-selected' : '' }}" data-value="Pokok">
+                                <div class="custom-select-option-info">
+                                    <span class="custom-select-option-title">Simpanan Pokok</span>
+                                    <span class="custom-select-option-desc">Setoran awal wajib saat resmi menjadi anggota</span>
+                                </div>
+                                <svg class="custom-select-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+
+                            <div class="custom-select-option {{ old('jenis_simpanan') == 'Wajib' ? 'is-selected' : '' }}" data-value="Wajib">
+                                <div class="custom-select-option-info">
+                                    <span class="custom-select-option-title">Simpanan Wajib</span>
+                                    <span class="custom-select-option-desc">Setoran berkala setiap periode/bulan</span>
+                                </div>
+                                <svg class="custom-select-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+
+                            <div class="custom-select-option {{ old('jenis_simpanan') == 'Sukarela' ? 'is-selected' : '' }}" data-value="Sukarela">
+                                <div class="custom-select-option-info">
+                                    <span class="custom-select-option-title">Simpanan Sukarela</span>
+                                    <span class="custom-select-option-desc">Setoran fleksibel dengan nominal bebas</span>
+                                </div>
+                                <svg class="custom-select-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+
+                        </div>
+
+                    </div>
 
 
                     @error('jenis_simpanan')
@@ -995,8 +1406,13 @@
                         Nominal Simpanan
                     </label>
 
-                    <input type="number" id="nominal" name="nominal" min="1000" step="1000" placeholder="Contoh: 500000"
-                        value="{{ old('nominal') }}" required>
+                    <div class="input-currency-wrapper">
+                        <span class="currency-prefix">Rp</span>
+                        <input type="text" id="nominal" name="nominal" inputmode="numeric" placeholder="Contoh: 500.000"
+                            value="{{ old('nominal') ? number_format((int)preg_replace('/[^0-9]/', '', old('nominal')), 0, ',', '.') : '' }}"
+                            oninput="this.value = this.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.')"
+                            required autocomplete="off">
+                    </div>
 
                     <small class="saving-form-help">
                         Minimal simpanan Rp1.000.
@@ -1022,10 +1438,18 @@
                         Tanggal Setoran
                     </label>
 
-                    <input type="date" id="tanggal_transaksi" name="tanggal_transaksi" value="{{ old(
-        'tanggal_transaksi',
-        now()->format('Y-m-d')
-    ) }}" required>
+                    <div class="input-date-wrapper">
+                        <input type="text" id="tanggal_transaksi" name="tanggal_transaksi"
+                            value="{{ old('tanggal_transaksi', now()->format('Y-m-d')) }}"
+                            placeholder="Pilih tanggal setoran"
+                            required>
+                        <svg class="date-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
 
 
                     @error('tanggal_transaksi')
@@ -1114,6 +1538,19 @@
 
             }
 
+            closeCustomSelect();
+
+        }
+
+
+        function closeCustomSelect() {
+
+            const wrapper = document.getElementById('customSelectWrapper');
+            const trigger = document.getElementById('customSelectTrigger');
+
+            if (wrapper) wrapper.classList.remove('is-open');
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+
         }
 
 
@@ -1132,7 +1569,107 @@
 
             if (event.key === 'Escape') {
 
+                closeCustomSelect();
                 closeSavingModal();
+
+            }
+
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const wrapper = document.getElementById('customSelectWrapper');
+            const select = document.getElementById('jenis_simpanan');
+            const trigger = document.getElementById('customSelectTrigger');
+            const valueEl = document.getElementById('customSelectValue');
+            const dropdown = document.getElementById('customSelectDropdown');
+
+            if (wrapper && trigger && select && valueEl && dropdown) {
+
+                // Toggle dropdown open/close
+                trigger.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const isOpen = wrapper.classList.toggle('is-open');
+                    trigger.setAttribute('aria-expanded', isOpen);
+                });
+
+                // Select option
+                const options = dropdown.querySelectorAll('.custom-select-option');
+                options.forEach(function (opt) {
+                    opt.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        const val = this.getAttribute('data-value');
+                        const title = this.querySelector('.custom-select-option-title') ? this.querySelector('.custom-select-option-title').textContent.trim() : val;
+
+                        select.value = val;
+                        valueEl.textContent = title;
+                        valueEl.classList.remove('is-placeholder');
+
+                        // Reset error outline if previously invalid
+                        trigger.style.borderColor = '';
+                        trigger.style.boxShadow = '';
+
+                        options.forEach(function (o) { o.classList.remove('is-selected'); });
+                        this.classList.add('is-selected');
+
+                        closeCustomSelect();
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                    });
+                });
+
+                // Close dropdown on click outside
+                document.addEventListener('click', function (e) {
+                    if (!wrapper.contains(e.target)) {
+                        closeCustomSelect();
+                    }
+                });
+
+                // Auto format nominal dengan titik ribuan
+                const nominalInput = document.getElementById('nominal');
+                if (nominalInput) {
+                    nominalInput.addEventListener('input', function () {
+                        const clean = this.value.replace(/\D/g, '');
+                        if (!clean) {
+                            this.value = '';
+                            return;
+                        }
+                        this.value = clean.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                    });
+                }
+
+                // Validation on submit
+                const form = select.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function (e) {
+                        if (!select.value) {
+                            e.preventDefault();
+                            wrapper.classList.add('is-open');
+                            trigger.setAttribute('aria-expanded', 'true');
+                            trigger.style.borderColor = '#DC2626';
+                            trigger.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.15)';
+                            trigger.focus();
+                            return;
+                        }
+
+                        if (nominalInput) {
+                            nominalInput.value = nominalInput.value.replace(/\D/g, '');
+                        }
+                    });
+                }
+
+                // Inisialisasi Flatpickr Tanggal Setoran
+                if (typeof flatpickr !== 'undefined') {
+                    flatpickr('#tanggal_transaksi', {
+                        locale: 'id',
+                        dateFormat: 'Y-m-d',
+                        altInput: true,
+                        altFormat: 'j F Y',
+                        altInputClass: 'saving-date-alt-input',
+                        defaultDate: "{{ old('tanggal_transaksi', now()->format('Y-m-d')) }}",
+                        disableMobile: true
+                    });
+                }
 
             }
 

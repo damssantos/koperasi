@@ -2,157 +2,64 @@
 
 @section('content')
 
-<div class="min-h-screen bg-[#0b0f14] text-white px-4 py-6 sm:px-6 lg:px-8">
+<div class="space-y-6">
 
-    <div class="max-w-7xl mx-auto">
-
-        {{-- ========================================================= --}}
-        {{-- HEADER --}}
-        {{-- ========================================================= --}}
-
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
-
+    <!-- PAGE HEADER CARD (Matching Customer Design) -->
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-md shadow-blue-600/25 shrink-0">
+                <i data-lucide="history" class="w-6 h-6"></i>
+            </div>
             <div>
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
-                    History Aktivitas
-                </h1>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">History Aktivitas</h1>
+                <p class="text-xs sm:text-sm text-[#64748B] mt-0.5">Riwayat aktivitas dan audit trail perubahan data yang dilakukan oleh pengguna.</p>
+            </div>
+        </div>
 
-                <p class="text-sm text-gray-400 mt-1">
-                    Riwayat aktivitas dan perubahan data yang dilakukan oleh pengguna.
-                </p>
+        <a href="{{ route('activity_logs.export', request()->query()) }}"
+           class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 text-white px-4 py-2 text-xs font-bold hover:bg-emerald-700 transition shadow-md shadow-emerald-600/20">
+            <i data-lucide="file-down" class="w-4 h-4"></i>
+            <span>Export Excel</span>
+        </a>
+    </div>
+
+    <!-- FILTER CARD (Customer Style) -->
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm">
+        <form method="GET" action="{{ route('activity_logs.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+                <label class="block text-xs font-bold text-[#64748B] mb-2 uppercase tracking-wider">Cari aktivitas</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari aktivitas, deskripsi, user..."
+                       class="w-full rounded-xl bg-white border border-[#E2E8F0] text-[#0F172A] placeholder-slate-400 px-4 py-2.5 text-xs focus:outline-none focus:border-[#2563EB]">
             </div>
 
-
-            {{-- EXPORT EXCEL --}}
-
-            <a
-                href="{{ route('activity_logs.export', request()->query()) }}"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm font-semibold hover:bg-gray-200 transition"
-            >
-
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" x2="12" y1="15" y2="3"/>
-                </svg>
-
-                Export Excel
-
-            </a>
-
-        </div>
-
-
-        {{-- ========================================================= --}}
-        {{-- FILTER --}}
-        {{-- ========================================================= --}}
-
-        <div class="bg-[#11161d] border border-white/10 rounded-2xl p-4 mb-6">
-
-            <form
-                method="GET"
-                action="{{ route('activity_logs.index') }}"
-                class="grid grid-cols-1 md:grid-cols-3 gap-3"
-            >
-
-                {{-- SEARCH --}}
-
-                <div>
-
-                    <label class="block text-xs text-gray-400 mb-2">
-                        Cari aktivitas
-                    </label>
-
-                    <input
-                        type="text"
-                        name="search"
-                        value="{{ request('search') }}"
-                        placeholder="Cari aktivitas, deskripsi, user..."
-                        class="w-full rounded-xl bg-[#0b0f14] border border-white/10 text-white placeholder-gray-500 px-4 py-3 text-sm focus:outline-none focus:border-white/30"
-                    >
-
-                </div>
-
-
-                {{-- FILTER AKTIVITAS --}}
-
-                <div>
-
-                    <label class="block text-xs text-gray-400 mb-2">
-                        Jenis aktivitas
-                    </label>
-
-                    <select
-                        name="aktivitas"
-                        class="w-full rounded-xl bg-[#0b0f14] border border-white/10 text-white px-4 py-3 text-sm focus:outline-none focus:border-white/30"
-                    >
-
-                        <option value="">
-                            Semua aktivitas
+            <div>
+                <label class="block text-xs font-bold text-[#64748B] mb-2 uppercase tracking-wider">Jenis aktivitas</label>
+                <select name="aktivitas" class="w-full rounded-xl bg-white border border-[#E2E8F0] text-[#0F172A] px-4 py-2.5 text-xs focus:outline-none focus:border-[#2563EB]">
+                    <option value="">Semua aktivitas</option>
+                    @foreach ($aktivitas as $item)
+                        <option value="{{ $item }}" @selected(request('aktivitas') === $item)>
+                            {{ ucwords(str_replace('_', ' ', $item)) }}
                         </option>
+                    @endforeach
+                </select>
+            </div>
 
-                        @foreach ($aktivitas as $item)
+            <div class="flex items-end gap-2">
+                <button type="submit" class="flex-1 rounded-xl bg-[#2563EB] text-white px-4 py-2.5 text-xs font-bold hover:bg-[#1D4ED8] transition shadow-md shadow-blue-600/20">
+                    Cari
+                </button>
+                <a href="{{ route('activity_logs.index') }}" class="rounded-xl border border-[#E2E8F0] bg-white px-4 py-2.5 text-xs font-bold text-[#0F172A] hover:bg-[#F8FAFC] transition shadow-sm">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
 
-                            <option
-                                value="{{ $item }}"
-                                @selected(request('aktivitas') === $item)
-                            >
-                                {{ ucwords(str_replace('_', ' ', $item)) }}
-                            </option>
-
-                        @endforeach
-
-                    </select>
-
-                </div>
-
-
-                {{-- BUTTON --}}
-
-                <div class="flex items-end gap-2">
-
-                    <button
-                        type="submit"
-                        class="flex-1 rounded-xl bg-white text-black px-4 py-3 text-sm font-semibold hover:bg-gray-200 transition"
-                    >
-                        Cari
-                    </button>
-
-                    <a
-                        href="{{ route('activity_logs.index') }}"
-                        class="rounded-xl border border-white/10 px-4 py-3 text-sm text-gray-300 hover:bg-white/5 transition"
-                    >
-                        Reset
-                    </a>
-
-                </div>
-
-            </form>
-
-        </div>
-
-
-        {{-- ========================================================= --}}
-        {{-- TABLE --}}
-        {{-- ========================================================= --}}
-
-        <div class="bg-[#11161d] border border-white/10 rounded-2xl overflow-hidden">
-
-            <div class="overflow-x-auto">
-
-                <table class="w-full text-sm">
-
-                    <thead class="bg-white/[0.03] border-b border-white/10">
+    <!-- TABLE CARD (Customer Style) -->
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-[#F8FAFC] border-b border-[#E2E8F0]">
 
                         <tr>
 
