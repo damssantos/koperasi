@@ -463,26 +463,16 @@
                 background: #CBD5E1;
                 border-radius: 3px;
             }
-            ::-webkit-scrollbar-thumb:hover {
-                background: #94A3B8;
+            /* Force Lucide icons inside header icon box to have white color */
+            .header-icon-box svg, .header-icon-box i {
+                color: #FFFFFF !important;
             }
         </style>
         @yield('styles')
     </head>
     <body class="h-full text-slate-900 antialiased bg-[#EEF3FB]">
-        <!-- GLOBAL LOADER (Matching Customer Theme) -->
-        <div id="global-loader" class="fixed inset-0 bg-[#EEF3FB] z-[9999] flex flex-col items-center justify-center transition-opacity duration-300">
-            <div class="flex flex-col items-center space-y-4">
-                <div class="relative w-14 h-14 flex items-center justify-center">
-                    <div class="absolute inset-0 border-4 border-blue-200/50 rounded-full"></div>
-                    <div class="absolute inset-0 border-4 border-[#2563EB] border-t-transparent rounded-full animate-spin"></div>
-                </div>
-                <span class="text-[11px] font-bold text-[#64748B] uppercase tracking-widest animate-pulse">Memuat Panel Admin</span>
-            </div>
-        </div>
-
-        <!-- MAIN APP CONTENT (Hidden during loader) -->
-        <div id="app-content" class="hidden opacity-0 transition-opacity duration-300 ease-in-out">
+        <!-- MAIN APP CONTENT (Instant Load, No Delay Loader) -->
+        <div id="app-content">
             <!-- TOP NAVBAR -->
             @include('partials.navbar')
 
@@ -518,62 +508,6 @@
 
         <!-- Common JavaScript -->
         <script>
-            // Page Loader handling
-            let loaderTimer;
-            function runLoader() {
-                const loader = document.getElementById('global-loader');
-                const appContent = document.getElementById('app-content');
-                if (!loader) return;
-
-                loader.classList.remove('hidden', 'opacity-0');
-                if (appContent) {
-                    appContent.classList.add('hidden', 'opacity-0');
-                }
-
-                if (loaderTimer) clearTimeout(loaderTimer);
-
-                loaderTimer = setTimeout(() => {
-                    loader.classList.add('opacity-0');
-                    if (appContent) {
-                        appContent.classList.remove('hidden');
-                        setTimeout(() => {
-                            appContent.classList.remove('opacity-0');
-                            window.dispatchEvent(new CustomEvent('page-loader-finished'));
-                        }, 50);
-                    }
-                    setTimeout(() => {
-                        loader.classList.add('hidden');
-                    }, 300);
-                }, 400);
-            }
-
-            window.addEventListener('DOMContentLoaded', runLoader);
-
-            document.addEventListener('click', function(e) {
-                const link = e.target.closest('a');
-                if (link) {
-                    const href = link.getAttribute('href');
-                    const target = link.getAttribute('target');
-                    
-                    if (href && 
-                        !href.startsWith('#') && 
-                        !href.startsWith('javascript:') && 
-                        !link.hasAttribute('onclick') &&
-                        target !== '_blank' && 
-                        !e.ctrlKey && 
-                        !e.metaKey && 
-                        !e.shiftKey) {
-                        
-                        const loader = document.getElementById('global-loader');
-                        if (loader) {
-                            loader.classList.remove('hidden');
-                            loader.offsetHeight;
-                            loader.classList.remove('opacity-0');
-                        }
-                    }
-                }
-            });
-
             // Mobile Sidebar Toggle
             function toggleSidebar() {
                 const sidebar = document.getElementById('sidebar');

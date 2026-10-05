@@ -274,46 +274,73 @@
         .user-pill {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 5px 14px 5px 6px;
-            border-radius: 20px;
+            gap: 10px;
+            padding: 6px 16px 6px 6px;
+            border-radius: 9999px;
             background: #F8FAFC;
             border: 1px solid #E2E8F0;
-            font-size: 13px;
-            font-weight: 700;
-            color: #0F172A;
             text-decoration: none;
             transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
         }
 
         .user-pill:hover,
         .user-pill.active {
             background: #EFF6FF;
             border-color: #BFDBFE;
-            color: #2563EB;
             box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
         }
 
-        .user-avatar-circle {
+        .user-avatar-circle,
+        .user-avatar-img {
             width: 28px;
             height: 28px;
             border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .user-avatar-circle {
             background: #2563EB;
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11.5px;
+            font-weight: 800;
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
         }
 
-        .user-role-badge {
-            background: #E2E8F0;
-            color: #475569;
-            font-size: 10px;
+        .user-avatar-img {
+            border: 1px solid #E2E8F0;
+        }
+
+        .user-info-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .user-name-text {
+            font-size: 12px;
             font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 6px;
+            color: #0F172A;
+            line-height: 1.2;
+            transition: color 0.2s ease;
+        }
+
+        .user-pill:hover .user-name-text {
+            color: #2563EB;
+        }
+
+        .user-role-text {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: #64748B;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
         }
 
         /* =========================================
@@ -345,9 +372,11 @@
             flex-shrink: 0;
         }
 
-        .header-icon-box svg {
+        .header-icon-box svg,
+        .header-icon-box i {
             width: 22px;
             height: 22px;
+            color: #FFFFFF !important;
         }
 
         .page-title {
@@ -431,6 +460,12 @@
 </head>
 
 <body>
+@php
+    $navUser = auth()->user();
+    $navAvatar = $navUser?->avatar;
+    $hasNavAvatar = $navAvatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($navAvatar);
+    $navInitial = strtoupper(substr(trim($navUser?->nama_lengkap ?: 'C'), 0, 1));
+@endphp
 
     <div class="layout">
 
@@ -505,15 +540,72 @@
             <!-- TOP NAVBAR -->
             <header class="top-navbar">
 
-                <div class="top-navbar-left"></div>
+                <div class="top-navbar-left">
+                    <!-- Mobile / Desktop Sidebar Toggle Button -->
+                    <button type="button" onclick="toggleSidebar()" class="p-2 rounded-xl text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" title="Buka/Tutup Menu Sidebar">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
 
-                <div class="top-navbar-right">
-                    <a href="{{ route('customer.profil') }}" class="user-pill {{ request()->routeIs('customer.profil') ? 'active' : '' }}" title="Lihat Profil Saya">
-                        <div class="user-avatar-circle">
-                            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                <div class="top-navbar-right relative">
+                    <!-- Profile Dropdown Trigger (Matching Admin Pill Design) -->
+                    <button type="button" onclick="toggleProfileDropdown()" id="profileDropdownBtn" 
+                            class="user-pill flex items-center gap-2.5 py-1.5 px-3 sm:pr-4 rounded-full bg-[#F8FAFC] border border-[#E2E8F0] hover:bg-[#EFF6FF] hover:border-[#BFDBFE] transition-all duration-200 group cursor-pointer shadow-sm">
+                        @if($hasNavAvatar)
+                            <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="user-avatar-img">
+                        @else
+                            <div class="user-avatar-circle">
+                                {{ $navInitial }}
+                            </div>
+                        @endif
+                        <div class="user-info-text hidden sm:flex">
+                            <span class="user-name-text">{{ $navUser?->nama_lengkap ?? 'Customer' }}</span>
+                            <span class="user-role-text">CUSTOMER</span>
                         </div>
-                        <span>{{ auth()->user()->nama_lengkap }}</span>
-                    </a>
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[#64748B] group-hover:text-[#2563EB] transition-transform duration-200" id="profileChevron"></i>
+                    </button>
+
+                    <!-- Profile Dropdown Menu (Matching Admin Light Style) -->
+                    <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E2E8F0] rounded-2xl shadow-xl shadow-slate-900/10 overflow-hidden z-[100] animate-dropdown">
+                        <!-- User Header -->
+                        <div class="px-4 py-3.5 border-b border-[#E2E8F0] bg-[#F8FAFC]">
+                            <div class="flex items-center gap-3">
+                                @if($hasNavAvatar)
+                                    <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-10 h-10 rounded-full object-cover border border-[#E2E8F0] shadow-sm">
+                                @else
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-extrabold bg-[#2563EB] shadow-sm">
+                                        {{ $navInitial }}
+                                    </div>
+                                @endif
+                                <div class="min-w-0">
+                                    <p class="text-xs font-bold text-[#0F172A] truncate">{{ $navUser?->nama_lengkap ?? 'Customer' }}</p>
+                                    <p class="text-[10px] text-[#64748B] font-semibold uppercase tracking-wider">CUSTOMER KOPERASI</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown Actions -->
+                        <div class="p-2 space-y-1">
+                            <a href="{{ route('customer.profil') }}" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-all duration-150">
+                                <div class="w-7 h-7 rounded-lg bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center">
+                                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <span>Profil Saya</span>
+                            </a>
+
+                            <div class="border-t border-[#E2E8F0] my-1"></div>
+
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all duration-150 text-left">
+                                    <div class="w-7 h-7 rounded-lg bg-rose-100/60 text-rose-600 flex items-center justify-center shrink-0">
+                                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                                    </div>
+                                    <span>Keluar Akun</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
             </header>
@@ -582,6 +674,34 @@
         document.addEventListener('DOMContentLoaded', function () {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
+            }
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('hidden');
+            }
+        }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+            if (chevron) {
+                chevron.classList.toggle('rotate-180');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('profileDropdown');
+            const btn = document.getElementById('profileDropdownBtn');
+            const chevron = document.getElementById('profileChevron');
+            if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
             }
         });
     </script>

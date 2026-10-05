@@ -7,22 +7,22 @@
     .profile-container {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 30px !important;
+        gap: 24px;
         margin-top: 24px;
         width: 100%;
-        align-items: stretch; /* Stretch child columns to have identical height */
+        align-items: stretch;
     }
 
     @media (min-width: 1024px) {
         .profile-container {
-            grid-template-columns: 320px 1fr; /* Left panel 320px, Right panel takes the rest */
+            grid-template-columns: 320px 1fr;
         }
     }
 
     .profile-left-column {
         display: flex;
         flex-direction: column;
-        gap: 24px !important;
+        gap: 24px;
         height: 100%;
     }
 
@@ -30,7 +30,7 @@
         background-color: #FFFFFF;
         border: 1px solid #E2E8F0;
         border-radius: 16px;
-        padding: 32px 24px;
+        padding: 28px 24px;
         position: relative;
         overflow: hidden;
         box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
@@ -42,7 +42,6 @@
         box-shadow: 0 8px 20px rgba(37, 99, 235, 0.06);
     }
 
-    /* Flex stretch for the bottom card on desktop to line up exactly with right card */
     @media (min-width: 1024px) {
         .profile-left-column .profile-card-fill {
             flex-grow: 1;
@@ -53,8 +52,8 @@
     }
 
     .profile-avatar-circle {
-        width: 110px;
-        height: 110px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         overflow: hidden;
         display: flex;
@@ -62,17 +61,15 @@
         justify-content: center;
         margin: 0 auto;
         border: 4px solid #FFFFFF;
-        box-shadow: 0 10px 20px -3px rgba(37, 99, 235, 0.25);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
         background: #2563EB;
-        z-index: 10;
         position: relative;
     }
 
-    /* Make the initial letter big and bold */
     .profile-avatar-circle span {
-        font-size: 46px !important;
-        font-weight: 800 !important;
-        color: #ffffff !important;
+        font-size: 42px;
+        font-weight: 800;
+        color: #FFFFFF;
     }
 
     .profile-avatar-img {
@@ -84,8 +81,8 @@
     .info-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 20px !important;
-        margin-top: 24px;
+        gap: 18px;
+        margin-top: 20px;
     }
 
     @media (min-width: 768px) {
@@ -98,10 +95,10 @@
         background-color: #F8FAFC;
         border: 1px solid #E2E8F0;
         border-radius: 12px;
-        padding: 18px 20px;
+        padding: 16px 18px;
         display: flex;
         flex-direction: column;
-        gap: 10px !important;
+        gap: 8px;
     }
 
     .info-item-full {
@@ -114,7 +111,6 @@
         color: #64748B;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 2px;
     }
 
     .info-input {
@@ -122,9 +118,9 @@
         background-color: #FFFFFF;
         border: 1px solid #CBD5E1;
         border-radius: 10px;
-        padding: 11px 14px;
+        padding: 10px 14px;
         color: #0F172A;
-        font-size: 14px;
+        font-size: 13.5px;
         font-weight: 600;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
@@ -144,7 +140,7 @@
     }
 
     .info-textarea {
-        min-height: 100px;
+        min-height: 90px;
         resize: vertical;
     }
 </style>
@@ -162,7 +158,7 @@
     <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-md shadow-blue-600/25 shrink-0">
-                <i data-lucide="user" class="w-6 h-6"></i>
+                <i data-lucide="user" class="w-6 h-6 text-white" stroke="white"></i>
             </div>
             <div>
                 <h1 class="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">Profil Saya</h1>
@@ -178,12 +174,7 @@
         <div class="profile-left-column">
             <!-- Profile Overview Card -->
             <div class="profile-card flex flex-col items-center text-center">
-                <!-- Decorative Blur Background -->
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
-                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
-
-                <!-- Avatar Display -->
-                <div class="profile-avatar-circle mt-4">
+                <div class="profile-avatar-circle mt-2">
                     @if($hasProfileAvatar)
                         <img src="{{ asset('storage/' . $profileAvatar) }}" alt="Avatar" class="profile-avatar-img">
                     @else
@@ -191,55 +182,55 @@
                     @endif
                 </div>
 
-                <div class="mt-6 space-y-1.5 z-10">
-                    <h3 style="font-size: 20px;" class="font-bold text-white tracking-tight leading-tight">{{ $profileUser->nama_lengkap }}</h3>
-                    <div class="inline-flex items-center gap-1.5 px-3 py-1 text-emerald-400 text-[10px] font-bold tracking-wide rounded-full mt-3" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>Status Anggota Aktif</span>
+                <div class="mt-4 space-y-1">
+                    <h3 class="text-lg font-bold text-[#0F172A] tracking-tight leading-tight">{{ $profileUser->nama_lengkap }}</h3>
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold tracking-wide rounded-full mt-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Akun Admin Aktif</span>
                     </div>
                 </div>
 
                 <!-- Profile quick specs list -->
-                <div class="w-full mt-8 pt-6 border-t border-[#1f243d] space-y-4 text-left z-10" style="border-top: 1px solid #1f243d; font-size: 13px;">
-                    <div class="flex items-center justify-between" style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                        <span style="color: #8f9bb3;">NIK Anggota:</span>
-                        <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->nik }}</span>
+                <div class="w-full mt-6 pt-5 border-t border-[#E2E8F0] space-y-3 text-left text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[#64748B] font-medium">NIK Pengelola:</span>
+                        <span class="text-[#0F172A] font-bold">{{ $profileUser->nik ?? '-' }}</span>
                     </div>
-                    <div class="flex items-center justify-between" style="display: flex; justify-content: space-between;">
-                        <span style="color: #8f9bb3;">Bergabung Sejak:</span>
-                        <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->created_at->format('d M Y') }}</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[#64748B] font-medium">Bergabung Sejak:</span>
+                        <span class="text-[#0F172A] font-bold">{{ $profileUser->created_at->format('d M Y') }}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Account Status Card (Fills empty space beautifully, aligned with right card) -->
+            <!-- Account Status Card -->
             <div class="profile-card profile-card-fill">
                 <!-- Header -->
-                <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1f243d; padding-bottom: 16px; margin-bottom: 16px;" class="border-b">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20">
+                <div class="flex items-center gap-3 border-b border-[#E2E8F0] pb-4 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] flex items-center justify-center border border-blue-100 shrink-0">
                         <i data-lucide="shield-check" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h4 style="font-size: 13px; font-weight: 700; color: #ffffff; margin: 0;">Status & Keamanan Akun</h4>
+                        <h4 class="text-xs font-bold text-[#0F172A]">Status & Keamanan Akun</h4>
                     </div>
                 </div>
                 <!-- Content list -->
-                <div style="font-size: 13px; display: flex; flex-direction: column; gap: 14px; flex-grow: 1; justify-content: center;">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #8f9bb3;">Tipe Akun:</span>
-                        <span style="color: #ffffff; font-weight: 600;" class="text-white">Anggota Koperasi</span>
+                <div class="text-xs space-y-3 flex-grow flex flex-col justify-center">
+                    <div class="flex justify-between">
+                        <span class="text-[#64748B] font-medium">Tipe Akun:</span>
+                        <span class="text-[#0F172A] font-bold">Administrator Koperasi</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #8f9bb3;">Status Akun:</span>
-                        <span style="color: #10b981; font-weight: 600;">Aktif</span>
+                    <div class="flex justify-between">
+                        <span class="text-[#64748B] font-medium">Status Akun:</span>
+                        <span class="text-emerald-600 font-bold">Aktif</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #8f9bb3;">Keamanan Sandi:</span>
-                        <span style="color: #ffffff; font-weight: 600;" class="text-white">Terlindungi (Enkripsi)</span>
+                    <div class="flex justify-between">
+                        <span class="text-[#64748B] font-medium">Keamanan Sandi:</span>
+                        <span class="text-[#0F172A] font-bold">Terlindungi (Enkripsi)</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: #8f9bb3;">Terakhir Diperbarui:</span>
-                        <span style="color: #ffffff; font-weight: 600;" class="text-white">{{ $profileUser->updated_at->format('d M Y, H:i') }} WIB</span>
+                    <div class="flex justify-between">
+                        <span class="text-[#64748B] font-medium">Terakhir Diperbarui:</span>
+                        <span class="text-[#0F172A] font-bold">{{ $profileUser->updated_at->format('d M Y, H:i') }} WIB</span>
                     </div>
                 </div>
             </div>
@@ -248,9 +239,9 @@
         <!-- Right Side: Detailed Profile Information (FORM) -->
         <div class="profile-card">
             <!-- Information Card Header -->
-            <div class="flex flex-col gap-1.5 border-b border-[#1f243d] pb-6 mb-4">
-                <h3 style="font-size: 16px; font-weight: 700;" class="text-white uppercase tracking-wider">Informasi Akun</h3>
-                <p style="font-size: 12px;" class="text-[#8f9bb3]">Detail data diri Anda yang terdaftar pada sistem koperasi.</p>
+            <div class="flex flex-col gap-1 border-b border-[#E2E8F0] pb-5 mb-4">
+                <h3 class="text-base font-bold text-[#0F172A] tracking-tight">Informasi Akun</h3>
+                <p class="text-xs text-[#64748B]">Detail data diri Anda yang terdaftar pada sistem koperasi.</p>
             </div>
 
             <form action="{{ route('profile.update') }}" method="POST">
@@ -283,156 +274,28 @@
                         <input type="text" name="no_hp" class="info-input" value="{{ old('no_hp', $profileUser->no_hp) }}" required>
                     </div>
 
-                    <!-- No Rekening (EDITABLE) -->
-       <!-- Nama Bank (EDITABLE) -->
-<div class="info-item">
-    <label class="info-label">Nama Bank</label>
+                    <!-- Nama Bank (EDITABLE) -->
+                    <div class="info-item">
+                        <label class="info-label">Nama Bank</label>
+                        <select name="nama_bank" class="info-input">
+                            <option value="">-- Pilih Bank --</option>
+                            @foreach(['Bank Central Asia (BCA)', 'Bank Negara Indonesia (BNI)', 'Bank Rakyat Indonesia (BRI)', 'Bank Mandiri', 'Bank Tabungan Negara (BTN)', 'Bank Syariah Indonesia (BSI)', 'CIMB Niaga', 'Bank Danamon', 'Bank Permata', 'Bank OCBC', 'Bank Mega', 'Bank Panin', 'Maybank Indonesia', 'Bank Jago', 'SeaBank Indonesia', 'Bank Muamalat Indonesia', 'Bank Sinarmas', 'Bank BTPN / SMBC Indonesia', 'Bank Neo Commerce', 'Bank Raya Indonesia', 'Bank Aladin Syariah', 'Bank Victoria', 'Bank Woori Saudara'] as $bank)
+                                <option value="{{ $bank }}" {{ old('nama_bank', $profileUser->nama_bank) == $bank ? 'selected' : '' }}>{{ $bank }}</option>
+                            @endforeach
+                        </select>
+                        @error('nama_bank')
+                            <span class="text-rose-500 text-xs mt-1">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-    <select
-        name="nama_bank"
-        class="info-input"
-    >
-        <option value="">-- Pilih Bank --</option>
-
-        <option value="Bank Central Asia (BCA)"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Central Asia (BCA)' ? 'selected' : '' }}>
-            Bank Central Asia (BCA)
-        </option>
-
-        <option value="Bank Negara Indonesia (BNI)"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Negara Indonesia (BNI)' ? 'selected' : '' }}>
-            Bank Negara Indonesia (BNI)
-        </option>
-
-        <option value="Bank Rakyat Indonesia (BRI)"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Rakyat Indonesia (BRI)' ? 'selected' : '' }}>
-            Bank Rakyat Indonesia (BRI)
-        </option>
-
-        <option value="Bank Mandiri"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Mandiri' ? 'selected' : '' }}>
-            Bank Mandiri
-        </option>
-
-        <option value="Bank Tabungan Negara (BTN)"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Tabungan Negara (BTN)' ? 'selected' : '' }}>
-            Bank Tabungan Negara (BTN)
-        </option>
-
-        <option value="Bank Syariah Indonesia (BSI)"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Syariah Indonesia (BSI)' ? 'selected' : '' }}>
-            Bank Syariah Indonesia (BSI)
-        </option>
-
-        <option value="CIMB Niaga"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'CIMB Niaga' ? 'selected' : '' }}>
-            CIMB Niaga
-        </option>
-
-        <option value="Bank Danamon"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Danamon' ? 'selected' : '' }}>
-            Bank Danamon
-        </option>
-
-        <option value="Bank Permata"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Permata' ? 'selected' : '' }}>
-            Bank Permata
-        </option>
-
-        <option value="Bank OCBC"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank OCBC' ? 'selected' : '' }}>
-            Bank OCBC
-        </option>
-
-        <option value="Bank Mega"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Mega' ? 'selected' : '' }}>
-            Bank Mega
-        </option>
-
-        <option value="Bank Panin"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Panin' ? 'selected' : '' }}>
-            Bank Panin
-        </option>
-
-        <option value="Maybank Indonesia"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Maybank Indonesia' ? 'selected' : '' }}>
-            Maybank Indonesia
-        </option>
-
-        <option value="Bank Jago"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Jago' ? 'selected' : '' }}>
-            Bank Jago
-        </option>
-
-        <option value="SeaBank Indonesia"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'SeaBank Indonesia' ? 'selected' : '' }}>
-            SeaBank Indonesia
-        </option>
-
-        <option value="Bank Muamalat Indonesia"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Muamalat Indonesia' ? 'selected' : '' }}>
-            Bank Muamalat Indonesia
-        </option>
-
-        <option value="Bank Sinarmas"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Sinarmas' ? 'selected' : '' }}>
-            Bank Sinarmas
-        </option>
-
-        <option value="Bank BTPN / SMBC Indonesia"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank BTPN / SMBC Indonesia' ? 'selected' : '' }}>
-            Bank BTPN / SMBC Indonesia
-        </option>
-
-        <option value="Bank Neo Commerce"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Neo Commerce' ? 'selected' : '' }}>
-            Bank Neo Commerce
-        </option>
-
-        <option value="Bank Raya Indonesia"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Raya Indonesia' ? 'selected' : '' }}>
-            Bank Raya Indonesia
-        </option>
-
-        <option value="Bank Aladin Syariah"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Aladin Syariah' ? 'selected' : '' }}>
-            Bank Aladin Syariah
-        </option>
-
-        <option value="Bank Victoria"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Victoria' ? 'selected' : '' }}>
-            Bank Victoria
-        </option>
-
-        <option value="Bank Woori Saudara"
-            {{ old('nama_bank', $profileUser->nama_bank) == 'Bank Woori Saudara' ? 'selected' : '' }}>
-            Bank Woori Saudara
-        </option>
-    </select>
-
-    @error('nama_bank')
-        <span class="text-red-400 text-xs">{{ $message }}</span>
-    @enderror
-</div>
-
-
-<!-- Nomor Rekening (EDITABLE) -->
-<div class="info-item">
-    <label class="info-label">Nomor Rekening</label>
-
-    <input
-        type="text"
-        name="no_rekening"
-        class="info-input"
-        value="{{ old('no_rekening', $profileUser->no_rekening) }}"
-        placeholder="Masukkan nomor rekening"
-        inputmode="numeric"
-    >
-
-    @error('no_rekening')
-        <span class="text-red-400 text-xs">{{ $message }}</span>
-    @enderror
-</div>
+                    <!-- Nomor Rekening (EDITABLE) -->
+                    <div class="info-item">
+                        <label class="info-label">Nomor Rekening</label>
+                        <input type="text" name="no_rekening" class="info-input" value="{{ old('no_rekening', $profileUser->no_rekening) }}" placeholder="Masukkan nomor rekening" inputmode="numeric">
+                        @error('no_rekening')
+                            <span class="text-rose-500 text-xs mt-1">{{ $message }}</span>
+                        @enderror
+                    </div>
 
                     <!-- Alamat Tinggal (EDITABLE, Full Width) -->
                     <div class="info-item info-item-full">
@@ -442,14 +305,13 @@
                 </div>
 
                 <!-- Submit Button -->
-                <div class="flex justify-end mt-8">
-                    <button type="submit" class="px-6 py-2.5 bg-[#2f54eb] hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg text-xs font-bold transition duration-150 flex items-center gap-2 shadow-md shadow-blue-500/10">
+                <div class="flex justify-end mt-6">
+                    <button type="submit" class="px-5 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] active:bg-blue-800 text-white rounded-xl text-xs font-bold transition duration-150 flex items-center gap-2 shadow-md shadow-blue-600/25 cursor-pointer">
                         <i data-lucide="save" class="w-4 h-4"></i>
                         <span>Simpan Perubahan</span>
                     </button>
                 </div>
             </form>
         </div>
-
     </div>
 @endsection

@@ -4,13 +4,19 @@
 
 @section('content')
 
-    <!-- Page Header Title -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Pusat Laporan</h1>
-            <p class="text-xs text-gray-500 mt-1">Ringkasan berkas dan rekapitulasi data operasional koperasi.</p>
+    <!-- PAGE HEADER CARD (Matching Customer Design) -->
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-md shadow-blue-600/25 shrink-0">
+                <i data-lucide="bar-chart-3" class="w-6 h-6 text-white" stroke="white"></i>
+            </div>
+            <div>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">Pusat Laporan</h1>
+                <p class="text-xs sm:text-sm text-[#64748B] mt-0.5">Ringkasan berkas dan rekapitulasi data operasional koperasi.</p>
+            </div>
         </div>
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
+
+        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] shadow-sm text-xs font-bold text-[#0F172A]">
             <i data-lucide="shield-check" class="w-4 h-4 text-[#2563EB]"></i>
             <span>Mode View Only</span>
         </div>

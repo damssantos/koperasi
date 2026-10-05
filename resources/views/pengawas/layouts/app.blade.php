@@ -86,11 +86,12 @@
             animation: dropdownIn 0.2s ease-out;
         }
 
-        /* SweetAlert2 Styling */
-        .swal2-popup {
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
-            border-radius: 1rem !important;
-            padding: 1.5rem !important;
+        /* Force Lucide icons inside solid blue backgrounds to have white color */
+        .bg-\[\#2563EB\] svg, .bg-\[\#2563EB\] i,
+        .header-icon-box svg, .header-icon-box i,
+        [class*="bg-[#2563EB]"] svg, [class*="bg-[#2563EB]"] i,
+        [class*="bg-blue-600"] svg, [class*="bg-blue-600"] i {
+            color: #FFFFFF !important;
         }
     </style>
     @stack('styles')
@@ -120,57 +121,59 @@
             </div>
         </div>
 
-        <!-- Right Side: Status Badge, Mode & User Profile -->
-        <div class="flex items-center gap-4">
-            
-            <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-100 text-[11px] font-bold text-blue-700">
-                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i>
-                <span>PORTAL PENGAWAS</span>
-            </div>
+        <!-- Right Side: User Profile -->
+        <div class="flex items-center gap-3 relative">
 
-            <!-- Profile Dropdown Button -->
+            <!-- Profile Dropdown Button (Matching Admin Pill Design) -->
             <div class="relative">
-                <button onclick="toggleProfileDropdown()" id="profileDropdownBtn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition duration-200 group">
+                <button type="button" onclick="toggleProfileDropdown()" id="profileDropdownBtn" 
+                        class="flex items-center gap-2.5 py-1.5 px-3 sm:pr-4 rounded-full bg-[#F8FAFC] border border-[#E2E8F0] hover:bg-[#EFF6FF] hover:border-[#BFDBFE] transition-all duration-200 group cursor-pointer shadow-sm">
                     @if($hasNavAvatar)
-                        <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-8 h-8 rounded-full object-cover border border-gray-200 shadow-sm">
+                        <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-7 h-7 rounded-full object-cover border border-[#E2E8F0]">
                     @else
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-extrabold bg-[#2563EB] shadow-sm">
                             {{ $navInitial }}
                         </div>
                     @endif
-                    <div class="hidden md:block text-left">
-                        <div class="text-xs font-bold text-gray-900 leading-none">{{ auth()->user()->nama_lengkap ?? 'Pengawas' }}</div>
-                        <span class="text-[10px] text-gray-500 font-medium leading-none">Pengawas Koperasi</span>
+
+                    <div class="flex flex-col text-left hidden sm:flex">
+                        <span class="text-xs font-bold text-[#0F172A] leading-tight group-hover:text-[#2563EB] transition-colors">
+                            {{ $navUser?->nama_lengkap ?? 'Pengawas YPIK' }}
+                        </span>
+                        <span class="text-[9.5px] font-bold text-[#64748B] uppercase tracking-wider">
+                            PENGAWAS
+                        </span>
                     </div>
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-700 transition-transform duration-200" id="profileChevron"></i>
+
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[#64748B] group-hover:text-[#2563EB] transition-transform duration-200" id="profileChevron"></i>
                 </button>
 
-                <!-- Profile Dropdown Menu -->
-                <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-[100] animate-dropdown">
-                    <div class="px-4 py-3.5 border-b border-gray-100 bg-[#F9FAFB]">
+                <!-- Profile Dropdown Menu (Matching Admin Light Style) -->
+                <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E2E8F0] rounded-2xl shadow-xl shadow-slate-900/10 overflow-hidden z-[100] animate-dropdown">
+                    <!-- User Header -->
+                    <div class="px-4 py-3.5 border-b border-[#E2E8F0] bg-[#F8FAFC]">
                         <div class="flex items-center gap-3">
                             @if($hasNavAvatar)
-                                <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                                <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-10 h-10 rounded-full object-cover border border-[#E2E8F0] shadow-sm">
                             @else
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style="background: linear-gradient(135deg, #2563EB, #0EA5E9);">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-extrabold bg-[#2563EB] shadow-sm">
                                     {{ $navInitial }}
                                 </div>
                             @endif
                             <div class="min-w-0">
-                                <p class="text-sm font-bold text-gray-900 truncate">{{ auth()->user()->nama_lengkap ?? 'Pengawas' }}</p>
-                                <span class="inline-block mt-0.5 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                                    Pengawas Koperasi
-                                </span>
+                                <p class="text-xs font-bold text-[#0F172A] truncate">{{ $navUser?->nama_lengkap ?? 'Pengawas YPIK' }}</p>
+                                <p class="text-[10px] text-[#64748B] font-semibold uppercase tracking-wider">PENGAWAS KOPERASI</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="py-1.5">
-                        <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 transition duration-150">
-                            <div class="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center">
-                                <i data-lucide="log-out" class="w-3.5 h-3.5 text-rose-600"></i>
+                    <!-- Dropdown Actions -->
+                    <div class="p-2 space-y-1">
+                        <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all duration-150 text-left">
+                            <div class="w-7 h-7 rounded-lg bg-rose-100/60 text-rose-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
                             </div>
-                            <span class="font-semibold">Keluar</span>
+                            <span>Keluar Akun</span>
                         </button>
                     </div>
                 </div>

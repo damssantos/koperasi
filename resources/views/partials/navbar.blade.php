@@ -28,12 +28,6 @@
         <button type="button" onclick="toggleSidebarCollapse()" class="hidden lg:flex p-2 rounded-xl text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" title="Sembunyikan/Tampilkan Menu">
             <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
-
-        <!-- Desktop System Subtitle / Indicator Badge -->
-        <div class="hidden sm:flex items-center gap-2 text-xs font-semibold text-[#64748B] pl-2 border-l border-[#E2E8F0]">
-            <span class="w-2 h-2 rounded-full bg-[#2563EB]"></span>
-            <span>Panel Pengelola Koperasi</span>
-        </div>
     </div>
 
     <!-- Right side: Profile Pill & Dropdown -->

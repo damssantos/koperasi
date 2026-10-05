@@ -23,104 +23,104 @@
         $shortFormattedDate = $dateObj ? $dateObj->format('d') . ' ' . ($shortIndonesianMonths[$dateObj->format('M')] ?? $dateObj->format('M')) . ' ' . $dateObj->format('Y') : '-';
     @endphp
 
-    <!-- Back Navigation -->
-    <div style="text-align: left; margin-bottom: 12px;">
-        <a href="{{ route('anggota.index') }}" class="inline-flex items-center gap-1 text-[11px] font-bold text-[#8f9bb3] hover:text-[#2f54eb] uppercase tracking-wider transition-colors duration-200">
-            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-            <span>Kembali ke daftar anggota</span>
-        </a>
-    </div>
-
-    <!-- Main Member Header Area -->
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-top: 8px; width: 100%; text-align: left;">
-        <div style="text-align: left;">
-            <h2 class="text-3xl font-extrabold text-white tracking-tight" style="font-size: 32px; font-weight: 800; color: #ffffff;">{{ $anggota->nama }}</h2>
-            <div class="inline-flex items-center mt-2 px-3 py-1 text-xs font-semibold rounded-lg" style="background-color: rgba(30, 34, 56, 0.4); border: 1px solid rgba(143, 155, 179, 0.15); color: #8f9bb3;">
-                ID: {{ $anggota->id_anggota ?? 'AGT-' . str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}
+    <!-- PAGE HEADER CARD (Matching Customer Design) -->
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-md shadow-blue-600/25 shrink-0">
+                <i data-lucide="user-check" class="w-6 h-6 text-white" stroke="white"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-3">
+                    <h1 class="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">{{ $anggota->nama }}</h1>
+                    <span class="bg-blue-50 border border-blue-100 text-[#2563EB] text-xs font-extrabold px-2.5 py-1 rounded-md">
+                        {{ $anggota->id_anggota ?? 'AGT-' . str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}
+                    </span>
+                </div>
+                <p class="text-xs sm:text-sm text-[#64748B] mt-0.5">Rincian data keanggotaan, simpanan, dan riwayat transaksi.</p>
             </div>
         </div>
 
+        <a href="{{ route('anggota.index') }}" class="inline-flex items-center gap-2 px-4 py-2 border border-[#E2E8F0] rounded-xl bg-white text-[#0F172A] hover:bg-[#F8FAFC] transition duration-150 text-xs font-bold shadow-sm">
+            <i data-lucide="arrow-left" class="w-4 h-4 text-[#64748B]"></i>
+            <span>Kembali ke Daftar Anggota</span>
+        </a>
     </div>
 
-    <!-- First Section: 3 Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+    <!-- First Section: 3 Stat Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Card 1: Total Simpanan -->
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-5 hover:border-[#8f9bb3]/20 transition duration-300 flex flex-col justify-between h-[135px] relative overflow-hidden group">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">
+        <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm flex flex-col justify-between h-[135px] hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-center">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#2563EB]">
                     <i data-lucide="wallet" class="w-5 h-5"></i>
                 </div>
-                <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Total Simpanan</span>
+                <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Total Simpanan</span>
             </div>
-            <div style="margin-top: auto; text-align: left;">
-                <h3 class="text-2xl font-extrabold text-white" style="text-align: left;">{{ $formatRupiah($anggota->total_saldo ?: ($anggota->simpanan_pokok + $anggota->simpanan_wajib + $anggota->simpanan_sukarela)) }}</h3>
-
+            <div>
+                <h3 class="text-2xl font-extrabold text-[#0F172A]">{{ $formatRupiah($anggota->total_saldo ?: ($anggota->simpanan_pokok + $anggota->simpanan_wajib + $anggota->simpanan_sukarela)) }}</h3>
             </div>
         </div>
 
         <!-- Card 2: Pinjaman Aktif -->
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-5 hover:border-[#8f9bb3]/20 transition duration-300 flex flex-col justify-between h-[135px] relative overflow-hidden group">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.2); color: #f97316;">
-                    <i data-lucide="banknote" class="w-5 h-5"></i>
+        <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm flex flex-col justify-between h-[135px] hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-center">
+                <div class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-600">
+                    <i data-lucide="hand-coins" class="w-5 h-5"></i>
                 </div>
-                <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Pinjaman Aktif</span>
+                <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Pinjaman Aktif</span>
             </div>
-            <div style="margin-top: auto; text-align: left;">
-                <h3 class="text-2xl font-extrabold text-white" style="text-align: left;">Rp 0</h3>
-                <p class="text-[10px] text-[#7c83a7] font-semibold mt-1" style="text-align: left;">0 Kontrak Berjalan</p>
+            <div>
+                <h3 class="text-2xl font-extrabold text-[#0F172A]">Rp 0</h3>
+                <p class="text-[11px] text-[#64748B] font-semibold mt-0.5">0 Kontrak Berjalan</p>
             </div>
         </div>
 
         <!-- Card 3: Sisa Cicilan -->
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-5 hover:border-[#8f9bb3]/20 transition duration-300 flex flex-col justify-between h-[135px] relative overflow-hidden group">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #a855f7;">
+        <div class="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm flex flex-col justify-between h-[135px] hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-center">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
                     <i data-lucide="history" class="w-5 h-5"></i>
                 </div>
-                <span class="text-[9px] font-bold text-[#8f9bb3] uppercase tracking-wider">Sisa Cicilan</span>
+                <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Sisa Cicilan</span>
             </div>
-            <div style="margin-top: auto; text-align: left;">
-                <h3 class="text-2xl font-extrabold text-white" style="text-align: left;">Rp 0</h3>
-                <p class="text-[10px] text-[#7c83a7] font-semibold mt-1" style="text-align: left;">Jatuh tempo: -</p>
+            <div>
+                <h3 class="text-2xl font-extrabold text-[#0F172A]">Rp 0</h3>
+                <p class="text-[11px] text-[#64748B] font-semibold mt-0.5">Jatuh tempo: -</p>
             </div>
         </div>
     </div>
 
     <!-- Second Section: Informasi Anggota Card -->
-    <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-6 mt-6">
-        <div class="flex items-center gap-2.5 border-b border-[#1f243d] pb-4 mb-8">
-            <i data-lucide="user" class="w-4 h-4 text-[#8f9bb3]"></i>
-            <h3 class="text-sm font-bold text-white tracking-wide" style="text-align: left;">Informasi Anggota</h3>
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-sm mt-6">
+        <div class="flex items-center gap-2.5 border-b border-[#E2E8F0] pb-4 mb-6">
+            <i data-lucide="user" class="w-4 h-4 text-[#2563EB]"></i>
+            <h3 class="text-sm font-bold text-[#0F172A] tracking-wide">Informasi Profil Anggota</h3>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-8 mt-4" style="text-align: left;">
-            <!-- Column 1 -->
-            <div class="space-y-6" style="text-align: left;">
-                <div style="text-align: left;">
-                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">ID Anggota</p>
-                    <p class="text-sm font-semibold text-white mt-1">{{ $anggota->id_anggota ?? 'AGT-' . str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">ID Anggota</p>
+                    <p class="text-sm font-extrabold text-[#0F172A] mt-1">{{ $anggota->id_anggota ?? 'AGT-' . str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}</p>
                 </div>
-                <div style="text-align: left;">
-                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Nomor HP</p>
-                    <p class="text-sm font-semibold text-white mt-1">{{ $anggota->no_hp ?? '-' }}</p>
-                </div>
-            </div>
-            <!-- Column 2 -->
-            <div class="space-y-6" style="text-align: left;">
-                <div style="text-align: left;">
-                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Nama Lengkap</p>
-                    <p class="text-sm font-semibold text-white mt-1">{{ $anggota->nama }}</p>
-                </div>
-                <div style="text-align: left;">
-                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">Tanggal Bergabung</p>
-                    <p class="text-sm font-semibold text-white mt-1">{{ $formattedDate }}</p>
+                <div>
+                    <p class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Nomor HP</p>
+                    <p class="text-sm font-semibold text-[#0F172A] mt-1">{{ $anggota->no_hp ?? '-' }}</p>
                 </div>
             </div>
-            <!-- Column 3 -->
-            <div class="space-y-6" style="text-align: left;">
-                <div style="text-align: left;">
-                    <p class="text-[10px] font-bold text-[#8f9bb3] uppercase tracking-wider">No. Rekening / Bank</p>
-                    <p class="text-sm font-semibold text-white mt-1">
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Nama Lengkap</p>
+                    <p class="text-sm font-extrabold text-[#0F172A] mt-1">{{ $anggota->nama }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Tanggal Bergabung</p>
+                    <p class="text-sm font-semibold text-[#0F172A] mt-1">{{ $formattedDate }}</p>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">No. Rekening / Bank</p>
+                    <p class="text-sm font-semibold text-[#0F172A] mt-1">
                         @if(optional($anggota->user)->no_rekening)
                             {{ $anggota->user->nama_bank ? $anggota->user->nama_bank . ' - ' : '' }}{{ $anggota->user->no_rekening }}
                         @else
@@ -133,12 +133,12 @@
     </div>
 
     <!-- Third Section: Tabs and Table Card -->
-    <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl p-6 mt-6">
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-sm mt-6">
         <!-- Tabs Header -->
-        <div class="flex border-b border-[#1f243d] mb-6">
-            <button id="tab-btn-simpanan" class="px-5 py-3 border-b-2 border-[#2f54eb] text-xs font-bold text-white" onclick="switchTab('simpanan')">Simpanan</button>
-            <button id="tab-btn-pinjaman" class="px-5 py-3 border-b-2 border-transparent text-xs font-semibold text-[#8f9bb3] hover:text-white" onclick="switchTab('pinjaman')">Pinjaman</button>
-            <button id="tab-btn-riwayat" class="px-5 py-3 border-b-2 border-transparent text-xs font-semibold text-[#8f9bb3] hover:text-white" onclick="switchTab('riwayat')">Riwayat</button>
+        <div class="flex border-b border-[#E2E8F0] mb-6 gap-2">
+            <button id="tab-btn-simpanan" class="px-5 py-2.5 border-b-2 border-[#2563EB] text-xs font-extrabold text-[#2563EB] cursor-pointer" onclick="switchTab('simpanan')">Simpanan</button>
+            <button id="tab-btn-pinjaman" class="px-5 py-2.5 border-b-2 border-transparent text-xs font-semibold text-[#64748B] hover:text-[#0F172A] cursor-pointer" onclick="switchTab('pinjaman')">Pinjaman</button>
+            <button id="tab-btn-riwayat" class="px-5 py-2.5 border-b-2 border-transparent text-xs font-semibold text-[#64748B] hover:text-[#0F172A] cursor-pointer" onclick="switchTab('riwayat')">Riwayat</button>
         </div>
         
         <!-- Tab Content: Simpanan (Active) -->
@@ -146,42 +146,42 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse table-fixed">
                     <thead>
-                        <tr class="border-b border-[#1f243d] text-slate-100 text-[10px] font-bold uppercase tracking-wider">
-                            <th class="py-3.5 px-4 font-semibold w-[25%]">Tanggal</th>
-                            <th class="py-3.5 px-4 font-semibold w-[35%]">Jenis Simpanan</th>
-                            <th class="py-3.5 px-4 font-semibold w-[25%]">Nominal</th>
-                            <th class="py-3.5 px-4 font-semibold text-center w-[15%]">Aksi</th>
+                        <tr class="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] text-[11px] font-bold uppercase tracking-wider">
+                            <th class="py-3.5 px-4 font-bold w-[25%]">Tanggal</th>
+                            <th class="py-3.5 px-4 font-bold w-[35%]">Jenis Simpanan</th>
+                            <th class="py-3.5 px-4 font-bold w-[25%]">Nominal</th>
+                            <th class="py-3.5 px-4 font-bold text-center w-[15%]">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-[#1f243d]">
+                    <tbody class="divide-y divide-[#E2E8F0]">
                         @forelse($anggota->transactions as $tx)
                             @php
                                 $txDate = optional($tx->tanggal_transaksi ?? $tx->created_at);
                                 $formattedTxDate = $txDate ? $txDate->format('d') . ' ' . ($shortIndonesianMonths[$txDate->format('M')] ?? $txDate->format('M')) . ' ' . $txDate->format('Y') : '-';
                             @endphp
-                            <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                                <td class="py-4 px-4 text-xs text-slate-400 w-[25%]">{{ $formattedTxDate }}</td>
+                            <tr class="hover:bg-[#F8FAFC] transition duration-150">
+                                <td class="py-4 px-4 text-xs text-[#64748B] w-[25%]">{{ $formattedTxDate }}</td>
                                 <td class="py-4 px-4 text-xs w-[35%]">
                                     @if($tx->jenis_simpanan === 'Pokok')
-                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-blue-50 text-[#2563EB] border border-blue-100">Simpanan Pokok</span>
                                     @elseif($tx->jenis_simpanan === 'Wajib')
-                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-purple-50 text-purple-600 border border-purple-100">Simpanan Wajib</span>
                                     @else
-                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">Simpanan Sukarela</span>
                                     @endif
                                 </td>
-                                <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[25%]">{{ $formatRupiah($tx->nominal) }}</td>
+                                <td class="py-4 px-4 text-xs font-extrabold text-[#0F172A] w-[25%]">{{ $formatRupiah($tx->nominal) }}</td>
                                 <td class="py-4 px-4 text-center w-[15%]">
                                     <div class="flex items-center justify-center">
-                                        <button onclick='showSimpananDetail(@json($tx))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Detail Simpanan">
-                                            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                        <button onclick='showSimpananDetail(@json($tx))' class="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center hover:bg-[#2563EB] hover:text-white transition-all duration-150 cursor-pointer" title="Detail Simpanan">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="py-8 text-center text-xs text-slate-500">Belum ada transaksi simpanan.</td>
+                                <td colspan="4" class="py-8 text-center text-xs text-[#64748B]">Belum ada transaksi simpanan.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -194,46 +194,46 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse table-fixed">
                     <thead>
-                        <tr class="border-b border-[#1f243d] text-slate-100 text-[10px] font-bold uppercase tracking-wider">
-                            <th class="py-3.5 px-4 font-semibold w-[20%]">Tanggal</th>
-                            <th class="py-3.5 px-4 font-semibold w-[20%]">Nominal</th>
-                            <th class="py-3.5 px-4 font-semibold w-[15%]">Tenor</th>
-                            <th class="py-3.5 px-4 font-semibold w-[20%]">Sisa Pinjaman</th>
-                            <th class="py-3.5 px-4 font-semibold text-center w-[15%]">Status</th>
-                            <th class="py-3.5 px-4 font-semibold text-center w-[10%]">Aksi</th>
+                        <tr class="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] text-[11px] font-bold uppercase tracking-wider">
+                            <th class="py-3.5 px-4 font-bold w-[20%]">Tanggal</th>
+                            <th class="py-3.5 px-4 font-bold w-[20%]">Nominal</th>
+                            <th class="py-3.5 px-4 font-bold w-[15%]">Tenor</th>
+                            <th class="py-3.5 px-4 font-bold w-[20%]">Sisa Pinjaman</th>
+                            <th class="py-3.5 px-4 font-bold text-center w-[15%]">Status</th>
+                            <th class="py-3.5 px-4 font-bold text-center w-[10%]">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-[#1f243d]/60 text-xs text-white">
+                    <tbody class="divide-y divide-[#E2E8F0] text-xs text-[#0F172A]">
                         @forelse($anggota->pinjaman as $loan)
                             @php
                                 $statusClass = '';
                                 if ($loan->status === 'Lunas') {
-                                    $statusClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                                    $statusClass = 'bg-emerald-50 text-emerald-600 border-emerald-200';
                                 } elseif ($loan->status === 'Menunggak') {
-                                    $statusClass = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+                                    $statusClass = 'bg-rose-50 text-rose-600 border-rose-200';
                                 } else {
-                                    $statusClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                                    $statusClass = 'bg-blue-50 text-[#2563EB] border-blue-200';
                                 }
                             @endphp
-                            <tr class="hover:bg-[#0d0f1d]/40 transition duration-150">
-                                <td class="py-3 px-4 text-[#8f9bb3] w-[20%]">{{ $loan->tanggal_pengajuan->format('d M Y') }}</td>
+                            <tr class="hover:bg-[#F8FAFC] transition duration-150">
+                                <td class="py-3 px-4 text-[#64748B] w-[20%]">{{ $loan->tanggal_pengajuan->format('d M Y') }}</td>
                                 <td class="py-3 px-4 font-bold w-[20%]">Rp {{ number_format($loan->nominal_pinjaman, 0, ',', '.') }}</td>
-                                <td class="py-3 px-4 text-[#8f9bb3] w-[15%]">{{ $loan->tenor }} Bln ({{ $loan->jumlah_cicilan_dibayar }}/{{ $loan->tenor }})</td>
-                                <td class="py-3 px-4 font-bold text-blue-400 w-[20%]">Rp {{ number_format($loan->sisa_pinjaman, 0, ',', '.') }}</td>
+                                <td class="py-3 px-4 text-[#64748B] w-[15%]">{{ $loan->tenor }} Bln ({{ $loan->jumlah_cicilan_dibayar }}/{{ $loan->tenor }})</td>
+                                <td class="py-3 px-4 font-bold text-[#2563EB] w-[20%]">Rp {{ number_format($loan->sisa_pinjaman, 0, ',', '.') }}</td>
                                 <td class="py-3 px-4 text-center w-[15%]">
-                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase border {{ $statusClass }}">{{ $loan->status }}</span>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase border {{ $statusClass }}">{{ $loan->status }}</span>
                                 </td>
                                 <td class="py-3 px-4 text-center w-[10%]">
                                     <div class="flex items-center justify-center">
-                                        <button onclick='showPinjamanDetail(@json($loan))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Detail Pinjaman">
-                                            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                        <button onclick='showPinjamanDetail(@json($loan))' class="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center hover:bg-[#2563EB] hover:text-white transition-all duration-150 cursor-pointer" title="Detail Pinjaman">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="py-8 text-center text-xs text-slate-500">Belum ada transaksi pinjaman.</td>
+                                <td colspan="6" class="py-8 text-center text-xs text-[#64748B]">Belum ada transaksi pinjaman.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -241,55 +241,55 @@
             </div>
         </div>
         
-        <!-- Tab Content: Riwayat (Table view) -->
+        <!-- Tab Content: Riwayat -->
         <div id="tab-content-riwayat" class="hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse table-fixed">
                     <thead>
-                        <tr class="border-b border-[#1f243d] text-slate-100 text-[10px] font-bold uppercase tracking-wider">
-                            <th class="py-3.5 px-4 font-semibold w-[20%]">Tanggal Selesai</th>
-                            <th class="py-3.5 px-4 font-semibold w-[35%]">Jenis Riwayat</th>
-                            <th class="py-3.5 px-4 font-semibold w-[20%]">Nominal</th>
-                            <th class="py-3.5 px-4 font-semibold text-center w-[15%]">Status</th>
-                            <th class="py-3.5 px-4 font-semibold text-center w-[10%]">Aksi</th>
+                        <tr class="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] text-[11px] font-bold uppercase tracking-wider">
+                            <th class="py-3.5 px-4 font-bold w-[20%]">Tanggal Selesai</th>
+                            <th class="py-3.5 px-4 font-bold w-[35%]">Jenis Riwayat</th>
+                            <th class="py-3.5 px-4 font-bold w-[20%]">Nominal</th>
+                            <th class="py-3.5 px-4 font-bold text-center w-[15%]">Status</th>
+                            <th class="py-3.5 px-4 font-bold text-center w-[10%]">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-[#1f243d]">
+                    <tbody class="divide-y divide-[#E2E8F0]">
                         @forelse($anggota->transactions as $tx)
                             @php
                                 $txDate = optional($tx->tanggal_transaksi ?? $tx->created_at);
                                 $formattedTxDate = $txDate ? $txDate->format('d') . ' ' . ($shortIndonesianMonths[$txDate->format('M')] ?? $txDate->format('M')) . ' ' . $txDate->format('Y') : '-';
                             @endphp
-                            <tr class="hover:bg-[#07080f]/30 transition duration-150">
-                                <td class="py-4 px-4 text-xs text-slate-400 w-[20%]">{{ $formattedTxDate }}</td>
+                            <tr class="hover:bg-[#F8FAFC] transition duration-150">
+                                <td class="py-4 px-4 text-xs text-[#64748B] w-[20%]">{{ $formattedTxDate }}</td>
                                 <td class="py-4 px-4 text-xs w-[35%]">
                                     @if($tx->jenis_simpanan === 'Pokok')
-                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-blue-50 text-[#2563EB] border border-blue-100">Simpanan Pokok</span>
                                     @elseif($tx->jenis_simpanan === 'Wajib')
-                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-purple-50 text-purple-600 border border-purple-100">Simpanan Wajib</span>
                                     @else
-                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">Simpanan Sukarela</span>
                                     @endif
                                 </td>
-                                <td class="py-4 px-4 text-xs font-extrabold text-slate-300 w-[20%]">{{ $formatRupiah($tx->nominal) }}</td>
+                                <td class="py-4 px-4 text-xs font-extrabold text-[#0F172A] w-[20%]">{{ $formatRupiah($tx->nominal) }}</td>
                                 <td class="py-4 px-4 text-center w-[15%]">
                                     @if($tx->status === 'Lunas')
-                                        <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.18); color: #34d399;">LUNAS</span>
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">LUNAS</span>
                                     @else
-                                        <span class="inline-flex px-2 py-0.5 text-[9px] font-bold tracking-wide rounded" style="background-color: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.18); color: #60a5fa;">AKTIF</span>
+                                        <span class="inline-flex px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-blue-50 text-[#2563EB] border border-blue-100">AKTIF</span>
                                     @endif
                                 </td>
                                 <td class="py-4 px-4 text-center w-[10%]">
                                     <div class="flex items-center justify-center">
-                                        <button onclick='showSimpananDetail(@json($tx))' class="w-7 h-7 rounded-lg bg-slate-800/40 text-slate-200 border border-slate-700/20 flex items-center justify-center hover:bg-[#2f54eb] hover:text-white hover:border-transparent transition-all duration-200" title="Detail Simpanan">
-                                            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                        <button onclick='showSimpananDetail(@json($tx))' class="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-100 flex items-center justify-center hover:bg-[#2563EB] hover:text-white transition-all duration-150 cursor-pointer" title="Detail Simpanan">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="py-8 text-center text-xs text-slate-500">Belum ada riwayat transaksi.</td>
+                                <td colspan="5" class="py-8 text-center text-xs text-[#64748B]">Belum ada riwayat transaksi.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -297,112 +297,85 @@
             </div>
 
             <!-- Footer Pagination -->
-            <div class="flex justify-between items-center mt-5 pt-4 border-t border-[#1f243d]" style="text-align: left;">
-                <span class="text-[10px] font-semibold text-[#8f9bb3]">Menampilkan {{ $anggota->transactions->count() }} dari {{ $anggota->transactions->count() }} transaksi</span>
-                <div class="flex gap-1">
-                    <button class="w-6 h-6 rounded bg-[#16192b] border border-[#1f243d] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#1f243d] transition-all cursor-pointer">
-                        <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
-                    </button>
-                    <button class="w-6 h-6 rounded bg-[#16192b] border border-[#1f243d] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#1f243d] transition-all cursor-pointer">
-                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-                    </button>
-                </div>
+            <div class="flex justify-between items-center mt-5 pt-4 border-t border-[#E2E8F0]">
+                <span class="text-xs font-semibold text-[#64748B]">Menampilkan {{ $anggota->transactions->count() }} dari {{ $anggota->transactions->count() }} transaksi</span>
             </div>
         </div>
     </div>
 
     <!-- DETAIL SIMPANAN MODAL -->
-    <div id="detailSimpananModal" class="fixed inset-0 flex items-center justify-center p-4 hidden transition-opacity" style="z-index: 9999; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background-color: rgba(7, 8, 15, 0.75);">
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5 animate-fade-in">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center pb-4 border-b border-[#1f243d]">
-                <h3 class="text-base font-bold text-white">Detail Transaksi Simpanan</h3>
-                <button onclick="closeDetailSimpananModal()" class="text-slate-400 hover:text-white transition-colors">
+    <div id="detailSimpananModal" class="fixed inset-0 z-[99] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden transition-opacity">
+        <div class="bg-white border border-[#E2E8F0] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5">
+            <div class="flex justify-between items-center pb-3 border-b border-[#E2E8F0]">
+                <h3 class="text-base font-extrabold text-[#0F172A]">Detail Transaksi Simpanan</h3>
+                <button onclick="closeDetailSimpananModal()" class="text-[#64748B] hover:text-[#0F172A] transition-colors cursor-pointer">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <!-- Modal Content Grid -->
-            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 1.5rem; text-align: left;">
-                <!-- ID Transaksi -->
+            <div class="grid grid-cols-2 gap-4 text-left">
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">ID Transaksi</label>
-                    <span class="text-sm font-bold text-white" id="detailSimpananTxId">-</span>
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">ID Transaksi</label>
+                    <span class="text-sm font-bold text-[#0F172A]" id="detailSimpananTxId">-</span>
                 </div>
-                <!-- Tanggal -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Tanggal</label>
-                    <span class="text-sm font-bold text-white" id="detailSimpananTxDate">-</span>
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Tanggal</label>
+                    <span class="text-sm font-bold text-[#0F172A]" id="detailSimpananTxDate">-</span>
                 </div>
 
-                <!-- Jenis Simpanan -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Jenis Simpanan</label>
-                    <div id="detailSimpananTypeBadge" class="mt-1">
-                        <!-- Badge injected by JS -->
-                    </div>
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Jenis Simpanan</label>
+                    <div id="detailSimpananTypeBadge" class="mt-1"></div>
                 </div>
-                <!-- Nominal -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Nominal</label>
-                    <span class="text-sm font-bold text-white" id="detailSimpananTxAmount">-</span>
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Nominal</label>
+                    <span class="text-sm font-extrabold text-[#2563EB]" id="detailSimpananTxAmount">-</span>
                 </div>
 
-                <!-- Keterangan -->
-                <div style="grid-column: span 2 / span 2; padding-top: 1.25rem; border-top: 1px solid #1f243d;">
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Keterangan</label>
-                    <p class="text-xs text-slate-300 leading-relaxed font-normal" id="detailSimpananTxDesc">-</p>
+                <div class="col-span-2 pt-3 border-t border-[#E2E8F0]">
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Keterangan</label>
+                    <p class="text-xs text-[#0F172A] font-medium leading-relaxed" id="detailSimpananTxDesc">-</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- DETAIL PINJAMAN MODAL -->
-    <div id="detailPinjamanModal" class="fixed inset-0 flex items-center justify-center p-4 hidden transition-opacity" style="z-index: 9999; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background-color: rgba(7, 8, 15, 0.75);">
-        <div class="bg-[#16192b] border border-[#1f243d] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5 animate-fade-in">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center pb-4 border-b border-[#1f243d]">
-                <h3 class="text-base font-bold text-white">Detail Transaksi Pinjaman</h3>
-                <button onclick="closeDetailPinjamanModal()" class="text-slate-400 hover:text-white transition-colors">
+    <div id="detailPinjamanModal" class="fixed inset-0 z-[99] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden transition-opacity">
+        <div class="bg-white border border-[#E2E8F0] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5">
+            <div class="flex justify-between items-center pb-3 border-b border-[#E2E8F0]">
+                <h3 class="text-base font-extrabold text-[#0F172A]">Detail Transaksi Pinjaman</h3>
+                <button onclick="closeDetailPinjamanModal()" class="text-[#64748B] hover:text-[#0F172A] transition-colors cursor-pointer">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <!-- Modal Content Grid -->
-            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 1.5rem; text-align: left;">
-                <!-- ID Pinjaman -->
+            <div class="grid grid-cols-2 gap-4 text-left">
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">ID Pinjaman</label>
-                    <span class="text-sm font-bold text-white" id="detailPinjamanId">-</span>
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">ID Pinjaman</label>
+                    <span class="text-sm font-bold text-[#0F172A]" id="detailPinjamanId">-</span>
                 </div>
-                <!-- Tanggal Pengajuan -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Tanggal Pengajuan</label>
-                    <span class="text-sm font-bold text-white" id="detailPinjamanDate">-</span>
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Tanggal Pengajuan</label>
+                    <span class="text-sm font-bold text-[#0F172A]" id="detailPinjamanDate">-</span>
                 </div>
 
-                <!-- Tenor -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Tenor</label>
-                    <span class="text-sm font-bold text-white" id="detailPinjamanTenor">-</span>
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Tenor</label>
+                    <span class="text-sm font-bold text-[#0F172A]" id="detailPinjamanTenor">-</span>
                 </div>
-                <!-- Status -->
                 <div>
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Status</label>
-                    <div id="detailPinjamanStatusBadge" class="mt-1">
-                        <!-- Badge injected by JS -->
-                    </div>
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Status</label>
+                    <div id="detailPinjamanStatusBadge" class="mt-1"></div>
                 </div>
 
-                <!-- Nominal Pinjaman -->
-                <div style="padding-top: 1.25rem; border-top: 1px solid #1f243d;">
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Nominal Pinjaman</label>
-                    <span class="text-sm font-bold text-white" id="detailPinjamanAmount">-</span>
+                <div class="pt-3 border-t border-[#E2E8F0]">
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Nominal Pinjaman</label>
+                    <span class="text-sm font-extrabold text-[#0F172A]" id="detailPinjamanAmount">-</span>
                 </div>
-                <!-- Sisa Pinjaman -->
-                <div style="padding-top: 1.25rem; border-top: 1px solid #1f243d;">
-                    <label class="block text-[10px] font-semibold text-[#8f9bb3] mb-1.5 uppercase tracking-wider">Sisa Pinjaman</label>
-                    <span class="text-sm font-bold text-rose-400" id="detailPinjamanRemaining">-</span>
+                <div class="pt-3 border-t border-[#E2E8F0]">
+                    <label class="block text-[10px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Sisa Pinjaman</label>
+                    <span class="text-sm font-extrabold text-rose-600" id="detailPinjamanRemaining">-</span>
                 </div>
             </div>
         </div>
@@ -419,19 +392,18 @@
                 const content = document.getElementById(`tab-content-${t}`);
                 
                 if (t === tabName) {
-                    btn.classList.remove('border-transparent', 'text-[#8f9bb3]');
-                    btn.classList.add('border-[#2f54eb]', 'text-white', 'font-bold');
+                    btn.classList.remove('border-transparent', 'text-[#64748B]');
+                    btn.classList.add('border-[#2563EB]', 'text-[#2563EB]', 'font-extrabold');
                     content.classList.remove('hidden');
                 } else {
-                    btn.classList.remove('border-[#2f54eb]', 'text-white', 'font-bold');
-                    btn.classList.add('border-transparent', 'text-[#8f9bb3]', 'font-semibold');
+                    btn.classList.remove('border-[#2563EB]', 'text-[#2563EB]', 'font-extrabold');
+                    btn.classList.add('border-transparent', 'text-[#64748B]', 'font-semibold');
                     content.classList.add('hidden');
                 }
             });
         }
 
         function showSimpananDetail(tx) {
-            // Format ID Transaksi like: TX-241023-YPIK-00010
             const d = new Date(tx.tanggal_transaksi || tx.created_at);
             const yy = String(d.getFullYear()).slice(-2);
             const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -439,7 +411,6 @@
             const formattedDateForId = `${dd}${mm}${yy}`;
             document.getElementById('detailSimpananTxId').textContent = `TX-${formattedDateForId}-YPIK-${String(tx.id).padStart(5, '0')}`;
 
-            // Format Date in Indonesian
             const monthsId = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
             const formattedDateId = `${d.getDate()} ${monthsId[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
             document.getElementById('detailSimpananTxDate').textContent = formattedDateId;
@@ -447,20 +418,19 @@
             document.getElementById('detailSimpananTxAmount').textContent = `Rp ${Number(tx.nominal).toLocaleString('id-ID')}`;
             document.getElementById('detailSimpananTxDesc').textContent = tx.keterangan || `Setoran Simpanan ${tx.jenis_simpanan}`;
 
-            // Set badge
             const badgeContainer = document.getElementById('detailSimpananTypeBadge');
             let typeBadge = '';
             if (tx.jenis_simpanan === 'Pokok') {
-                typeBadge = `<span class="px-3 py-1 rounded-full text-xs font-semibold" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Simpanan Pokok</span>`;
+                typeBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-[#2563EB] border border-blue-100">Simpanan Pokok</span>`;
             } else if (tx.jenis_simpanan === 'Wajib') {
-                typeBadge = `<span class="px-3 py-1 rounded-full text-xs font-semibold" style="background-color: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); color: #c084fc;">Simpanan Wajib</span>`;
+                typeBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-600 border border-purple-100">Simpanan Wajib</span>`;
             } else {
-                typeBadge = `<span class="px-3 py-1 rounded-full text-xs font-semibold" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Simpanan Sukarela</span>`;
+                typeBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">Simpanan Sukarela</span>`;
             }
             badgeContainer.innerHTML = typeBadge;
 
             document.getElementById('detailSimpananModal').classList.remove('hidden');
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         }
 
         function closeDetailSimpananModal() {
@@ -468,7 +438,6 @@
         }
 
         function showPinjamanDetail(loan) {
-            // Format ID Pinjaman like: PJ-241023-YPIK-00010
             const d = new Date(loan.tanggal_pengajuan || loan.created_at);
             const yy = String(d.getFullYear()).slice(-2);
             const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -476,29 +445,27 @@
             const formattedDateForId = `${dd}${mm}${yy}`;
             document.getElementById('detailPinjamanId').textContent = `PJ-${formattedDateForId}-YPIK-${String(loan.id).padStart(5, '0')}`;
 
-            // Format Date in Indonesian
             const monthsId = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
             const formattedDateId = `${d.getDate()} ${monthsId[d.getMonth()]} ${d.getFullYear()}`;
             document.getElementById('detailPinjamanDate').textContent = formattedDateId;
 
-            document.getElementById('detailPinjamanTenor').textContent = `${loan.tenor} Bulan (Cicilan: ${loan.jumlah_cicilan_dibayar}/${loan.tenor})`;
+            document.getElementById('detailPinjamanTenor').textContent = `${loan.tenor} Bulan (${loan.jumlah_cicilan_dibayar}/${loan.tenor})`;
             document.getElementById('detailPinjamanAmount').textContent = `Rp ${Number(loan.nominal_pinjaman).toLocaleString('id-ID')}`;
             document.getElementById('detailPinjamanRemaining').textContent = `Rp ${Number(loan.sisa_pinjaman).toLocaleString('id-ID')}`;
 
-            // Set badge
             const badgeContainer = document.getElementById('detailPinjamanStatusBadge');
             let statusBadge = '';
             if (loan.status === 'Lunas') {
-                statusBadge = `<span class="px-3 py-1 rounded-full text-xs font-semibold" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399;">Lunas</span>`;
+                statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">Lunas</span>`;
             } else if (loan.status === 'Menunggak') {
-                statusBadge = `<span class="px-3 py-1 rounded-full text-xs font-semibold" style="background-color: rgba(245, 34, 45, 0.1); border: 1px solid rgba(245, 34, 45, 0.2); color: #ff4d4f;">Menunggak</span>`;
+                statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-100">Menunggak</span>`;
             } else {
-                statusBadge = `<span class="px-3 py-1 rounded-full text-xs font-semibold" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #60a5fa;">Aktif</span>`;
+                statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-[#2563EB] border border-blue-100">Aktif</span>`;
             }
             badgeContainer.innerHTML = statusBadge;
 
             document.getElementById('detailPinjamanModal').classList.remove('hidden');
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         }
 
         function closeDetailPinjamanModal() {

@@ -49,13 +49,22 @@
                 </div>
             </div>
 
-            <div class="mt-5 pt-4 border-t border-dashed border-[#E2E8F0] space-y-2">
-                <div class="flex items-center justify-between text-xs text-[#64748B]">
-                    <div>Pokok: <span class="text-[#0F172A] font-bold">Rp {{ number_format($totalPokok, 0, ',', '.') }}</span></div>
-                    <div>Wajib: <span class="text-[#0F172A] font-bold">Rp {{ number_format($totalWajib, 0, ',', '.') }}</span></div>
-                    <div>Sukarela: <span class="text-[#0F172A] font-bold">Rp {{ number_format($totalSukarela, 0, ',', '.') }}</span></div>
+            <div class="mt-5 pt-4 border-t border-dashed border-[#E2E8F0] space-y-3">
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="bg-[#F8FAFC] border border-[#E2E8F0] p-2 rounded-xl">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">Pokok</span>
+                        <span class="text-xs font-bold text-[#0F172A] block mt-0.5 truncate">Rp {{ number_format($totalPokok, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="bg-[#F8FAFC] border border-[#E2E8F0] p-2 rounded-xl">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">Wajib</span>
+                        <span class="text-xs font-bold text-[#0F172A] block mt-0.5 truncate">Rp {{ number_format($totalWajib, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="bg-[#F8FAFC] border border-[#E2E8F0] p-2 rounded-xl">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">Sukarela</span>
+                        <span class="text-xs font-bold text-[#0F172A] block mt-0.5 truncate">Rp {{ number_format($totalSukarela, 0, ',', '.') }}</span>
+                    </div>
                 </div>
-                <a href="{{ route('simpanan') }}" class="text-xs font-bold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 pt-1 group">
+                <a href="{{ route('simpanan') }}" class="text-xs font-bold text-[#2563EB] hover:text-[#1D4ED8] inline-flex items-center gap-1 group">
                     <span>Lihat Rincian Simpanan</span>
                     <i data-lucide="chevron-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"></i>
                 </a>

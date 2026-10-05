@@ -1,274 +1,499 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Verifikasi Email - SOY YPIK PAM JAYA</title>
 
+    <!-- Google Font: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        :root {
-            --bg-page: #0d0f17;
-            --bg-card: rgba(22, 25, 43, 0.7);
-            --border-card: rgba(255, 255, 255, 0.06);
-            --text-title: #ffffff;
-            --text-muted: #94a3b8;
-            --text-body: #d1d5db;
-            --bg-input: rgba(7, 8, 15, 0.6);
-            --border-input: rgba(255, 255, 255, 0.08);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background:
-                radial-gradient(
-                    at 0% 0%,
-                    rgba(47, 84, 235, 0.12) 0,
-                    transparent 40%
-                ),
-                radial-gradient(
-                    at 100% 100%,
-                    rgba(99, 102, 241, 0.12) 0,
-                    transparent 40%
-                ),
-                #0d0f17;
-
-            color: var(--text-body);
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: #EEF2F6;
+            background-image: 
+                radial-gradient(at 10% 15%, rgba(37, 99, 235, 0.16) 0px, transparent 45%),
+                radial-gradient(at 90% 85%, rgba(56, 189, 248, 0.18) 0px, transparent 45%),
+                radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.12) 0px, transparent 40%),
+                radial-gradient(at 15% 90%, rgba(30, 58, 138, 0.14) 0px, transparent 40%),
+                radial-gradient(#CBD5E1 1.2px, transparent 1.2px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 28px 28px;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 20px;
+            position: relative;
+            overflow-x: hidden;
+            color: #1E293B;
         }
 
+        /* Ambient Glowing Aurora Blobs in Background */
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.65;
+            animation: blobFloat 12s ease-in-out infinite alternate;
+        }
+
+        .bg-blob-1 {
+            width: 480px;
+            height: 480px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(99, 102, 241, 0.18));
+            top: -140px;
+            left: -120px;
+        }
+
+        .bg-blob-2 {
+            width: 440px;
+            height: 440px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(37, 99, 235, 0.2));
+            bottom: -120px;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        @keyframes blobFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(30px, 20px) scale(1.08);
+            }
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Auth Card */
         .auth-card {
-            background: var(--bg-card);
-            border-color: var(--border-card);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            width: 100%;
+            background: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 38px 34px;
+            box-shadow: 0 25px 65px -15px rgba(15, 23, 42, 0.15), 0 10px 25px -10px rgba(37, 99, 235, 0.12);
         }
 
-        input::placeholder {
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
-            letter-spacing: normal !important;
-            font-size: 0.875rem !important;
-            font-weight: 400 !important;
-            color: #64748b !important;
+        /* Logo */
+        .logo-wrapper {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.1);
+        }
+
+        .logo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            line-height: 1.3;
+            font-weight: 800;
+            color: #1E293B;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.55;
+            color: #94A3B8;
+            font-weight: 500;
+        }
+
+        /* Email Box */
+        .email-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+        }
+
+        .email-label {
+            font-size: 11px;
+            color: #94A3B8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .email-address {
+            font-size: 13.5px;
+            color: #1E293B;
+            font-weight: 700;
+            margin-top: 2px;
+            word-break: break-all;
+        }
+
+        /* Alerts */
+        .alert {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .alert-success {
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            color: #065F46;
+        }
+
+        .alert-error {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #64748B;
+            font-size: 12.5px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .otp-input {
+            width: 100%;
+            height: 52px;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 10px;
+            color: #1E293B;
+            font-family: inherit;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 8px;
+            text-align: center;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .otp-input::placeholder {
+            color: #CBD5E1;
+            font-weight: 400;
+            letter-spacing: 6px;
+        }
+
+        .otp-input:focus {
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .input-error {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 6px;
+            color: #DC2626;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        /* Info Box */
+        .info-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            border-radius: 10px;
+        }
+
+        .info-box svg {
+            color: #2563EB;
+            margin-top: 2px;
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+        }
+
+        .info-text {
+            color: #1E40AF;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .info-text strong {
+            color: #1D4ED8;
+            font-weight: 700;
+        }
+
+        /* Button */
+        .verify-button {
+            width: 100%;
+            height: 46px;
+            border: none;
+            border-radius: 8px;
+            background: #2563EB;
+            color: #FFFFFF;
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .verify-button:hover {
+            background: #1D4ED8;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .verify-button:active {
+            transform: translateY(0);
+        }
+
+        /* Resend Section */
+        .resend-section {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .resend-text {
+            font-size: 12px;
+            color: #94A3B8;
+            margin-bottom: 8px;
+        }
+
+        .resend-button {
+            background: transparent;
+            border: none;
+            color: #2563EB;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .resend-button:hover {
+            color: #1D4ED8;
+            text-decoration: underline;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 18px;
+            color: #64748B;
+            font-size: 12.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .back-link:hover {
+            color: #2563EB;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer-main {
+            color: #94A3B8;
+            font-size: 11.5px;
+            font-weight: 500;
+        }
+
+        .footer-sub {
+            color: #CBD5E1;
+            font-size: 10.5px;
+            margin-top: 2px;
         }
     </style>
 </head>
+<body>
 
-<body class="min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden">
+    <!-- Ambient Glowing Aurora Blobs in Background -->
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
 
-    <!-- Background -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="page-wrapper">
 
-        <div class="absolute -top-40 -left-40 w-96 h-96
-            bg-blue-500/10 rounded-full blur-3xl opacity-60">
-        </div>
+        <div class="auth-card">
 
-        <div class="absolute -bottom-40 -right-40 w-96 h-96
-            bg-indigo-500/10 rounded-full blur-3xl opacity-60">
-        </div>
-
-    </div>
-
-    <!-- Card -->
-    <div class="w-full max-w-md auth-card border rounded-2xl shadow-xl
-        overflow-hidden relative z-10">
-
-        <!-- Top bar -->
-        <div class="h-1.5 w-full bg-gradient-to-r
-            from-blue-600 via-indigo-500 to-blue-600">
-        </div>
-
-        <div class="p-8 space-y-6">
-
-            <!-- Logo -->
-            <div class="flex flex-col items-center text-center space-y-3">
-
-                <div class="w-16 h-16 rounded-full overflow-hidden
-                    bg-white shadow-lg shadow-blue-500/10">
-
-                    <img
-                        src="{{ asset('images/logo-ypik.png') }}"
-                        alt="Logo YPIK PAM JAYA"
-                        class="w-full h-full object-cover"
-                    >
-
-                </div>
-
-                <div>
-
-                    <h2 class="text-xl font-extrabold text-white">
-                        Verifikasi Email
-                    </h2>
-
-                    <p class="text-slate-400 text-xs font-semibold
-                        tracking-wide uppercase mt-1">
-
-                        SOY YPIK PAM JAYA
-
-                    </p>
-
-                </div>
-
+            <!-- LOGO -->
+            <div class="logo-wrapper">
+                <img src="{{ asset('images/logo-ypik.png') }}" alt="SOY YPIK PAM JAYA">
             </div>
 
-            <!-- Description -->
-            <div class="text-center">
-
-                <p class="text-sm text-slate-400 leading-relaxed">
-
-                    Kode OTP telah dikirim ke:
-
-                </p>
-
-                <p class="text-sm text-white font-semibold mt-1 break-all">
-
-                    {{ $email }}
-
-                </p>
-
-                <p class="text-xs text-slate-500 mt-2">
-
-                    Masukkan kode 6 digit yang kami kirimkan
-                    ke email Anda.
-
-                </p>
-
+            <!-- HEADER -->
+            <div class="header">
+                <h1>Verifikasi Email</h1>
+                <p>Silakan verifikasi alamat email Anda untuk melanjutkan pendaftaran.</p>
             </div>
 
-            <!-- Success -->
+            <!-- EMAIL BOX -->
+            <div class="email-box">
+                <span class="email-label">Kode OTP dikirim ke</span>
+                <span class="email-address">{{ $email }}</span>
+            </div>
+
+            <!-- SUCCESS MESSAGE -->
             @if(session('success'))
-
-                <div class="bg-emerald-500/10 border
-                    border-emerald-500/20 text-emerald-400
-                    text-xs p-3.5 rounded-xl">
-
-                    {{ session('success') }}
-
+                <div class="alert alert-success">
+                    <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                    <span>{{ session('success') }}</span>
                 </div>
-
             @endif
 
-            <!-- Error -->
+            <!-- ERROR MESSAGE -->
             @if(session('error'))
-
-                <div class="bg-rose-500/10 border
-                    border-rose-500/20 text-rose-400
-                    text-xs p-3.5 rounded-xl">
-
-                    {{ session('error') }}
-
+                <div class="alert alert-error">
+                    <i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
+                    <span>{{ session('error') }}</span>
                 </div>
-
             @endif
 
-         <!-- OTP Form -->
-<form
-    action="{{ route('register.verify.submit') }}"
-    method="POST"
-    class="space-y-5"
->
-    @csrf
+            <!-- OTP FORM -->
+            <form action="{{ route('register.verify.submit') }}" method="POST">
+                @csrf
 
-    <div>
-        <label class="block text-xs font-bold text-slate-400 mb-2">
-            Kode OTP
-        </label>
-
-        <input
-            type="text"
-            name="otp"
-            inputmode="numeric"
-            maxlength="6"
-            autocomplete="one-time-code"
-            placeholder="Masukkan 6 digit OTP"
-            class="w-full bg-black/30 border
-                border-white/10 rounded-xl
-                px-4 py-3 text-center text-xl font-bold
-                tracking-[0.5em] text-white
-                placeholder:tracking-normal placeholder:font-normal placeholder:text-sm placeholder:text-slate-500
-                focus:outline-none focus:border-blue-500
-                transition"
-            required
-        >
-
-        @error('otp')
-            <p class="text-rose-400 text-xs mt-2">
-                {{ $message }}
-            </p>
-        @enderror
-    </div>
-
-    <button
-        type="submit"
-        class="w-full bg-[#2f54eb]
-            hover:bg-[#1d39c4]
-            text-white font-bold py-3
-            rounded-xl text-sm
-            transition-all shadow-md"
-    >
-        Verifikasi OTP
-    </button>
-</form>
-            <!-- Resend -->
-            <div class="text-center pt-2 border-t border-white/5">
-
-                <p class="text-xs text-slate-500 mb-3">
-                    Tidak menerima kode?
-                </p>
-
-                <form
-                    action="{{ route('register.resend') }}"
-                    method="POST"
-                >
-
-                    @csrf
-
-                    <button
-                        type="submit"
-                        class="text-[#2f54eb]
-                            hover:text-blue-400
-                            text-xs font-semibold
-                            hover:underline"
+                <div class="form-group">
+                    <label for="otp" class="form-label">Kode OTP 6 Digit</label>
+                    <input
+                        type="text"
+                        id="otp"
+                        name="otp"
+                        inputmode="numeric"
+                        maxlength="6"
+                        minlength="6"
+                        pattern="[0-9]{6}"
+                        autocomplete="one-time-code"
+                        placeholder="••••••"
+                        required
+                        autofocus
+                        class="otp-input"
                     >
-                        Kirim Ulang OTP
+
+                    @error('otp')
+                        <div class="input-error">
+                            <i data-lucide="alert-circle" style="width: 13px; height: 13px;"></i>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                </div>
+
+                <!-- INFO -->
+                <div class="info-box">
+                    <i data-lucide="shield-alert"></i>
+                    <div class="info-text">
+                        Kode OTP berlaku selama <strong>5 menit</strong>. Masukkan kode digit yang dikirimkan ke email Anda.
+                    </div>
+                </div>
+
+                <!-- BUTTON -->
+                <button type="submit" class="verify-button">
+                    <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                    <span>Verifikasi OTP</span>
+                </button>
+            </form>
+
+            <!-- RESEND SECTION -->
+            <div class="resend-section">
+                <p class="resend-text">Tidak menerima kode OTP?</p>
+                <form action="{{ route('register.resend') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="resend-button">
+                        Kirim Ulang Kode OTP
                     </button>
-
                 </form>
-
             </div>
 
-            <!-- Back -->
-            <div class="text-center">
+            <!-- BACK LINK -->
+            <a href="{{ route('register') }}" class="back-link">
+                <i data-lucide="arrow-left" style="width: 15px; height: 15px;"></i>
+                <span>Kembali ke Pendaftaran</span>
+            </a>
 
-                <a
-                    href="{{ route('register') }}"
-                    class="text-xs text-slate-500
-                        hover:text-white transition"
-                >
-                    ← Kembali ke halaman pendaftaran
-                </a>
+        </div>
 
-            </div>
-
+        <!-- FOOTER -->
+        <div class="footer">
+            <p class="footer-main">© {{ date('Y') }} SOY YPIK PAM JAYA</p>
+            <p class="footer-sub">Sistem Operasional Koperasi</p>
         </div>
 
     </div>
 
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
     </script>
 
 </body>
-
 </html>
