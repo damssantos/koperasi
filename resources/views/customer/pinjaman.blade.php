@@ -656,39 +656,6 @@
 
 
     {{-- =====================================================
-    NOTIFICATION
-    ===================================================== --}}
-
-    @if(session('success'))
-
-        <div class="loan-alert loan-alert-success">
-            {{ session('success') }}
-        </div>
-
-    @endif
-
-
-    @if(session('error'))
-
-        <div class="loan-alert loan-alert-error">
-            {{ session('error') }}
-        </div>
-
-    @endif
-
-
-    @if($errors->any())
-
-        <div class="loan-alert loan-alert-error">
-
-            {{ $errors->first() }}
-
-        </div>
-
-    @endif
-
-
-    {{-- =====================================================
     RINGKASAN PINJAMAN
     ===================================================== --}}
 

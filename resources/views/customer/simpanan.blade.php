@@ -876,41 +876,7 @@
     </style>
 
 
-    {{-- =====================================================
-    NOTIFICATION
-    ===================================================== --}}
 
-    @if(session('success'))
-
-        <div class="saving-alert saving-alert-success">
-
-            {{ session('success') }}
-
-        </div>
-
-    @endif
-
-
-    @if(session('error'))
-
-        <div class="saving-alert saving-alert-error">
-
-            {{ session('error') }}
-
-        </div>
-
-    @endif
-
-
-    @if($errors->any())
-
-        <div class="saving-alert saving-alert-error">
-
-            {{ $errors->first() }}
-
-        </div>
-
-    @endif
 
 
     {{-- =====================================================

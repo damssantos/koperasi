@@ -252,6 +252,7 @@
         }
 
         .top-navbar-right {
+            position: relative;
             display: flex;
             align-items: center;
             gap: 14px;
@@ -291,6 +292,73 @@
             border-color: #BFDBFE;
             box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
         }
+
+        /* =========================================
+           PROFILE DROPDOWN (paritas dengan admin/pengawas)
+        ========================================= */
+        .hidden { display: none !important; }
+
+        .user-info-text { display: none; }
+        @media (min-width: 640px) {
+            .user-info-text { display: flex; flex-direction: column; text-align: left; }
+        }
+        .user-name-text { font-size: 12px; font-weight: 700; color: #0F172A; line-height: 1.25; }
+        .user-role-text { font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        #profileDropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 8px;
+            width: 256px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+            overflow: hidden;
+            z-index: 100;
+        }
+        #profileDropdown .dd-header { padding: 14px 16px; border-bottom: 1px solid #E2E8F0; background: #F8FAFC; }
+        #profileDropdown .dd-actions { padding: 8px; }
+        #profileDropdown .dd-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            text-decoration: none;
+            text-align: left;
+            transition: all 0.15s ease;
+        }
+        #profileDropdown .dd-item { border: none; outline: none; background: transparent; font-family: inherit; cursor: pointer; }
+        #profileDropdown .dd-item:hover { color: #0F172A; background: #F1F5F9; }
+        #profileDropdown .dd-item.danger { color: #E11D48; }
+        #profileDropdown .dd-item.danger:hover { background: #FFF1F2; }
+        #profileDropdown .dd-icon {
+            width: 28px; height: 28px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            background: #EFF6FF; color: #2563EB;
+        }
+        #profileDropdown .dd-icon.danger { background: rgba(254, 226, 226, 0.6); color: #E11D48; }
+        #profileDropdown .dd-divider { border-top: 1px solid #E2E8F0; margin: 4px 0; }
+        #profileDropdown .dd-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            object-fit: cover; border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        #profileDropdown .dd-initial {
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #FFFFFF; font-size: 14px; font-weight: 800;
+            background: #2563EB; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .rotate-180 { transform: rotate(180deg); transition: transform 0.2s; }
 
         .user-avatar-circle,
         .user-avatar-img {
@@ -541,10 +609,6 @@
             <header class="top-navbar">
 
                 <div class="top-navbar-left">
-                    <!-- Mobile / Desktop Sidebar Toggle Button -->
-                    <button type="button" onclick="toggleSidebar()" class="p-2 rounded-xl text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" title="Buka/Tutup Menu Sidebar">
-                        <i data-lucide="menu" class="w-5 h-5"></i>
-                    </button>
                 </div>
 
                 <div class="top-navbar-right relative">
@@ -558,7 +622,7 @@
                                 {{ $navInitial }}
                             </div>
                         @endif
-                        <div class="user-info-text hidden sm:flex">
+                        <div class="user-info-text">
                             <span class="user-name-text">{{ $navUser?->nama_lengkap ?? 'Customer' }}</span>
                             <span class="user-role-text">CUSTOMER</span>
                         </div>
@@ -566,40 +630,40 @@
                     </button>
 
                     <!-- Profile Dropdown Menu (Matching Admin Light Style) -->
-                    <div id="profileDropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white border border-[#E2E8F0] rounded-2xl shadow-xl shadow-slate-900/10 overflow-hidden z-[100] animate-dropdown">
+                    <div id="profileDropdown" class="hidden">
                         <!-- User Header -->
-                        <div class="px-4 py-3.5 border-b border-[#E2E8F0] bg-[#F8FAFC]">
-                            <div class="flex items-center gap-3">
+                        <div class="dd-header">
+                            <div class="flex items-center gap-3" style="display:flex;align-items:center;gap:12px;">
                                 @if($hasNavAvatar)
-                                    <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="w-10 h-10 rounded-full object-cover border border-[#E2E8F0] shadow-sm">
+                                    <img src="{{ asset('storage/' . $navAvatar) }}" alt="" class="dd-avatar">
                                 @else
-                                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-extrabold bg-[#2563EB] shadow-sm">
+                                    <div class="dd-initial">
                                         {{ $navInitial }}
                                     </div>
                                 @endif
-                                <div class="min-w-0">
-                                    <p class="text-xs font-bold text-[#0F172A] truncate">{{ $navUser?->nama_lengkap ?? 'Customer' }}</p>
-                                    <p class="text-[10px] text-[#64748B] font-semibold uppercase tracking-wider">CUSTOMER KOPERASI</p>
+                                <div style="min-width:0;">
+                                    <p style="font-size:12px;font-weight:700;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;">{{ $navUser?->nama_lengkap ?? 'Customer' }}</p>
+                                    <p style="font-size:10px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin:0;">CUSTOMER KOPERASI</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Dropdown Actions -->
-                        <div class="p-2 space-y-1">
-                            <a href="{{ route('customer.profil') }}" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-all duration-150">
-                                <div class="w-7 h-7 rounded-lg bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center">
-                                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                        <div class="dd-actions">
+                            <a href="{{ route('customer.profil') }}" class="dd-item">
+                                <div class="dd-icon">
+                                    <i data-lucide="user" style="width:14px;height:14px;"></i>
                                 </div>
                                 <span>Profil Saya</span>
                             </a>
 
-                            <div class="border-t border-[#E2E8F0] my-1"></div>
+                            <div class="dd-divider"></div>
 
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all duration-150 text-left">
-                                    <div class="w-7 h-7 rounded-lg bg-rose-100/60 text-rose-600 flex items-center justify-center shrink-0">
-                                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                                <button type="submit" class="dd-item danger">
+                                    <div class="dd-icon danger">
+                                        <i data-lucide="log-out" style="width:14px;height:14px;"></i>
                                     </div>
                                     <span>Keluar Akun</span>
                                 </button>
