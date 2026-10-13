@@ -16,12 +16,14 @@ class Pinjaman extends Model
         'kategori_debitur',
         'persentase_bunga',
         'total_bunga',
+        'potongan_admin',
         'jumlah_cicilan_dibayar',
         'sisa_pinjaman',
         'tanggal_pengajuan',
         'tanggal_pelunasan',
         'bukti_transfer',
         'status',
+        'status_persetujuan',
     ];
 
     protected $casts = [

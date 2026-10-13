@@ -207,9 +207,9 @@ Route::middleware('role:customer')->group(function () {
 
         'tanggal_pengajuan' => now()->toDateString(),
 
-        'status' => 'Aktif',
+        'status' => 'Pengajuan',
 
-        'status_persetujuan' => 'Disetujui',
+        'status_persetujuan' => 'Menunggu',
 
         'keterangan' => $data['keterangan'] ?? null,
 
@@ -969,6 +969,8 @@ Route::middleware('auth')->group(function () {
                     'kategori' => $loan->kategori_debitur ?? 'Pegawai',
                     'persenBunga' => (float) ($loan->persentase_bunga ?? 0),
                     'totalBunga' => (int) ($loan->total_bunga ?? 0),
+                    'potonganAdmin' => (int) ($loan->potongan_admin ?? 0),
+                    'kategori' => $loan->kategori_debitur ?? 'Pegawai',
                     'paid' => $loan->jumlah_cicilan_dibayar,
                     'remaining' => (int) $loan->sisa_pinjaman,
                     'status' => $loan->status,
@@ -1045,6 +1047,81 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('pinjaman')
             ->with('success', 'Pengajuan pinjaman berhasil disimpan ke database.');
     })->middleware('role:admin')->name('pinjaman.store');
+
+    // ACC / Tolak pengajuan pinjaman oleh admin,
+    // dengan bunga custom & potongan admin.
+    Route::post('/pinjaman/{pinjaman}/acc', function (Request $request, App\Models\Pinjaman $pinjaman) {
+        if ($pinjaman->status !== 'Pengajuan') {
+            return redirect()->route('pinjaman')->with('error', 'Pinjaman ini tidak sedang menunggu persetujuan.');
+        }
+
+        $data = $request->validate([
+            'persen_bunga' => ['required', 'numeric', 'min:0', 'max:100'],
+            'potongan_admin' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        $tenor = (int) $pinjaman->tenor;
+        $persen = (float) $data['persen_bunga'];
+        $potongan = (int) ($data['potongan_admin'] ?? 0);
+
+        $totalBunga = (int) round($pinjaman->nominal_pinjaman * ($persen / 100) * $tenor);
+
+        // Cair bersih = nominal - potongan admin (potongan masuk kas sebelum diserahkan ke anggota).
+        if ($potongan > $pinjaman->nominal_pinjaman) {
+            return redirect()->back()->with('error', 'Potongan admin tidak boleh melebihi nominal pinjaman.');
+        }
+
+        $before = $pinjaman->toArray();
+
+        $pinjaman->update([
+            'persentase_bunga' => $persen,
+            'total_bunga' => $totalBunga,
+            'potongan_admin' => $potongan,
+            'sisa_pinjaman' => (int) $pinjaman->nominal_pinjaman + $totalBunga,
+            'status' => 'Aktif',
+            'status_persetujuan' => 'Disetujui',
+        ]);
+
+        AuditService::catat(
+            'acc_pinjaman',
+            $pinjaman->fresh(),
+            $before,
+            $pinjaman->fresh()->toArray(),
+            'Admin menyetujui pinjaman #' . $pinjaman->id . ' (bunga ' . $persen . '%/bln, potongan Rp' . number_format($potongan, 0, ',', '.') . ').'
+        );
+
+        return redirect()->route('pinjaman')
+            ->with('success', 'Pinjaman #' . $pinjaman->id . ' berhasil disetujui dan kini aktif.');
+    })->middleware('role:admin')->name('pinjaman.acc');
+
+    Route::post('/pinjaman/{pinjaman}/tolak', function (Request $request, App\Models\Pinjaman $pinjaman) {
+        if ($pinjaman->status !== 'Pengajuan') {
+            return redirect()->route('pinjaman')->with('error', 'Pinjaman ini tidak sedang menunggu persetujuan.');
+        }
+
+        $data = $request->validate([
+            'alasan' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $before = $pinjaman->toArray();
+
+        $pinjaman->update([
+            'status' => 'Ditolak',
+            'status_persetujuan' => 'Ditolak',
+            'keterangan' => $data['alasan'] ?? $pinjaman->keterangan,
+        ]);
+
+        AuditService::catat(
+            'tolak_pinjaman',
+            $pinjaman->fresh(),
+            $before,
+            $pinjaman->fresh()->toArray(),
+            'Admin menolak pinjaman #' . $pinjaman->id . '.'
+        );
+
+        return redirect()->route('pinjaman')
+            ->with('success', 'Pinjaman #' . $pinjaman->id . ' telah ditolak.');
+    })->middleware('role:admin')->name('pinjaman.tolak');
 
     Route::get('/pinjaman/template', function () {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();

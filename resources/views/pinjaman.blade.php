@@ -585,6 +585,61 @@
         </form>
     </div>
 </div>
+
+{{-- MODAL ACC / TOLAK PENGAJUAN --}}
+<div id="accModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <h3 class="text-base font-extrabold text-[#0F172A]">ACC Pengajuan Pinjaman</h3>
+                <p class="text-xs text-[#64748B] mt-0.5">Atur bunga & potongan, lalu setujui.</p>
+            </div>
+            <button type="button" onclick="closeAccModal()" class="text-[#64748B] hover:text-[#0F172A] text-xl leading-none">×</button>
+        </div>
+
+        <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 mb-4 text-xs space-y-1">
+            <div class="flex justify-between"><span class="text-[#64748B]">Peminjam</span><strong id="accNama" class="text-[#0F172A]">-</strong></div>
+            <div class="flex justify-between"><span class="text-[#64748B]">Nominal</span><strong id="accNominal" class="text-[#0F172A]">-</strong></div>
+            <div class="flex justify-between"><span class="text-[#64748B]">Tenor</span><strong id="accTenor" class="text-[#0F172A]">-</strong></div>
+            <div class="flex justify-between"><span class="text-[#64748B]">Kategori</span><strong id="accKategori" class="text-[#0F172A]">-</strong></div>
+        </div>
+
+        <form id="accForm" method="POST" action="">
+            @csrf
+            <div class="mb-3">
+                <label class="block text-[11px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Bunga per Bulan (%)</label>
+                <input type="number" step="0.01" min="0" max="100" id="accPersen" name="persen_bunga" required
+                    class="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-semibold text-[#0F172A] focus:outline-none focus:border-[#2563EB]">
+                <p class="text-[10px] text-[#64748B] mt-1">Kosongkan penyesuaian & gunakan default kategori, atau ubah sesuai kebijakan.</p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-[11px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Potongan Admin (Rp)</label>
+                <input type="text" inputmode="numeric" id="accPotongan" name="potongan_admin"
+                    class="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-semibold text-[#0F172A] focus:outline-none focus:border-[#2563EB]"
+                    oninput="this.value = this.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.')">
+                <p class="text-[10px] text-[#64748B] mt-1">Dipotong langsung dari nominal sebelum pencairan. Kosongkan = tanpa potongan.</p>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4 text-xs space-y-1">
+                <div class="flex justify-between"><span class="text-[#64748B]">Total Bunga</span><strong id="accPreviewBunga">-</strong></div>
+                <div class="flex justify-between"><span class="text-[#64748B]">Cicilan / Bulan</span><strong id="accPreviewCicilan">-</strong></div>
+                <div class="flex justify-between"><span class="text-[#64748B]">Diterima Bersih</span><strong id="accPreviewBersih">-</strong></div>
+            </div>
+
+            <div class="flex items-center gap-3 justify-end">
+                <button type="button" onclick="submitTolak()"
+                    class="px-4 py-2 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition">
+                    Tolak
+                </button>
+                <button type="submit"
+                    class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition shadow-md shadow-emerald-600/20">
+                    Setujui (ACC)
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endpush
 
 @endsection
@@ -714,6 +769,10 @@ function renderTable() {
         const paymentButton = status === 'Lunas'
             ? `<button type="button" disabled class="w-8 h-8 rounded-lg bg-slate-100 text-slate-300 border border-slate-200 flex items-center justify-center opacity-50 cursor-not-allowed" title="Pinjaman sudah lunas">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
+               </button>`
+            : status === 'Pengajuan'
+            ? `<button type="button" onclick="openAccModal(${loan.id})" class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center hover:bg-emerald-100 transition shadow-sm" title="ACC / Tolak Pengajuan">
+                    <i data-lucide="check-check" class="w-4 h-4"></i>
                </button>`
             : `<button type="button" onclick="openPayInstallmentModal(${loan.id})" class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center hover:bg-emerald-100 transition shadow-sm" title="Bayar Cicilan">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
@@ -975,19 +1034,6 @@ function openNewLoanModal() {
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
-function closeNewLoanModal() {
-    const modal = document.getElementById('newLoanModal');
-    if (modal) modal.classList.add('hidden');
-}
-
-function resetFilters() {
-    const searchInput = document.getElementById('searchInput');
-    const sortBy = document.getElementById('sortBy');
-    if (searchInput) searchInput.value = '';
-    if (sortBy) sortBy.value = 'date-desc';
-    setFilterStatus('All');
-}
-
 function openPayInstallmentModal(id) {
     const loan = originalLoans.find(l => Number(l.id) === Number(id));
     if (!loan) return;
@@ -1078,6 +1124,90 @@ function togglePelunasan() {
         document.getElementById('payInstallmentForm').appendChild(hidden);
     }
     hidden.value = checked ? 'pelunasan' : 'cicilan';
+}
+
+/* ==== ACC / TOLAK PENGAJUAN ==== */
+let accLoan = null;
+
+function openAccModal(id) {
+    const loan = originalLoans.find(l => Number(l.id) === Number(id));
+    if (!loan) return;
+    accLoan = loan;
+
+    const form = document.getElementById('accForm');
+    form.action = `/pinjaman/${loan.id}/acc`;
+
+    document.getElementById('accNama').textContent = loan.name ?? '-';
+    document.getElementById('accNominal').textContent = formatRupiah(loan.amount);
+    document.getElementById('accTenor').textContent = `${loan.tenor ?? 0} Bulan`;
+    document.getElementById('accKategori').textContent = loan.kategori ?? '-';
+
+    const defaultPersen = Number(window.bungaPerKategori?.[loan.kategori] ?? 0);
+    document.getElementById('accPersen').value = defaultPersen;
+    document.getElementById('accPotongan').value = '';
+
+    updateAccPreview();
+
+    const modal = document.getElementById('accModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeAccModal() {
+    const modal = document.getElementById('accModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    accLoan = null;
+}
+
+function updateAccPreview() {
+    if (!accLoan) return;
+
+    const nominal = Number(accLoan.amount) || 0;
+    const tenor = Number(accLoan.tenor) || 0;
+    const persen = parseFloat(document.getElementById('accPersen').value) || 0;
+    const potongan = Number(document.getElementById('accPotongan').value.replace(/\D/g, '')) || 0;
+
+    const totalBunga = Math.round(nominal * (persen / 100) * tenor);
+    const cicilan = tenor > 0 ? Math.round((nominal + totalBunga) / tenor) : 0;
+    const bersih = Math.max(0, nominal - potongan);
+
+    document.getElementById('accPreviewBunga').textContent = formatRupiah(totalBunga);
+    document.getElementById('accPreviewCicilan').textContent = formatRupiah(cicilan);
+    document.getElementById('accPreviewBersih').textContent = formatRupiah(bersih);
+}
+
+document.getElementById('accPersen')?.addEventListener('input', updateAccPreview);
+document.getElementById('accPotongan')?.addEventListener('input', updateAccPreview);
+
+function submitTolak() {
+    if (!accLoan) return;
+
+    if (!confirm(`Tolak pengajuan pinjaman #${accLoan.id}?`)) return;
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/pinjaman/${accLoan.id}/tolak`;
+
+    const csrf = document.createElement('input');
+    csrf.type = 'hidden';
+    csrf.name = '_token';
+    csrf.value = document.querySelector('meta[name="csrf-token"]')?.content
+        ?? document.getElementById('accForm').querySelector('input[name="_token"]')?.value
+        ?? '';
+    form.appendChild(csrf);
+
+    const alasan = prompt('Alasan penolakan (opsional):');
+    if (alasan) {
+        const alasanInput = document.createElement('input');
+        alasanInput.type = 'hidden';
+        alasanInput.name = 'alasan';
+        alasanInput.value = alasan;
+        form.appendChild(alasanInput);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
