@@ -13,9 +13,21 @@ class RoleMiddleware
         Closure $next,
         ...$roles
     ): Response {
-        if (!auth()->check()) {
+        // Deteksi guard aktif (admin/pengawas = web, customer = customer)
+        // supaya admin & customer bisa login bersamaan di browser yang sama.
+        $activeGuard = null;
+        foreach (['web', 'customer'] as $guardName) {
+            if (auth()->guard($guardName)->check()) {
+                $activeGuard = $guardName;
+                break;
+            }
+        }
+
+        if ($activeGuard === null) {
             return redirect()->route('login');
         }
+
+        auth()->shouldUse($activeGuard);
 
         if (!in_array(auth()->user()->role, $roles)) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');

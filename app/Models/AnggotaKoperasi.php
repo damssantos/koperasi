@@ -15,6 +15,7 @@ class AnggotaKoperasi extends Model
         'id_anggota',
         'nama',
         'no_hp',
+        'nik',
         'tanggal_join',
         'simpanan_pokok',
         'simpanan_wajib',

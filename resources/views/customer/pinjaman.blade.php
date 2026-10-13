@@ -758,6 +758,9 @@
                     <h2>
                         Daftar Pinjaman
                     </h2>
+                            <th>
+                                Aksi
+                            </th>
 
                     <p>
                         Daftar pengajuan dan pinjaman yang terhubung dengan akun Anda.
@@ -808,12 +811,10 @@
                             </th>
 
                             <th>
-                                Status
+                                Status Pengajuan
                             </th>
 
-                            <th>
-                                Approval
-                            </th>
+                          
 
                         </tr>
 
@@ -874,81 +875,58 @@
 
                                         <td>
 
-                                            Rp{{ number_format(
-                                $loan->sisa_pinjaman ?? 0,
-                                0,
-                                ',',
-                                '.'
-                            ) }}
+                                                @if(
+        $loan->status_persetujuan === 'Disetujui'
+        && in_array($loan->status, ['Aktif', 'Menunggak', 'Lunas'])
+    )
+        Rp{{ number_format(
+            $loan->sisa_pinjaman ?? 0,
+            0,
+            ',',
+            '.'
+        ) }}
+    @else
+        —
+    @endif
 
                                         </td>
 
 
-                                        {{-- STATUS --}}
+                                     {{-- STATUS PENGAJUAN GABUNGAN --}}
+<td>
+    @if($loan->status_persetujuan === 'Menunggu')
+        <span class="badge badge-warning">
+            Menunggu Persetujuan
+        </span>
+    @elseif($loan->status_persetujuan === 'Ditolak'
+        || $loan->status === 'Ditolak')
+        <span class="badge badge-danger">
+            Ditolak
+        </span>
+    @elseif($loan->status_persetujuan === 'Disetujui')
+        <span class="badge badge-success">
+            Disetujui
+        </span>
+    @elseif($loan->status === 'Lunas')
+        <span class="badge badge-info">
+            Lunas
+        </span>
+    @else
+        <span class="badge badge-success">
+            {{ $loan->status ?? '-' }}
+        </span>
+    @endif
+</td>
 
-                                        <td>
-
-                                            @if($loan->status === 'Aktif')
-
-                                                <span class="badge badge-success">
-                                                    Aktif
-                                                </span>
-
-                                            @elseif($loan->status === 'Pengajuan')
-
-                                                <span class="badge badge-warning">
-                                                    Pengajuan
-                                                </span>
-
-                                            @elseif($loan->status === 'Ditolak')
-
-                                                <span class="badge badge-danger">
-                                                    Ditolak
-                                                </span>
-
-                                            @elseif($loan->status === 'Lunas')
-
-                                                <span class="badge badge-info">
-                                                    Lunas
-                                                </span>
-
-                                            @else
-
-                                                <span class="badge badge-info">
-                                                    {{ $loan->status ?? '-' }}
-                                                </span>
-
-                                            @endif
-
-                                        </td>
-
-
-                                        {{-- APPROVAL --}}
-
-                                        <td>
-
-                                            @if($loan->status_persetujuan === 'Disetujui')
-
-                                                <span class="badge badge-success">
-                                                    Disetujui
-                                                </span>
-
-                                            @elseif($loan->status_persetujuan === 'Ditolak')
-
-                                                <span class="badge badge-danger">
-                                                    Ditolak
-                                                </span>
-
-                                            @else
-
-                                                <span class="badge badge-warning">
-                                                    Menunggu
-                                                </span>
-
-                                            @endif
-
-                                        </td>
-
+                                    {{-- AKSI BAYAR --}}
+<td>
+    @if($loan->status_persetujuan === 'Disetujui' && $loan->status !== 'Lunas' && $loan->sisa_pinjaman > 0)
+        <button type="button" class="btn-primary" style="padding:6px 12px; font-size:11px;"
+            onclick="openBayarModal({{ $loan->id }}, '{{ addslashes($loan->id_anggota ?? '') }}', {{ (int) $loan->sisa_pinjaman }}, {{ (int) $loan->tenor }}, {{ (int) $loan->jumlah_cicilan_dibayar }})">
+            Bayar
+        </button>
+    @endif
+</td>
 
                                     </tr>
 
@@ -1320,10 +1298,149 @@
 
 
     {{-- =====================================================
+    MODAL BAYAR CICILAN
+    ===================================================== --}}
+
+    <div id="bayarModal" class="loan-modal" onclick="closeBayarModalOutside(event)">
+
+        <div class="loan-modal-box" onclick="event.stopPropagation()">
+
+            <div class="loan-modal-header">
+
+                <div>
+                    <h3>
+                        Bayar Cicilan
+                    </h3>
+
+                    <p>
+                        Unggah bukti pembayaran Anda.
+                    </p>
+
+                </div>
+
+                <button type="button" class="loan-modal-close" onclick="closeBayarModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <form method="POST" action="" id="bayarForm" enctype="multipart/form-data">
+
+                @csrf
+
+                <input type="hidden" name="tipe" id="bayarTipe" value="cicilan">
+
+                <div class="loan-form-group">
+                    <label>Sisa Pinjaman</label>
+                    <strong id="bayarSisa" style="font-size:16px;">Rp0</strong>
+                </div>
+
+                <div class="loan-form-group">
+                    <label for="tanggal_pembayaran">Tanggal Pembayaran</label>
+                    <input type="date" id="tanggal_pembayaran" name="tanggal_pembayaran"
+                        value="{{ date('Y-m-d') }}" required>
+                </div>
+
+                <div class="loan-form-group">
+                    <label class="flex items-center gap-2" style="display:flex;align-items:center;gap:8px;">
+                        <input type="checkbox" id="bayarPelunasan" onchange="toggleBayarPelunasan()"
+                            style="width:auto;">
+                        <span>Pelunasan Dipercepat (bayar semua sisa sekaligus)</span>
+                    </label>
+                </div>
+
+                <div class="loan-form-group">
+                    <label for="bukti_transfer">Bukti Pembayaran</label>
+                    <input type="file" id="bukti_transfer" name="bukti_transfer"
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>
+                    <small class="loan-form-help">
+                        Format JPG, JPEG, PNG atau WEBP. Maksimal 2MB.
+                    </small>
+                    @error('bukti_transfer')
+                        <div class="loan-error">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
+                <div class="loan-modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeBayarModal()">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Kirim Pembayaran
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    {{-- =====================================================
     JAVASCRIPT
     ===================================================== --}}
 
     <script>
+
+        const bayarUrl = @json(route('customer.pinjaman.bayar', ['pinjaman' => '__ID__']));
+
+        function openBayarModal(id, kode, sisa, tenor, dibayar) {
+            const form = document.getElementById('bayarForm');
+            if (form) form.action = bayarUrl.replace('__ID__', id);
+
+            const sisaEl = document.getElementById('bayarSisa');
+            if (sisaEl) sisaEl.textContent = 'Rp' + new Intl.NumberFormat('id-ID').format(sisa);
+
+            const check = document.getElementById('bayarPelunasan');
+            const tipe = document.getElementById('bayarTipe');
+            if (check) check.checked = false;
+            if (tipe) tipe.value = 'cicilan';
+
+            const file = document.getElementById('bukti_transfer');
+            if (file) file.value = '';
+
+            const modal = document.getElementById('bayarModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function closeBayarModal() {
+            const modal = document.getElementById('bayarModal');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function closeBayarModalOutside(event) {
+            if (event.target.id === 'bayarModal') {
+                closeBayarModal();
+            }
+        }
+
+        function toggleBayarPelunasan() {
+            const checked = document.getElementById('bayarPelunasan')?.checked ?? false;
+            const tipe = document.getElementById('bayarTipe');
+            if (tipe) tipe.value = checked ? 'pelunasan' : 'cicilan';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const file = document.getElementById('bukti_transfer');
+            if (!file) return;
+            file.addEventListener('change', function () {
+                const f = this.files[0];
+                if (!f) return;
+                if (f.size > 2 * 1024 * 1024) {
+                    alert('Ukuran bukti pembayaran maksimal 2MB.');
+                    this.value = '';
+                    return;
+                }
+                const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!allowed.includes(f.type)) {
+                    alert('Format bukti pembayaran harus JPG, JPEG, PNG atau WEBP.');
+                    this.value = '';
+                }
+            });
+        });
 
         function openLoanModal() {
 

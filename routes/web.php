@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -207,9 +207,9 @@ Route::middleware('role:customer')->group(function () {
 
         'tanggal_pengajuan' => now()->toDateString(),
 
-        'status' => 'Pengajuan',
+        'status' => 'Aktif',
 
-        'status_persetujuan' => 'Menunggu',
+        'status_persetujuan' => 'Disetujui',
 
         'keterangan' => $data['keterangan'] ?? null,
 
@@ -966,9 +966,14 @@ Route::middleware('auth')->group(function () {
                     'formattedDate' => $loan->tanggal_pengajuan->format('d M Y'),
                     'amount' => (int) $loan->nominal_pinjaman,
                     'tenor' => $loan->tenor,
+                    'kategori' => $loan->kategori_debitur ?? 'Pegawai',
+                    'persenBunga' => (float) ($loan->persentase_bunga ?? 0),
+                    'totalBunga' => (int) ($loan->total_bunga ?? 0),
                     'paid' => $loan->jumlah_cicilan_dibayar,
                     'remaining' => (int) $loan->sisa_pinjaman,
                     'status' => $loan->status,
+                    'statusPersetujuan' => $loan->status_persetujuan,
+                    'bukti_transfer' => $loan->bukti_transfer,
                 ];
             });
 
@@ -994,13 +999,17 @@ Route::middleware('auth')->group(function () {
             'anggota_id' => 'required|exists:anggota_koperasi,id',
             'nominal_pinjaman' => 'required|integer|min:1000',
             'tenor' => 'required|integer|min:1',
+            'kategori_debitur' => 'required|in:' . implode(',', App\Models\PengaturanBunga::KATEGORI),
             'tanggal_pengajuan' => 'required|date',
             'status' => 'nullable|in:Aktif,Menunggak,Lunas',
             'jumlah_cicilan_dibayar' => 'nullable|integer|min:0',
         ]);
 
         $status = $data['status'] ?? 'Pengajuan';
+        $status = $status === 'Pengajuan' ? 'Aktif' : $status;
         $tenor = (int) $data['tenor'];
+        $persen = App\Models\PengaturanBunga::persenUntuk($data['kategori_debitur']);
+        $totalBunga = (int) round($data['nominal_pinjaman'] * ($persen / 100) * $tenor);
 
         $dibayar = isset($data['jumlah_cicilan_dibayar'])
             ? (int) $data['jumlah_cicilan_dibayar']
@@ -1022,11 +1031,15 @@ Route::middleware('auth')->group(function () {
             'anggota_id' => $data['anggota_id'],
             'nominal_pinjaman' => $data['nominal_pinjaman'],
             'tenor' => $tenor,
+            'kategori_debitur' => $data['kategori_debitur'],
+            'persentase_bunga' => $persen,
+            'total_bunga' => $totalBunga,
             'jumlah_cicilan_dibayar' => $dibayar,
-            'sisa_pinjaman' => $sisa,
+            // sisa pokok + bunga yang belum dibayar (flat)
+            'sisa_pinjaman' => $sisa + ($status === 'Lunas' ? 0 : $totalBunga),
             'tanggal_pengajuan' => $data['tanggal_pengajuan'],
             'status' => $status,
-            'status_persetujuan' => 'Menunggu',
+            'status_persetujuan' => 'Disetujui',
         ]);
 
         return redirect()->route('pinjaman')
@@ -1088,54 +1101,6 @@ Route::middleware('auth')->group(function () {
         }
     })->name('pinjaman.import');
 
-    // Approval / Validasi Pinjaman
-    Route::post('/pinjaman/{pinjaman}/approval', function (Request $request, Pinjaman $pinjaman) {
-        $data = $request->validate([
-            'status_persetujuan' => ['required', 'in:Disetujui,Ditolak'],
-            'keterangan' => ['nullable', 'string', 'max:1000'],
-        ]);
-
-        // Pastikan hanya pinjaman dengan status Pengajuan yang bisa diproses
-        if ($pinjaman->status !== 'Pengajuan') {
-            return redirect()->back()
-                ->with('error', 'Pinjaman ini tidak sedang dalam status pengajuan.');
-        }
-
-        // 1. Simpan data SEBELUM perubahan
-        $before = $pinjaman->toArray();
-
-        // 2. Tentukan status approval
-        $statusPersetujuan = $data['status_persetujuan'];
-        $statusPinjaman = $statusPersetujuan === 'Disetujui' ? 'Aktif' : 'Ditolak';
-
-        // 3. Update pinjaman
-        $pinjaman->update([
-            'status_persetujuan' => $statusPersetujuan,
-            'status' => $statusPinjaman,
-            'keterangan' => $data['keterangan'] ?? $pinjaman->keterangan,
-            'diperbarui_oleh' => auth()->id(),
-        ]);
-
-        // 4. Ambil data SETELAH perubahan
-        $after = $pinjaman->fresh()->toArray();
-
-        // 5. Buat deskripsi Activity Log
-        $deskripsi = $statusPersetujuan === 'Disetujui'
-            ? 'Admin menyetujui pengajuan pinjaman #' . $pinjaman->id . '.'
-            : 'Admin menolak pengajuan pinjaman #' . $pinjaman->id . '.';
-
-        // 6. Simpan Activity Log
-        AuditService::catat('approval_pinjaman', $pinjaman->fresh(), $before, $after, $deskripsi);
-
-        // 7. Pesan ke Admin
-        $message = $statusPersetujuan === 'Disetujui'
-            ? 'Pengajuan pinjaman berhasil disetujui.'
-            : 'Pengajuan pinjaman berhasil ditolak.';
-
-        // 8. Kembali ke halaman Pinjaman
-        return redirect()->route('pinjaman')->with('success', $message);
-    })->middleware('role:admin')->name('pinjaman.approval');
-
     Route::get('/history', [ActivityLogController::class, 'index'])
         ->middleware('role:admin')->name('activity_logs.index');
 
@@ -1160,10 +1125,45 @@ Route::middleware('auth')->group(function () {
     Route::post('/pinjaman/{pinjaman}/bayar', function (Request $request, App\Models\Pinjaman $pinjaman) {
         $data = $request->validate([
             'tanggal_pembayaran' => 'required|date',
+            'tipe' => 'nullable|in:cicilan,pelunasan',
+            'bukti_transfer' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        // Simpan bukti pembayaran (gambar) ke storage public
+        $buktiPath = null;
+        if ($request->hasFile('bukti_transfer')) {
+            $buktiPath = $request->file('bukti_transfer')->store('bukti-pembayaran', 'public');
+        }
 
         if ($pinjaman->status === 'Lunas') {
             return redirect()->back()->with('error', 'Pinjaman ini sudah lunas.');
+        }
+
+        $tipe = $data['tipe'] ?? 'cicilan';
+
+        // Pelunasan dipercepat: bayar seluruh sisa pinjaman sekaligus,
+        // terlepas dari tenor berjalan.
+        if ($tipe === 'pelunasan') {
+            $before = $pinjaman->toArray();
+
+            $pinjaman->update([
+                'jumlah_cicilan_dibayar' => $pinjaman->tenor,
+                'sisa_pinjaman' => 0,
+                'status' => 'Lunas',
+                'tanggal_pelunasan' => now()->toDateString(),
+                'bukti_transfer' => $buktiPath ?? $pinjaman->bukti_transfer,
+            ]);
+
+            AuditService::catat(
+                'pelunasan_pinjaman',
+                $pinjaman->fresh(),
+                $before,
+                $pinjaman->fresh()->toArray(),
+                'Admin mencatat pelunasan dipercepat pinjaman #' . $pinjaman->id . '.'
+            );
+
+            return redirect()->route('pinjaman')
+                ->with('success', 'Pelunasan dipercepat berhasil dicatat. Pinjaman #' . $pinjaman->id . ' telah lunas.');
         }
 
         $remainingMonths = $pinjaman->tenor - $pinjaman->jumlah_cicilan_dibayar;
@@ -1179,14 +1179,118 @@ Route::middleware('auth')->group(function () {
         $newSisa = max(0, $pinjaman->sisa_pinjaman - $nominalCicilan);
         $newStatus = ($newDibayar >= $pinjaman->tenor || $newSisa <= 0) ? 'Lunas' : $pinjaman->status;
 
+        $before = $pinjaman->toArray();
+
         $pinjaman->update([
             'jumlah_cicilan_dibayar' => $newDibayar,
             'sisa_pinjaman' => $newSisa,
             'status' => $newStatus,
+            'tanggal_pelunasan' => $newStatus === 'Lunas' ? now()->toDateString() : $pinjaman->tanggal_pelunasan,
+            'bukti_transfer' => $buktiPath ?? $pinjaman->bukti_transfer,
         ]);
 
         return redirect()->back()->with('success', 'Pembayaran cicilan berhasil dikonfirmasi.');
     })->name('pinjaman.bayar');
+
+    // Customer mencatat pembayaran cicilan sendiri untuk pinjamannya.
+    Route::post('/customer/pinjaman/{pinjaman}/bayar', function (Request $request, App\Models\Pinjaman $pinjaman) {
+        $anggota = auth()->user()->anggota;
+
+        if (!$anggota || $pinjaman->anggota_id !== $anggota->id) {
+            return redirect()->back()->with('error', 'Pinjaman tidak ditemukan.');
+        }
+
+        $data = $request->validate([
+            'tanggal_pembayaran' => 'required|date',
+            'tipe' => 'nullable|in:cicilan,pelunasan',
+            'bukti_transfer' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        if ($pinjaman->status === 'Lunas') {
+            return redirect()->back()->with('error', 'Pinjaman ini sudah lunas.');
+        }
+
+        $buktiPath = $request->file('bukti_transfer')->store('bukti-pembayaran', 'public');
+        $tipe = $data['tipe'] ?? 'cicilan';
+
+        $before = $pinjaman->toArray();
+
+        if ($tipe === 'pelunasan') {
+            $pinjaman->update([
+                'jumlah_cicilan_dibayar' => $pinjaman->tenor,
+                'sisa_pinjaman' => 0,
+                'status' => 'Lunas',
+                'tanggal_pelunasan' => now()->toDateString(),
+                'bukti_transfer' => $buktiPath,
+            ]);
+        } else {
+            $remainingMonths = $pinjaman->tenor - $pinjaman->jumlah_cicilan_dibayar;
+            if ($remainingMonths <= 0) {
+                return redirect()->back()->with('error', 'Semua cicilan sudah dibayar.');
+            }
+
+            $nominalCicilan = round($pinjaman->sisa_pinjaman / $remainingMonths);
+            $newDibayar = $pinjaman->jumlah_cicilan_dibayar + 1;
+            $newSisa = max(0, $pinjaman->sisa_pinjaman - $nominalCicilan);
+            $newStatus = ($newDibayar >= $pinjaman->tenor || $newSisa <= 0) ? 'Lunas' : $pinjaman->status;
+
+            $pinjaman->update([
+                'jumlah_cicilan_dibayar' => $newDibayar,
+                'sisa_pinjaman' => $newSisa,
+                'status' => $newStatus,
+                'tanggal_pelunasan' => $newStatus === 'Lunas' ? now()->toDateString() : $pinjaman->tanggal_pelunasan,
+                'bukti_transfer' => $buktiPath,
+            ]);
+        }
+
+        AuditService::catat(
+            'pembayaran_cicilan_customer',
+            $pinjaman->fresh(),
+            $before,
+            $pinjaman->fresh()->toArray(),
+            'Customer membayar ' . ($tipe === 'pelunasan' ? 'pelunasan dipercepat' : 'cicilan') . ' pinjaman #' . $pinjaman->id . '.'
+        );
+
+        return redirect()->route('customer.pinjaman')
+            ->with('success', 'Pembayaran berhasil dikirim dan sedang menunggu verifikasi Admin.');
+    })->middleware('role:customer')->name('customer.pinjaman.bayar');
+
+    /*
+    |----------------------------------------------------------------------
+    | Pengaturan Bunga
+    |----------------------------------------------------------------------
+    */
+
+    Route::get('/pengaturan-bunga', function () {
+        $pengaturan = App\Models\PengaturanBunga::orderBy('id')->get();
+
+        return view('pengaturan-bunga', compact('pengaturan'));
+    })->middleware('role:admin')->name('pengaturan-bunga.index');
+
+    Route::put('/pengaturan-bunga/{pengaturan}', function (Request $request, App\Models\PengaturanBunga $pengaturan) {
+        $data = $request->validate([
+            'persen_bunga' => ['required', 'numeric', 'min:0', 'max:100'],
+        ], [
+            'persen_bunga.required' => 'Persentase bunga wajib diisi.',
+            'persen_bunga.numeric' => 'Persentase bunga harus berupa angka.',
+            'persen_bunga.min' => 'Persentase bunga tidak boleh negatif.',
+            'persen_bunga.max' => 'Persentase bunga maksimal 100.',
+        ]);
+
+        $before = $pengaturan->toArray();
+        $pengaturan->update($data);
+
+        AuditService::catat(
+            'ubah_pengaturan_bunga',
+            $pengaturan->fresh(),
+            $before,
+            $pengaturan->fresh()->toArray(),
+            'Admin mengubah persentase bunga kategori ' . $pengaturan->kategori . '.'
+        );
+
+        return redirect()->route('pengaturan-bunga.index')
+            ->with('success', 'Persentase bunga kategori ' . $pengaturan->kategori . ' berhasil diperbarui.');
+    })->middleware('role:admin')->name('pengaturan-bunga.update');
 
     /*
     |----------------------------------------------------------------------

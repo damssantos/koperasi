@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('id_anggota')->unique()->nullable();
             $table->string('nama');
+          $table->string('nik', 16)->nullable()->unique();
             $table->string('no_hp')->nullable();
             $table->date('tanggal_join')->nullable();
             $table->integer('simpanan_pokok')->default(0);

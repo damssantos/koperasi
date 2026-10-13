@@ -161,7 +161,6 @@
                     <th class="px-6 py-4 text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Progress Cicilan</th>
                     <th class="px-6 py-4 text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Sisa Pinjaman</th>
                     <th class="px-6 py-4 text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-4 text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Approval</th>
                     <th class="px-6 py-4 text-[11px] font-bold text-[#64748B] uppercase tracking-wider text-center">Aksi</th>
                 </tr>
             </thead>
@@ -251,6 +250,20 @@
                 </div>
             </div>
 
+            <!-- KATEGORI DEBITUR -->
+            <div>
+                <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">KATEGORI DEBITUR*</label>
+                <div class="relative">
+                    <select name="kategori_debitur" id="inputKategori" onchange="calculateSummary()" required
+                        class="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-xs font-medium text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:bg-white transition appearance-none cursor-pointer">
+                        @foreach(\App\Models\PengaturanBunga::KATEGORI as $kategori)
+                            <option value="{{ $kategori }}">{{ $kategori }}</option>
+                        @endforeach
+                    </select>
+                    <i data-lucide="chevron-down" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B] pointer-events-none"></i>
+                </div>
+            </div>
+
             <!-- KETERANGAN -->
             <div>
                 <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">KETERANGAN (OPSIONAL)</label>
@@ -277,8 +290,8 @@
                     <span>Ringkasan Pinjaman</span>
                 </div>
                 <div class="flex justify-between items-center text-[11px] text-[#64748B]">
-                    <span>Biaya Administrasi (1%)</span>
-                    <span id="summaryAdminFee" class="font-bold text-[#0F172A]">Rp 0</span>
+                    <span>Total Bunga (<span id="summaryPersen">0</span>%/bulan, flat)</span>
+                    <span id="summaryBunga" class="font-bold text-[#0F172A]">Rp 0</span>
                 </div>
                 <div class="flex justify-between items-center text-[11px] text-[#64748B]">
                     <span>Estimasi Cicilan per Bulan</span>
@@ -304,6 +317,13 @@
         </form>
     </div>
 </div>
+
+@php
+    $bungaPerKategori = \App\Models\PengaturanBunga::pluck('persen_bunga', 'kategori')->toArray();
+@endphp
+<script>
+    window.bungaPerKategori = @json($bungaPerKategori ?: ['Pegawai' => 0.75, 'Umum' => 1.25]);
+</script>
 
 <!-- IMPORT EXCEL MODAL -->
 <div id="importModal" class="fixed inset-0 flex items-center justify-center p-4 z-50 bg-slate-900/50 backdrop-blur-sm hidden">
@@ -419,12 +439,6 @@
                 <span id="detailStatus" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold inline-block border">-</span>
             </div>
 
-            <!-- APPROVAL -->
-            <div class="col-span-2">
-                <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">Status Approval</label>
-                <span id="detailApproval" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold inline-block border">-</span>
-            </div>
-
             <!-- KETERANGAN -->
             <div class="col-span-2">
                 <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">Keterangan</label>
@@ -436,10 +450,12 @@
                 <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">Bukti Pembayaran</label>
                 <div id="detailProofContainer" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-3">
                     <span id="detailProofText" class="text-xs text-[#64748B]">Belum ada bukti pembayaran</span>
-                    <a href="#" id="detailProofLink" target="_blank" class="hidden inline-flex items-center gap-2 text-xs text-[#2563EB] hover:text-[#1D4ED8] font-semibold">
-                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                        Lihat Bukti Pembayaran
-                    </a>
+                    <div id="detailProofImageWrap" class="hidden mt-2">
+                        <a href="#" id="detailProofLink" target="_blank">
+                            <img id="detailProofImage" src="" alt="Bukti Pembayaran"
+                                class="max-h-64 w-auto rounded-lg border border-[#E2E8F0] cursor-zoom-in hover:opacity-90 transition" />
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -586,6 +602,7 @@ function closeImportModal() {
 }
 
 const originalLoans = @json($loans ?? []);
+window.bungaPerKategori = @json(\App\Models\PengaturanBunga::orderBy('id')->pluck('persen_bunga', 'kategori'));
 let currentFilterStatus = 'All';
 let currentPage = 1;
 const itemsPerPage = 10;
@@ -679,7 +696,6 @@ function renderTable() {
 
     paginatedItems.forEach(loan => {
         const status = String(loan.status ?? 'Aktif');
-        const statusPersetujuan = String(loan.statusPersetujuan ?? 'Menunggu');
         const name = String(loan.name ?? '-');
         const memberId = String(loan.memberId ?? '-');
         const formattedDate = String(loan.formattedDate ?? '-');
@@ -693,10 +709,6 @@ function renderTable() {
         else if (status === 'Lunas') statusClass = 'bg-emerald-50 text-emerald-600 border-emerald-200';
         else if (status === 'Menunggak') statusClass = 'bg-rose-50 text-rose-600 border-rose-200';
 
-        let approvalClass = 'bg-amber-50 text-amber-600 border-amber-200';
-        if (statusPersetujuan === 'Disetujui') approvalClass = 'bg-emerald-50 text-emerald-600 border-emerald-200';
-        else if (statusPersetujuan === 'Ditolak') approvalClass = 'bg-rose-50 text-rose-600 border-rose-200';
-
         let displayDate = formattedDate.replace('Oct', 'Okt').replace('Dec', 'Des');
 
         const paymentButton = status === 'Lunas'
@@ -706,27 +718,6 @@ function renderTable() {
             : `<button type="button" onclick="openPayInstallmentModal(${loan.id})" class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center hover:bg-emerald-100 transition shadow-sm" title="Bayar Cicilan">
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
                </button>`;
-
-        let approvalButtons = '';
-        if (status === 'Pengajuan' && statusPersetujuan === 'Menunggu') {
-            const approvalUrl = @json(url('/pinjaman')) + '/' + loan.id + '/approval';
-            approvalButtons = `
-                <form method="POST" action="${approvalUrl}" class="inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <input type="hidden" name="status_persetujuan" value="Disetujui">
-                    <button type="submit" onclick="return confirm('Yakin ingin menyetujui pengajuan pinjaman ini?')" class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100 transition" title="Setujui">
-                        <i data-lucide="check" class="w-4 h-4"></i>
-                    </button>
-                </form>
-                <form method="POST" action="${approvalUrl}" class="inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <input type="hidden" name="status_persetujuan" value="Ditolak">
-                    <button type="submit" onclick="return confirm('Yakin ingin menolak pengajuan pinjaman ini?')" class="p-1.5 rounded-lg bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 transition" title="Tolak">
-                        <i data-lucide="x" class="w-4 h-4"></i>
-                    </button>
-                </form>
-            `;
-        }
 
         const row = document.createElement('tr');
         row.className = 'hover:bg-[#F8FAFC] transition duration-150';
@@ -744,11 +735,7 @@ function renderTable() {
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase border ${statusClass}">${status}</span>
             </td>
             <td class="px-6 py-4">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase border ${approvalClass}">${statusPersetujuan}</span>
-            </td>
-            <td class="px-6 py-4">
                 <div class="flex items-center justify-center gap-2">
-                    ${approvalButtons}
                     <button type="button" onclick="showDetail(${loan.id})" class="w-8 h-8 rounded-xl bg-blue-50 text-[#2563EB] border border-blue-200/80 flex items-center justify-center hover:bg-[#2563EB] hover:text-white transition-all duration-150 cursor-pointer shadow-sm group" title="Lihat Detail">
                         <i data-lucide="eye" class="w-4 h-4 text-[#2563EB] group-hover:text-white"></i>
                     </button>
@@ -838,7 +825,6 @@ function showDetail(id) {
     const elProgress = document.getElementById('detailProgress');
     const elRemaining = document.getElementById('detailRemaining');
     const elStatus = document.getElementById('detailStatus');
-    const elApproval = document.getElementById('detailApproval');
     const elKet = document.getElementById('detailKeterangan');
 
     if (elId) elId.textContent = loan.formattedId ?? '-';
@@ -860,19 +846,12 @@ function showDetail(id) {
         else elStatus.classList.add('bg-blue-50', 'text-[#2563EB]', 'border-blue-200');
     }
 
-    const approval = loan.statusPersetujuan ?? 'Menunggu';
-    if (elApproval) {
-        elApproval.textContent = approval.toUpperCase();
-        elApproval.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold inline-block border';
-        if (approval === 'Disetujui') elApproval.classList.add('bg-emerald-50', 'text-emerald-600', 'border-emerald-200');
-        else if (approval === 'Ditolak') elApproval.classList.add('bg-rose-50', 'text-rose-600', 'border-rose-200');
-        else elApproval.classList.add('bg-amber-50', 'text-amber-600', 'border-amber-200');
-    }
-
     if (elKet) elKet.textContent = loan.keterangan ?? '-';
 
     const proofText = document.getElementById('detailProofText');
     const proofLink = document.getElementById('detailProofLink');
+    const proofImage = document.getElementById('detailProofImage');
+    const proofImageWrap = document.getElementById('detailProofImageWrap');
     const bukti = loan.bukti_transfer ?? null;
 
     if (bukti) {
@@ -885,6 +864,8 @@ function showDetail(id) {
             proofLink.href = proofUrl;
             proofLink.classList.remove('hidden');
         }
+        if (proofImage) proofImage.src = proofUrl;
+        if (proofImageWrap) proofImageWrap.classList.remove('hidden');
     } else {
         if (proofText) {
             proofText.textContent = 'Belum ada bukti pembayaran';
@@ -894,6 +875,8 @@ function showDetail(id) {
             proofLink.classList.add('hidden');
             proofLink.removeAttribute('href');
         }
+        if (proofImage) proofImage.removeAttribute('src');
+        if (proofImageWrap) proofImageWrap.classList.add('hidden');
     }
 
     const modal = document.getElementById('detailLoanModal');
@@ -947,21 +930,26 @@ document.addEventListener('click', function(e) {
 function calculateSummary() {
     const nominalInput = document.getElementById('inputNominal');
     const tenorInput = document.getElementById('inputTenor');
+    const kategoriInput = document.getElementById('inputKategori');
     if (!nominalInput || !tenorInput) return;
 
     const nominal = parseFloat(nominalInput.value) || 0;
     const tenor = parseInt(tenorInput.value) || 0;
+    const kategori = kategoriInput ? kategoriInput.value : 'Pegawai';
+    const persen = (window.bungaPerKategori && window.bungaPerKategori[kategori]) || 0;
 
-    const adminFee = nominal * 0.01;
-    const totalReturn = nominal + adminFee;
+    const totalBunga = Math.round(nominal * (persen / 100) * tenor);
+    const totalReturn = nominal + totalBunga;
     let monthlyPayment = 0;
     if (tenor > 0) monthlyPayment = Math.round(totalReturn / tenor);
 
-    const summaryAdminFee = document.getElementById('summaryAdminFee');
+    const summaryPersen = document.getElementById('summaryPersen');
+    const summaryBunga = document.getElementById('summaryBunga');
     const summaryMonthlyPayment = document.getElementById('summaryMonthlyPayment');
     const summaryTotalReturn = document.getElementById('summaryTotalReturn');
 
-    if (summaryAdminFee) summaryAdminFee.textContent = formatRupiah(adminFee);
+    if (summaryPersen) summaryPersen.textContent = persen;
+    if (summaryBunga) summaryBunga.textContent = formatRupiah(totalBunga);
     if (summaryMonthlyPayment) summaryMonthlyPayment.textContent = formatRupiah(monthlyPayment);
     if (summaryTotalReturn) summaryTotalReturn.textContent = formatRupiah(totalReturn);
 }
@@ -1017,6 +1005,29 @@ function openPayInstallmentModal(id) {
     if (payProgressText) payProgressText.textContent = `${loan.paid ?? 0} / ${loan.tenor ?? 0} Cicilan`;
     if (payRemainingAmount) payRemainingAmount.textContent = Number(loan.remaining) > 0 ? formatRupiah(loan.remaining) : 'Rp 0';
 
+    const payForm = document.getElementById('payInstallmentForm');
+    const pelunasanInfo = document.getElementById('payPelunasanInfo');
+    const existingCheck = document.getElementById('payTipePelunasan');
+    if (existingCheck) existingCheck.checked = false;
+    const existingTipe = document.getElementById('payTipeInput');
+    if (existingTipe) existingTipe.value = 'cicilan';
+    if (pelunasanInfo) {
+        pelunasanInfo.textContent = 'Pelunasan dipercepat: bayar seluruh sisa ' + formatRupiah(loan.remaining) + ' sekaligus, tanpa menunggu tenor habis.';
+    }
+    if (payForm && !document.getElementById('payTipePelunasanWrap')) {
+        const wrap = document.createElement('div');
+        wrap.id = 'payTipePelunasanWrap';
+        wrap.className = 'bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 space-y-2';
+        wrap.innerHTML = `
+            <label class="flex items-center gap-2 text-xs font-medium text-[#0F172A]">
+                <input type="checkbox" id="payTipePelunasan" onchange="togglePelunasan()" class="rounded border-[#E2E8F0] text-[#2563EB] focus:ring-[#2563EB]">
+                <span>Pelunasan Dipercepat (bayar semua sisa sekaligus)</span>
+            </label>
+            <p id="payPelunasanInfo" class="text-[11px] text-[#64748B] leading-relaxed"></p>
+        `;
+        payForm.insertBefore(wrap, payForm.querySelector('.flex.items-center.gap-3.pt-3'));
+    }
+
     const tenor = Number(loan.tenor) || 0;
     const paid = Number(loan.paid) || 0;
     const progressPercent = tenor > 0 ? Math.min((paid / tenor) * 100, 100) : 0;
@@ -1053,6 +1064,20 @@ function openPayInstallmentModal(id) {
 function closePayInstallmentModal() {
     const modal = document.getElementById('payInstallmentModal');
     if (modal) modal.classList.add('hidden');
+}
+
+function togglePelunasan() {
+    const checked = document.getElementById('payTipePelunasan')?.checked ?? false;
+    let hidden = document.getElementById('payTipeInput');
+    if (!hidden) {
+        hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'tipe';
+        hidden.id = 'payTipeInput';
+        hidden.value = 'cicilan';
+        document.getElementById('payInstallmentForm').appendChild(hidden);
+    }
+    hidden.value = checked ? 'pelunasan' : 'cicilan';
 }
 
 document.addEventListener('DOMContentLoaded', function() {

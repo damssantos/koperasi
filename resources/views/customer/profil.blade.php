@@ -329,7 +329,19 @@
 
                 <div class="profile-item">
                     <span>No. HP</span>
-                    <input type="text" name="no_hp" class="profile-input" value="{{ old('no_hp', $user->no_hp) }}" placeholder="Masukkan Nomor HP" required>
+                    <input
+    type="tel"
+    name="no_hp"
+    class="profile-input"
+    value="{{ old('no_hp', $user->no_hp) }}"
+    placeholder="Masukkan Nomor HP"
+    minlength="9"
+    maxlength="15"
+    inputmode="numeric"
+    pattern="[0-9]{9,15}"
+    title="Nomor HP harus terdiri dari 9 sampai 15 digit angka."
+    required
+>
                 </div>
 
                 {{-- Row 3: Nama Bank & No. Rekening --}}

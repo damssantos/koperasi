@@ -42,6 +42,8 @@ class PinjamanImport implements ToModel, WithHeadingRow, WithValidation
 
             // Status awal sistem
             'status' => 'Aktif',
+
+            'status_persetujuan' => 'Disetujui',
         ]);
     }
 

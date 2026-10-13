@@ -51,6 +51,12 @@
             <span>Laporan</span>
         </a>
 
+        <!-- Pengaturan Bunga -->
+        <a href="{{ route('pengaturan-bunga.index') }}" class="{{ request()->is('pengaturan-bunga*') ? 'active' : '' }}">
+            <i data-lucide="percent"></i>
+            <span>Pengaturan Bunga</span>
+        </a>
+
         <!-- History Aktivitas -->
         <a href="{{ route('activity_logs.index') }}" class="{{ request()->is('history*') ? 'active' : '' }}">
             <i data-lucide="history"></i>

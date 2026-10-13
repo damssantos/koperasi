@@ -56,15 +56,17 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if (
-            Auth::attempt([
-                'email' => $credentials['akun'],
-                'password' => $credentials['password'],
-            ])
-        ) {
-            $request->session()->regenerate();
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            /*
+            | Admin/pengawas pakai guard 'web', customer pakai guard 'customer'.
+            | Dua guard berbeda menyimpan sesi terpisah, jadi admin dan customer
+            | bisa login bersamaan di dua tab browser yang sama.
+            */
+            $guard = $user->role === 'customer' ? 'customer' : 'web';
 
-            $user = Auth::user();
+            Auth::guard($guard)->login($user);
+
+            $request->session()->regenerate();
 
             if ($user->role === 'admin') {
                 return redirect('/dashboard');
@@ -378,6 +380,7 @@ if ($user->role === 'customer' && !$user->anggota) {
         'user_id' => $user->id,
         'id_anggota' => $idAnggota,
         'nama' => $user->nama_lengkap,
+        'nik' => $user->nik,
         'no_hp' => $user->no_hp,
         'tanggal_join' => now()->toDateString(),
         'simpanan_pokok' => 0,
@@ -869,6 +872,7 @@ if ($user->role === 'customer' && !$user->anggota) {
     public function logout(Request $request)
     {
         Auth::logout();
+        Auth::guard('customer')->logout();
 
         $request->session()->invalidate();
 

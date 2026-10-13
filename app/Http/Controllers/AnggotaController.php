@@ -22,12 +22,14 @@ class AnggotaController extends Controller
         $data = $request->validate([
             'id_anggota' => 'required|string|unique:anggota_koperasi,id_anggota',
             'nama' => 'required|string|max:255',
+            'nik' => 'nullable|string|size:16|unique:anggota_koperasi,nik',
             'no_hp' => 'required|string|max:20',
             'tanggal_join' => 'required|date',
         ], [
             'id_anggota.required' => 'ID Anggota wajib diisi.',
             'id_anggota.unique' => 'ID Anggota ini sudah terdaftar.',
             'nama.required' => 'Nama lengkap wajib diisi.',
+            'nik.size' => 'NIK harus terdiri dari 16 digit.',
             'no_hp.required' => 'Nomor HP wajib diisi.',
             'tanggal_join.required' => 'Tanggal bergabung wajib diisi.',
         ]);
@@ -37,6 +39,7 @@ class AnggotaController extends Controller
         $newMember = AnggotaKoperasi::create([
             'id_anggota' => $data['id_anggota'],
             'nama' => $data['nama'],
+            'nik' => null,
             'no_hp' => $data['no_hp'],
             'tanggal_join' => $data['tanggal_join'],
             'simpanan_pokok' => $pokok,
@@ -76,6 +79,7 @@ class AnggotaController extends Controller
         $data = $request->validate([
             'id_anggota' => 'required|string|unique:anggota_koperasi,id_anggota,' . $anggota->id,
             'nama' => 'required|string|max:255',
+            'nik' => 'nullable|digits:16|unique:anggota_koperasi,nik,' . $anggota->id,
             'no_hp' => 'required|string|max:20',
             'tanggal_join' => 'required|date',
             'simpanan_pokok' => 'required|numeric|min:0',

@@ -13,9 +13,14 @@ class Pinjaman extends Model
         'anggota_id',
         'nominal_pinjaman',
         'tenor',
+        'kategori_debitur',
+        'persentase_bunga',
+        'total_bunga',
         'jumlah_cicilan_dibayar',
         'sisa_pinjaman',
         'tanggal_pengajuan',
+        'tanggal_pelunasan',
+        'bukti_transfer',
         'status',
     ];
 

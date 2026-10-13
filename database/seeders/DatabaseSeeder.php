@@ -13,6 +13,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Bunga default: pegawai 0.75%/bulan, orang luar (umum) 1.25%/bulan
+        App\Models\PengaturanBunga::firstOrCreate(['kategori' => 'Pegawai'], ['persen_bunga' => 0.75]);
+        App\Models\PengaturanBunga::firstOrCreate(['kategori' => 'Umum'], ['persen_bunga' => 1.25]);
+
         // Truncate tables with foreign key constraints disabled
         Schema::disableForeignKeyConstraints();
         DB::table('transaksi_simpanan')->truncate();

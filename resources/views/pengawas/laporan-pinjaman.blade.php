@@ -206,7 +206,6 @@
                         <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-center">Cicilan</th>
                         <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-right">Sisa Pinjaman</th>
                         <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-center">Status</th>
-                        <th class="px-5 py-4 font-bold text-gray-500 uppercase tracking-wider text-[11px] text-center">Approval</th>
                     </tr>
                 </thead>
                 <tbody id="pinjamanTable" class="divide-y divide-gray-100 text-gray-700">
@@ -273,23 +272,10 @@
                                 </span>
                             </td>
 
-                            <!-- Approval -->
-                            <td class="px-5 py-4 text-center whitespace-nowrap">
-                                @php
-                                    $approvalBadge = match($item->status_persetujuan) {
-                                        'Disetujui' => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-                                        'Ditolak' => 'bg-rose-50 text-rose-700 border border-rose-200',
-                                        default => 'bg-amber-50 text-amber-700 border border-amber-200',
-                                    };
-                                @endphp
-                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {{ $approvalBadge }}">
-                                    {{ $item->status_persetujuan ?? 'Menunggu' }}
-                                </span>
-                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="9" class="px-6 py-12 text-center text-gray-500">
                                 <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mx-auto mb-3 text-gray-400">
                                     <i data-lucide="inbox" class="w-6 h-6"></i>
                                 </div>

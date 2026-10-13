@@ -60,40 +60,70 @@
                 <thead>
                     <tr class="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] text-[11px] font-bold uppercase tracking-wider">
                         <th class="py-3.5 px-4 font-bold w-[20%]">ID Anggota</th>
+                        <th class="py-3.5 px-4 font-bold w-[15%]">NIK</th>
                         <th class="py-3.5 px-4 font-bold w-[25%]">Nama Anggota</th>
                         <th class="py-3.5 px-4 font-bold w-[25%]">Nomor HP</th>
                         <th class="py-3.5 px-4 font-bold w-[20%]">Tanggal Bergabung</th>
                         <th class="py-3.5 px-4 font-bold text-center w-[10%]">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-[#E2E8F0]">
-                    @forelse($anggota as $item)
-                        <tr class="member-row hover:bg-[#F8FAFC] transition duration-150">
-                            <td class="py-4 px-4 text-xs font-semibold text-[#2563EB] member-id w-[20%]">
-                                <span class="bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-md text-xs">
-                                    {{ $item->id_anggota ?? 'AGT-' . str_pad($item->id, 3, '0', STR_PAD_LEFT) }}
-                                </span>
-                            </td>
-                            <td class="py-4 px-4 text-xs font-bold text-[#0F172A] member-name w-[25%]">{{ $item->nama }}</td>
-                            <td class="py-4 px-4 text-xs text-[#64748B] member-phone w-[25%]">{{ $item->no_hp ?? '-' }}</td>
-                            <td class="py-4 px-4 text-xs text-[#64748B] w-[20%]">{{ optional($item->tanggal_join ?? $item->created_at)->format('d M Y') }}</td>
-                            <td class="py-4 px-4 text-center w-[10%]">
-                                <div class="flex items-center justify-center gap-1.5">
-                                    <a href="{{ route('anggota.show', $item) }}" class="w-8 h-8 rounded-xl bg-blue-50 text-[#2563EB] border border-blue-200/80 flex items-center justify-center hover:bg-[#2563EB] hover:text-white transition-all duration-150 shadow-sm group" title="Lihat Detail">
-                                        <i data-lucide="eye" class="w-4 h-4 text-[#2563EB] group-hover:text-white"></i>
-                                    </a>
-                                    <button type="button" onclick="openDeleteModal({{ $item->id }}, '{{ addslashes($item->nama) }}')" class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 border border-rose-200/80 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all duration-150 cursor-pointer shadow-sm group" title="Hapus Anggota">
-                                        <i data-lucide="trash-2" class="w-4 h-4 text-rose-600 group-hover:text-white"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr class="member-row">
-                            <td colspan="5" class="py-10 px-4 text-center text-xs text-[#64748B]">Belum ada data anggota di database.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
+             
+<tbody class="divide-y divide-[#E2E8F0]">
+    @forelse($anggota as $item)
+        <tr class="member-row hover:bg-[#F8FAFC] transition duration-150">
+            {{-- ID Anggota --}}
+            <td class="py-4 px-4 text-xs font-semibold text-[#2563EB] member-id">
+                <span class="bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-md text-xs">
+                    {{ $item->id_anggota ?? 'AGT-' . str_pad($item->id, 3, '0', STR_PAD_LEFT) }}
+                </span>
+            </td>
+
+            {{-- NIK --}}
+            <td class="py-4 px-4 text-xs text-[#0F172A] member-nik">
+                {{ $item->nik ?? '-' }}
+            </td>
+
+            {{-- Nama Anggota --}}
+            <td class="py-4 px-4 text-xs font-bold text-[#0F172A] member-name">
+                {{ $item->nama }}
+            </td>
+
+            {{-- Nomor HP --}}
+            <td class="py-4 px-4 text-xs text-[#64748B] member-phone">
+                {{ $item->no_hp ?? '-' }}
+            </td>
+
+            {{-- Tanggal Bergabung --}}
+            <td class="py-4 px-4 text-xs text-[#64748B]">
+                {{ optional($item->tanggal_join ?? $item->created_at)->format('d M Y') }}
+            </td>
+
+            {{-- Aksi --}}
+            <td class="py-4 px-4 text-center">
+                <div class="flex items-center justify-center gap-1.5">
+                    <a href="{{ route('anggota.show', $item) }}"
+                        class="w-8 h-8 rounded-xl bg-blue-50 text-[#2563EB] border border-blue-200/80 flex items-center justify-center hover:bg-[#2563EB] hover:text-white transition-all duration-150 shadow-sm group"
+                        title="Lihat Detail">
+                        <i data-lucide="eye" class="w-4 h-4 text-[#2563EB] group-hover:text-white"></i>
+                    </a>
+
+                    <button type="button"
+                        onclick="openDeleteModal({{ $item->id }}, '{{ addslashes($item->nama) }}')"
+                        class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 border border-rose-200/80 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all duration-150 cursor-pointer shadow-sm group"
+                        title="Hapus Anggota">
+                        <i data-lucide="trash-2" class="w-4 h-4 text-rose-600 group-hover:text-white"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    @empty
+        <tr class="member-row">
+            <td colspan="6" class="py-10 px-4 text-center text-xs text-[#64748B]">
+                Belum ada data anggota di database.
+            </td>
+        </tr>
+    @endforelse
+</tbody>
             </table>
 
             <!-- Table Footer: Total Members Count -->
@@ -357,6 +387,13 @@
                 const name = row.querySelector('.member-name')?.textContent.toLowerCase() ?? '';
                 const id = row.querySelector('.member-id')?.textContent.toLowerCase() ?? '';
                 const phone = row.querySelector('.member-phone')?.textContent.toLowerCase() ?? '';
+                const nik = row.querySelector('.member-nik')?.textContent.toLowerCase() ?? '';
+                const matchesQuery =
+    name.includes(query) ||
+    id.includes(query) ||
+    phone.includes(query) ||
+    nik.includes(query);
+
                 const matchesQuery = name.includes(query) || id.includes(query) || phone.includes(query);
 
                 row.classList.toggle('hidden', !matchesQuery);

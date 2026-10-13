@@ -18,7 +18,7 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'no_hp' => 'required|numeric|digits_between:10,15',
+            'no_hp' => 'required|numeric|digits_between:9,15',
             'nama_bank' => 'nullable|string|max:100',
             'no_rekening' => 'nullable|numeric|digits_between:10,20',
             'alamat' => 'required|string|min:10',
