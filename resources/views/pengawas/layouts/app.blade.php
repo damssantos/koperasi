@@ -35,8 +35,13 @@
         }
     </script>
 
-    <!-- Lucide Icons CDN -->
-    <script src="/koperasi/public/js/lucide.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        if (typeof lucide === 'undefined') {
+            document.write('<script src="{{ asset('js/lucide.min.js') }}"><\/script>');
+        }
+    </script>
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

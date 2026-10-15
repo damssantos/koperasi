@@ -11,7 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
-    <script src="/koperasi/public/js/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        if (typeof lucide === 'undefined') {
+            document.write('<script src="{{ asset('js/lucide.min.js') }}"><\/script>');
+        }
+    </script>
 
     <style>
         * {
@@ -241,7 +246,11 @@
         }
 
         .toggle-btn:hover {
-            color: #64748B;
+            color: #2563EB;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         .input-error {
@@ -426,11 +435,21 @@
                         >
                         <button
                             type="button"
-                            onclick="togglePassword('password', 'eye-password')"
+                            onclick="togglePasswordVisibility('password', this)"
                             class="toggle-btn"
                             aria-label="Tampilkan / Sembunyikan Kata Sandi"
+                            title="Tampilkan / Sembunyikan Kata Sandi"
                         >
-                            <i id="eye-password" data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                            <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="eye-off-icon hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                <line x1="2" x2="22" y1="2" y2="22"/>
+                            </svg>
                         </button>
                     </div>
 
@@ -460,11 +479,21 @@
                         >
                         <button
                             type="button"
-                            onclick="togglePassword('password_confirmation', 'eye-confirm')"
+                            onclick="togglePasswordVisibility('password_confirmation', this)"
                             class="toggle-btn"
                             aria-label="Tampilkan / Sembunyikan Kata Sandi"
+                            title="Tampilkan / Sembunyikan Kata Sandi"
                         >
-                            <i id="eye-confirm" data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                            <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="eye-off-icon hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                <line x1="2" x2="22" y1="2" y2="22"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -507,21 +536,25 @@
     </div>
 
     <script>
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
 
-        function togglePassword(inputId, iconId) {
+        function togglePasswordVisibility(inputId, btn) {
             const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
+            if (!input) return;
+            const eyeIcon = btn.querySelector('.eye-icon');
+            const eyeOffIcon = btn.querySelector('.eye-off-icon');
 
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.setAttribute('data-lucide', 'eye-off');
+                if (eyeIcon) eyeIcon.classList.add('hidden');
+                if (eyeOffIcon) eyeOffIcon.classList.remove('hidden');
             } else {
                 input.type = 'password';
-                icon.setAttribute('data-lucide', 'eye');
+                if (eyeIcon) eyeIcon.classList.remove('hidden');
+                if (eyeOffIcon) eyeOffIcon.classList.add('hidden');
             }
-
-            lucide.createIcons();
         }
     </script>
 

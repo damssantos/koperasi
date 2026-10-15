@@ -11,7 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
-    <script src="/koperasi/public/js/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        if (typeof lucide === 'undefined') {
+            document.write('<script src="{{ asset('js/lucide.min.js') }}"><\/script>');
+        }
+    </script>
 
     <style>
         * {
@@ -284,18 +289,24 @@
         .password-toggle-btn {
             position: absolute;
             right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
             background: transparent;
             border: none;
             color: #94A3B8;
             cursor: pointer;
-            padding: 4px;
+            padding: 6px;
             display: flex;
             align-items: center;
-            transition: color 0.15s ease;
+            justify-content: center;
+            border-radius: 6px;
+            transition: color 0.15s ease, background-color 0.15s ease;
+            z-index: 2;
         }
 
         .password-toggle-btn:hover {
-            color: #64748B;
+            color: #2563EB;
+            background-color: #F1F5F9;
         }
 
         /* Options Row (Remember Me & Forgot Password) */
@@ -632,12 +643,53 @@
                                 onclick="togglePasswordVisibility('password', this)" 
                                 class="password-toggle-btn"
                                 aria-label="Tampilkan / Sembunyikan Kata Sandi"
+                                title="Tampilkan / Sembunyikan Kata Sandi"
                             >
-                                <i data-lucide="eye" class="eye-icon" style="width: 17px; height: 17px;"></i>
-                                <i data-lucide="eye-off" class="eye-off-icon hidden" style="width: 17px; height: 17px;"></i>
+                                <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <svg class="eye-off-icon hidden" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                    <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                    <line x1="2" x2="22" y1="2" y2="22"/>
+                                </svg>
                             </button>
                         </div>
                         @error('password') 
+                            <div class="form-error">
+                                {{ $message }}
+                            </div> 
+                        @enderror
+                    </div>
+
+                    <!-- Captcha Verification -->
+                    <div class="form-group">
+                        <label for="captcha" class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Verifikasi Keamanan (Captcha)</span>
+                            <span style="font-size: 11px; color: #64748B; font-weight: 500;">Klik gambar untuk ganti</span>
+                        </label>
+                        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                            <div style="flex: 1; height: 44px; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);">
+                                <img src="{{ route('captcha') }}" id="captchaImage" alt="Captcha Code" style="height: 100%; width: 100%; object-fit: cover; cursor: pointer;" onclick="refreshCaptcha()" title="Klik untuk memuat ulang kode">
+                            </div>
+                            <button type="button" onclick="refreshCaptcha()" style="height: 44px; width: 44px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #64748B; cursor: pointer; transition: all 0.2s;" title="Ganti Kode Baru">
+                                <svg id="captchaRefreshIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.4s ease;"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                            </button>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="captcha" 
+                            name="captcha" 
+                            class="form-input @error('captcha') is-invalid @enderror" 
+                            placeholder="Ketik kode di atas" 
+                            required 
+                            autocomplete="off"
+                            maxlength="6"
+                            style="text-transform: uppercase; letter-spacing: 2px; font-weight: 700; text-align: center;"
+                        >
+                        @error('captcha') 
                             <div class="form-error">
                                 {{ $message }}
                             </div> 
@@ -693,6 +745,21 @@
                 input.type = 'password';
                 eyeIcon.classList.remove('hidden');
                 eyeOffIcon.classList.add('hidden');
+            }
+        }
+
+        // Refresh Captcha
+        function refreshCaptcha() {
+            const img = document.getElementById('captchaImage');
+            const icon = document.getElementById('captchaRefreshIcon');
+            if (icon) {
+                const currentRot = icon.getAttribute('data-rot') || 0;
+                const nextRot = parseInt(currentRot) + 360;
+                icon.style.transform = `rotate(${nextRot}deg)`;
+                icon.setAttribute('data-rot', nextRot);
+            }
+            if (img) {
+                img.src = '{{ route('captcha') }}?' + Date.now();
             }
         }
     </script>

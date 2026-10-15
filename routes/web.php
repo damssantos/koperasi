@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -74,6 +74,9 @@ Route::post('/register/verify', [AuthController::class, 'verifyRegisterOtp'])
 
 Route::post('/register/resend', [AuthController::class, 'resendRegisterOtp'])
     ->name('register.resend');
+
+    // Captcha Image Route
+    Route::get('/captcha', [AuthController::class, 'captcha'])->name('captcha');
 
 });
 
@@ -952,16 +955,25 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/pinjaman', function () {
-        $loans = App\Models\Pinjaman::with('anggota')
+        $loans = App\Models\Pinjaman::with(['anggota.user'])
             ->orderBy('tanggal_pengajuan', 'desc')
             ->orderBy('id', 'desc')
             ->get()
             ->map(function ($loan) {
+                $email = $loan->anggota->user->email ?? App\Models\User::where('nik', $loan->anggota->nik)->value('email');
+                $tenor = (int) $loan->tenor;
+                $paid = (int) $loan->jumlah_cicilan_dibayar;
+                $remainingMonths = max(0, $tenor - $paid);
+                $remaining = (int) $loan->sisa_pinjaman;
+                $cicilanPerBulan = $remainingMonths > 0 ? (int) round($remaining / $remainingMonths) : $remaining;
+
                 return [
                     'id' => $loan->id,
                     'formattedId' => 'PJ-' . str_pad($loan->id, 5, '0', STR_PAD_LEFT),
                     'memberId' => $loan->anggota->id_anggota ?? 'AGT-' . str_pad($loan->anggota->id, 3, '0', STR_PAD_LEFT),
                     'name' => $loan->anggota->nama,
+                    'email' => $email,
+                    'phone' => $loan->anggota->no_hp ?? $loan->anggota->user->no_hp ?? '-',
                     'date' => $loan->tanggal_pengajuan->format('Y-m-d'),
                     'formattedDate' => $loan->tanggal_pengajuan->format('d M Y'),
                     'amount' => (int) $loan->nominal_pinjaman,
@@ -970,9 +982,10 @@ Route::middleware('auth')->group(function () {
                     'persenBunga' => (float) ($loan->persentase_bunga ?? 0),
                     'totalBunga' => (int) ($loan->total_bunga ?? 0),
                     'potonganAdmin' => (int) ($loan->potongan_admin ?? 0),
-                    'kategori' => $loan->kategori_debitur ?? 'Pegawai',
                     'paid' => $loan->jumlah_cicilan_dibayar,
                     'remaining' => (int) $loan->sisa_pinjaman,
+                    'cicilanPerBulan' => $cicilanPerBulan,
+                    'cicilanKe' => min($tenor, $paid + 1),
                     'status' => $loan->status,
                     'statusPersetujuan' => $loan->status_persetujuan,
                     'bukti_transfer' => $loan->bukti_transfer,
@@ -1268,6 +1281,47 @@ Route::middleware('auth')->group(function () {
 
         return redirect()->back()->with('success', 'Pembayaran cicilan berhasil dikonfirmasi.');
     })->name('pinjaman.bayar');
+
+    // Admin mengirim notifikasi email pengingat pembayaran ke customer
+    Route::post('/pinjaman/{pinjaman}/kirim-notifikasi', function (Request $request, App\Models\Pinjaman $pinjaman) {
+        $pinjaman->load(['anggota.user']);
+
+        // Selalu kunci ke email terdaftar customer
+        $targetEmail = $pinjaman->anggota->user->email ?? App\Models\User::where('nik', $pinjaman->anggota->nik)->value('email');
+
+        if (empty($targetEmail) || !filter_var($targetEmail, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Alamat email anggota tidak ditemukan atau belum terdaftar di sistem.',
+            ], 422);
+        }
+
+        $tenor = (int) $pinjaman->tenor;
+        $paid = (int) $pinjaman->jumlah_cicilan_dibayar;
+        $remainingMonths = max(0, $tenor - $paid);
+        $remaining = (int) $pinjaman->sisa_pinjaman;
+        $nominalCicilan = $remainingMonths > 0 ? (int) round($remaining / $remainingMonths) : $remaining;
+        $cicilanKe = min($tenor, $paid + 1);
+
+        $catatan = $request->input('catatan');
+
+        try {
+            Illuminate\Support\Facades\Mail::to($targetEmail)->send(
+                new App\Mail\NotifikasiTagihanPinjamanMail($pinjaman, $nominalCicilan, $cicilanKe, $catatan)
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email pengingat pembayaran berhasil dikirim ke ' . $targetEmail,
+                'email' => $targetEmail,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengirim email: ' . $e->getMessage(),
+            ], 500);
+        }
+    })->name('pinjaman.kirimNotifikasi');
 
     // Customer mencatat pembayaran cicilan sendiri untuk pinjamannya.
     Route::post('/customer/pinjaman/{pinjaman}/bayar', function (Request $request, App\Models\Pinjaman $pinjaman) {

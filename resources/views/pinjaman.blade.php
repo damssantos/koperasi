@@ -460,7 +460,12 @@
             </div>
         </div>
 
-        <div class="flex justify-end pt-3 border-t border-[#E2E8F0]">
+        <div class="flex justify-between items-center pt-3 border-t border-[#E2E8F0]">
+            <button type="button" id="detailSendReminderBtn" onclick="sendReminderFromDetail()"
+                class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 rounded-xl transition duration-150 shadow-sm">
+                <i data-lucide="mail" class="w-4 h-4 text-amber-600"></i>
+                <span>Kirim Pengingat Email</span>
+            </button>
             <button type="button" onclick="closeDetailLoanModal()"
                 class="px-4 py-2 text-xs font-semibold text-[#64748B] hover:text-[#0F172A] bg-white border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-xl transition duration-150">
                 Tutup
@@ -640,6 +645,164 @@
         </form>
     </div>
 </div>
+
+<!-- EMAIL REMINDER MODAL -->
+<div id="emailReminderModal" class="fixed inset-0 flex items-center justify-center p-4 z-50 bg-slate-900/60 backdrop-blur-sm hidden transition-all duration-200">
+    <div class="bg-white border border-[#E2E8F0] rounded-2xl max-w-md w-full p-6 shadow-2xl relative overflow-hidden">
+        <!-- Top Gradient Accent Strip -->
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500"></div>
+
+        <!-- 1. FORM STATE -->
+        <div id="reminderFormState" class="space-y-4 pt-1">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-start pb-3 border-b border-[#E2E8F0]">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center shrink-0 shadow-sm">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-[#0F172A]">Kirim Pengingat Pembayaran</h3>
+                        <p class="text-xs text-[#64748B] mt-0.5">Notifikasi tagihan resmi ke email customer</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeEmailReminderModal()" class="text-[#64748B] hover:text-[#0F172A] p-1.5 rounded-lg hover:bg-[#F8FAFC] transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Loan Summary Box -->
+            <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3.5 space-y-2 text-xs">
+                <div class="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+                    <span class="text-[#64748B] font-medium">Anggota</span>
+                    <span class="font-bold text-[#0F172A]" id="remindMemberName">-</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2.5 py-1">
+                    <div>
+                        <span class="text-[11px] text-[#64748B] block">No. Pinjaman</span>
+                        <span class="inline-block mt-0.5 px-2 py-0.5 rounded text-[11px] font-bold bg-blue-50 text-[#2563EB] border border-blue-200" id="remindLoanId">-</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-[#64748B] block">Cicilan Ke</span>
+                        <span class="font-bold text-[#0F172A] text-xs block mt-0.5" id="remindCicilanKe">-</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-[#64748B] block">Estimasi Tagihan</span>
+                        <span class="font-extrabold text-[#2563EB] text-sm block mt-0.5" id="remindTagihan">-</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-[#64748B] block">Sisa Pinjaman</span>
+                        <span class="font-bold text-rose-600 text-xs block mt-0.5" id="remindSisa">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Input (Locked / Permanen) -->
+            <div class="space-y-1.5">
+                <label class="block font-bold text-[#0F172A] text-[11px] uppercase tracking-wider flex items-center justify-between">
+                    <span>Email Customer</span>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                        <i data-lucide="lock" class="w-3 h-3 text-slate-500"></i>
+                        <span>Terkunci / Permanen</span>
+                    </span>
+                </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-[#64748B] pointer-events-none">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                    </span>
+                    <input type="email" id="remindEmailInput" readonly tabindex="-1"
+                        class="w-full bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl pl-9 pr-3.5 py-2.5 text-xs font-bold text-[#1E293B] cursor-not-allowed select-none pointer-events-none">
+                </div>
+                <p class="text-[11px] text-[#64748B]">Email resmi anggota yang terdaftar di akun koperasi.</p>
+            </div>
+
+            <!-- Catatan Tambahan (Optional) -->
+            <div class="space-y-1.5">
+                <label class="block font-bold text-[#0F172A] text-[11px] uppercase tracking-wider">
+                    Pesan / Catatan Tambahan <span class="text-[#94A3B8] font-normal lowercase">(opsional)</span>
+                </label>
+                <textarea id="remindCatatanInput" rows="2"
+                    placeholder="Contoh: Mohon transfer sebelum tanggal jatuh tempo. Terima kasih."
+                    class="w-full bg-white border border-[#E2E8F0] rounded-xl px-3.5 py-2 text-xs text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 transition resize-none"></textarea>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-[#E2E8F0]">
+                <button type="button" onclick="closeEmailReminderModal()"
+                    class="px-4 py-2.5 text-xs font-semibold text-[#64748B] hover:text-[#0F172A] bg-white border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-xl transition duration-150">
+                    Batal
+                </button>
+                <button type="button" onclick="executeSendReminder()"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold rounded-xl transition shadow-md shadow-blue-600/25">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    <span>Kirim Email Sekarang</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. LOADING STATE -->
+        <div id="reminderLoadingState" class="hidden py-8 flex flex-col items-center justify-center text-center space-y-4">
+            <div class="relative w-20 h-20 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full bg-blue-500/20 animate-ping"></div>
+                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/30">
+                    <i data-lucide="send" class="w-8 h-8 animate-pulse"></i>
+                </div>
+            </div>
+            
+            <div class="space-y-1.5 max-w-xs">
+                <h4 class="text-base font-extrabold text-[#0F172A]">Mengirim Email Notifikasi...</h4>
+                <p class="text-xs text-[#64748B] leading-relaxed">
+                    Sedang menghubungkan ke server email dan mengirimkan rincian tagihan ke <span id="loadingTargetEmail" class="font-bold text-[#0F172A]">...</span>
+                </p>
+            </div>
+
+            <!-- Flowing Progress Bar -->
+            <div class="w-full max-w-xs bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200/80">
+                <div class="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 rounded-full w-full animate-pulse"></div>
+            </div>
+        </div>
+
+        <!-- 3. SUCCESS STATE -->
+        <div id="reminderSuccessState" class="hidden py-6 flex flex-col items-center justify-center text-center space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/10">
+                <i data-lucide="check-circle" class="w-8 h-8 text-emerald-600"></i>
+            </div>
+            <div class="space-y-1.5 max-w-xs">
+                <h4 class="text-base font-extrabold text-[#0F172A]">Email Berhasil Terkirim!</h4>
+                <p class="text-xs text-[#64748B] leading-relaxed" id="reminderSuccessMsg">
+                    Notifikasi tagihan cicilan telah berhasil dikirimkan ke email customer.
+                </p>
+            </div>
+            <button type="button" onclick="closeEmailReminderModal()"
+                class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow-md shadow-emerald-600/20">
+                Selesai
+            </button>
+        </div>
+
+        <!-- 4. ERROR STATE -->
+        <div id="reminderErrorState" class="hidden py-6 flex flex-col items-center justify-center text-center space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shadow-lg shadow-rose-500/10">
+                <i data-lucide="alert-circle" class="w-8 h-8 text-rose-600"></i>
+            </div>
+            <div class="space-y-1.5 max-w-xs">
+                <h4 class="text-base font-extrabold text-[#0F172A]">Gagal Mengirim Email</h4>
+                <p class="text-xs text-rose-600 leading-relaxed" id="reminderErrorMsg">
+                    Terjadi kesalahan saat memproses pengiriman email.
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="closeEmailReminderModal()"
+                    class="px-4 py-2 text-xs font-semibold text-[#64748B] hover:text-[#0F172A] bg-white border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-xl transition">
+                    Tutup
+                </button>
+                <button type="button" onclick="executeSendReminder()"
+                    class="px-5 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold rounded-xl transition shadow-md shadow-blue-600/25">
+                    Coba Lagi
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
 @endpush
 
 @endsection
@@ -778,6 +941,14 @@ function renderTable() {
                     <i data-lucide="credit-card" class="w-4 h-4"></i>
                </button>`;
 
+        const reminderButton = status === 'Lunas'
+            ? `<button type="button" disabled class="w-8 h-8 rounded-lg bg-slate-100 text-slate-300 border border-slate-200 flex items-center justify-center opacity-50 cursor-not-allowed" title="Pinjaman sudah lunas">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+               </button>`
+            : `<button type="button" onclick="openSendReminderModal(${loan.id})" class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 border border-amber-200/80 flex items-center justify-center hover:bg-amber-500 hover:text-white transition-all duration-150 cursor-pointer shadow-sm group" title="Kirim Notifikasi Pembayaran via Email">
+                    <i data-lucide="mail" class="w-4 h-4 text-amber-600 group-hover:text-white"></i>
+               </button>`;
+
         const row = document.createElement('tr');
         row.className = 'hover:bg-[#F8FAFC] transition duration-150';
         row.innerHTML = `
@@ -794,11 +965,12 @@ function renderTable() {
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase border ${statusClass}">${status}</span>
             </td>
             <td class="px-6 py-4">
-                <div class="flex items-center justify-center gap-2">
-                    <button type="button" onclick="showDetail(${loan.id})" class="w-8 h-8 rounded-xl bg-blue-50 text-[#2563EB] border border-blue-200/80 flex items-center justify-center hover:bg-[#2563EB] hover:text-white transition-all duration-150 cursor-pointer shadow-sm group" title="Lihat Detail">
+                <div class="flex items-center justify-center gap-1.5">
+                    <button type="button" onclick="showDetail(${loan.id})" class="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] border border-blue-200/80 flex items-center justify-center hover:bg-[#2563EB] hover:text-white transition-all duration-150 cursor-pointer shadow-sm group" title="Lihat Detail">
                         <i data-lucide="eye" class="w-4 h-4 text-[#2563EB] group-hover:text-white"></i>
                     </button>
                     ${paymentButton}
+                    ${reminderButton}
                 </div>
             </td>
         `;
@@ -871,7 +1043,10 @@ function renderPaginationControls(totalItems) {
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
+let currentDetailLoanId = null;
+
 function showDetail(id) {
+    currentDetailLoanId = id;
     const loan = originalLoans.find(l => Number(l.id) === Number(id));
     if (!loan) return;
 
@@ -903,6 +1078,15 @@ function showDetail(id) {
         else if (status === 'Lunas') elStatus.classList.add('bg-emerald-50', 'text-emerald-600', 'border-emerald-200');
         else if (status === 'Menunggak') elStatus.classList.add('bg-rose-50', 'text-rose-600', 'border-rose-200');
         else elStatus.classList.add('bg-blue-50', 'text-[#2563EB]', 'border-blue-200');
+    }
+
+    const detailReminderBtn = document.getElementById('detailSendReminderBtn');
+    if (detailReminderBtn) {
+        if (status === 'Lunas') {
+            detailReminderBtn.classList.add('hidden');
+        } else {
+            detailReminderBtn.classList.remove('hidden');
+        }
     }
 
     if (elKet) elKet.textContent = loan.keterangan ?? '-';
@@ -941,6 +1125,12 @@ function showDetail(id) {
     const modal = document.getElementById('detailLoanModal');
     if (modal) modal.classList.remove('hidden');
     if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function sendReminderFromDetail() {
+    if (currentDetailLoanId) {
+        openSendReminderModal(currentDetailLoanId);
+    }
 }
 
 function closeDetailLoanModal() {
@@ -1228,6 +1418,125 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+let currentReminderLoanId = null;
+
+function openSendReminderModal(id) {
+    const loan = originalLoans.find(l => Number(l.id) === Number(id));
+    if (!loan) return;
+
+    const email = (loan.email || '').trim();
+
+    if (!email) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Email Tidak Ditemukan',
+            text: `Anggota ${loan.name} (${loan.memberId}) belum memiliki alamat email yang terdaftar di sistem.`,
+            confirmButtonColor: '#2563EB',
+            customClass: {
+                popup: 'rounded-2xl border border-[#E2E8F0] shadow-2xl p-6',
+                confirmButton: 'px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider'
+            }
+        });
+        return;
+    }
+
+    currentReminderLoanId = id;
+
+    // Set preview values
+    const memberName = document.getElementById('remindMemberName');
+    const loanId = document.getElementById('remindLoanId');
+    const cicilanKe = document.getElementById('remindCicilanKe');
+    const tagihan = document.getElementById('remindTagihan');
+    const sisa = document.getElementById('remindSisa');
+    const emailInput = document.getElementById('remindEmailInput');
+    const catatanInput = document.getElementById('remindCatatanInput');
+
+    if (memberName) memberName.textContent = `${loan.name} (${loan.memberId})`;
+    if (loanId) loanId.textContent = loan.formattedId;
+    if (cicilanKe) cicilanKe.textContent = `${loan.cicilanKe || (Number(loan.paid || 0) + 1)} dari ${loan.tenor} Bulan`;
+    if (tagihan) tagihan.textContent = loan.cicilanPerBulan ? formatRupiah(loan.cicilanPerBulan) : '-';
+    if (sisa) sisa.textContent = loan.remaining ? formatRupiah(loan.remaining) : '-';
+    if (emailInput) emailInput.value = email;
+    if (catatanInput) catatanInput.value = '';
+
+    // Reset to form view
+    setReminderState('form');
+
+    const modal = document.getElementById('emailReminderModal');
+    if (modal) modal.classList.remove('hidden');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function closeEmailReminderModal() {
+    const modal = document.getElementById('emailReminderModal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function setReminderState(state) {
+    const formState = document.getElementById('reminderFormState');
+    const loadingState = document.getElementById('reminderLoadingState');
+    const successState = document.getElementById('reminderSuccessState');
+    const errorState = document.getElementById('reminderErrorState');
+
+    if (formState) formState.classList.toggle('hidden', state !== 'form');
+    if (loadingState) loadingState.classList.toggle('hidden', state !== 'loading');
+    if (successState) successState.classList.toggle('hidden', state !== 'success');
+    if (errorState) errorState.classList.toggle('hidden', state !== 'error');
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function executeSendReminder() {
+    if (!currentReminderLoanId) return;
+    const loan = originalLoans.find(l => Number(l.id) === Number(currentReminderLoanId));
+    if (!loan) return;
+
+    const email = (loan.email || '').trim();
+    const catatan = document.getElementById('remindCatatanInput')?.value.trim() || '';
+
+    const targetLabel = document.getElementById('loadingTargetEmail');
+    if (targetLabel) targetLabel.textContent = email;
+
+    // Switch to sleek animated loading state
+    setReminderState('loading');
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    fetch(`/pinjaman/${loan.id}/kirim-notifikasi`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            catatan: catatan
+        })
+    })
+    .then(async res => {
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            throw new Error(data.message || 'Gagal mengirim email.');
+        }
+        return data;
+    })
+    .then(data => {
+        const successMsg = document.getElementById('reminderSuccessMsg');
+        if (successMsg) {
+            successMsg.textContent = `Notifikasi tagihan cicilan telah berhasil dikirimkan ke ${email}.`;
+        }
+        setReminderState('success');
+    })
+    .catch(err => {
+        const errorMsg = document.getElementById('reminderErrorMsg');
+        if (errorMsg) {
+            errorMsg.textContent = err.message || 'Terjadi kesalahan saat memproses pengiriman email.';
+        }
+        setReminderState('error');
+    });
+}
 
 window.addEventListener('DOMContentLoaded', function() {
     applyFilters();

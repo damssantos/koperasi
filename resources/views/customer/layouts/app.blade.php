@@ -14,7 +14,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
-    <script src="/koperasi/public/js/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        if (typeof lucide === 'undefined') {
+            document.write('<script src="{{ asset('js/lucide.min.js') }}"><\/script>');
+        }
+    </script>
 
     <!-- Flatpickr Datepicker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">

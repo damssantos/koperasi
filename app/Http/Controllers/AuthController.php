@@ -5,6 +5,7 @@ use App\Models\AnggotaKoperasi;
 use App\Models\User;
 use App\Models\OtpVerification;
 use App\Mail\OtpMail;
+use App\Services\CaptchaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,6 +13,24 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | CAPTCHA
+    |--------------------------------------------------------------------------
+    */
+
+    public function captcha()
+    {
+        $svg = CaptchaService::renderSvg();
+
+        return response($svg, 200, [
+            'Content-Type' => 'image/svg+xml; charset=utf-8',
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | LOGIN
@@ -28,11 +47,21 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'akun' => 'required|string|email',
             'password' => 'required|string',
+            'captcha' => 'required|string',
         ], [
             'akun.required' => 'Kolom Email wajib diisi.',
             'akun.email' => 'Format alamat email tidak valid.',
             'password.required' => 'Kata sandi wajib diisi.',
+            'captcha.required' => 'Kode captcha verifikasi wajib diisi.',
         ]);
+
+        if (!CaptchaService::validate($request->captcha)) {
+            return back()
+                ->withErrors([
+                    'captcha' => 'Kode captcha tidak cocok atau telah kedaluwarsa. Silakan coba lagi.',
+                ])
+                ->onlyInput('akun');
+        }
 
         $user = User::where('email', $credentials['akun'])->first();
 
@@ -113,6 +142,7 @@ class AuthController extends Controller
             'alamat' => 'required|string|min:10',
             'no_hp' => 'required|numeric|digits_between:10,15',
             'password' => 'required|string|min:6',
+            'captcha' => 'required|string',
         ], [
             'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
             'nama_lengkap.regex' => 'Nama lengkap hanya boleh berisi huruf dan spasi.',
@@ -135,7 +165,17 @@ class AuthController extends Controller
 
             'password.required' => 'Kata sandi wajib diisi.',
             'password.min' => 'Kata sandi minimal harus 6 karakter.',
+
+            'captcha.required' => 'Kode captcha verifikasi wajib diisi.',
         ]);
+
+        if (!CaptchaService::validate($request->captcha)) {
+            return back()
+                ->withErrors([
+                    'captcha' => 'Kode captcha tidak cocok atau telah kedaluwarsa. Silakan coba lagi.',
+                ])
+                ->withInput($request->except('password', 'captcha'));
+        }
 
         /*
         |--------------------------------------------------------------------------
