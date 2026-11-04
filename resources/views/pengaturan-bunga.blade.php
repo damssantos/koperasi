@@ -48,14 +48,32 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <form action="{{ route('pengaturan-bunga.update', $item) }}" method="POST" class="flex items-center gap-2">
+                            <form action="{{ route('pengaturan-bunga.update', $item) }}" method="POST" class="flex flex-col gap-2">
                                 @csrf
                                 @method('PUT')
-                                <input type="number" name="persen_bunga" value="{{ $item->persen_bunga }}" min="0" max="100" step="0.01" required
-                                    class="w-28 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-medium text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:bg-white transition">
-                                <span class="text-xs font-bold text-[#64748B]">% / bulan</span>
-                                <button type="submit" onclick="return confirm('Simpan perubahan bunga kategori {{ $item->kategori }}?')"
-                                    class="px-3 py-2 text-xs font-bold text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-xl transition duration-150 shadow-sm">
+
+                                <div class="flex items-center gap-2">
+                                    <input type="number" name="persen_bunga" value="{{ $item->persen_bunga }}" min="0" max="100" step="0.01" required
+                                        class="w-24 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-medium text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:bg-white transition">
+                                    <span class="text-xs font-bold text-[#64748B]">%</span>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold text-[#64748B] uppercase w-20 shrink-0">Limit (Rp)</span>
+                                    <input type="number" name="limit_nominal" value="{{ $item->limit_nominal ?? 0 }}" min="0" step="1000"
+                                        class="w-36 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-medium text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:bg-white transition">
+                                </div>
+                                <p class="text-[10px] text-[#64748B]">0 = tanpa limit.</p>
+
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold text-[#64748B] uppercase w-20 shrink-0">Denda</span>
+                                    <input type="number" name="denda_persen" value="{{ $item->denda_persen ?? 0 }}" min="0" max="100" step="0.01"
+                                        class="w-24 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-medium text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:bg-white transition">
+                                    <span class="text-xs font-bold text-[#64748B]">%/bln telat</span>
+                                </div>
+
+                                <button type="submit" onclick="return confirm('Simpan perubahan pengaturan kategori {{ $item->kategori }}?')"
+                                    class="w-fit px-3 py-2 text-xs font-bold text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-xl transition duration-150 shadow-sm">
                                     Simpan
                                 </button>
                             </form>

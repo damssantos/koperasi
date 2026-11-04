@@ -14,7 +14,40 @@
                 <p class="text-xs sm:text-sm text-[#64748B] mt-0.5">Kelola pencatatan jurnal dan buku besar secara otomatis berdasarkan transaksi koperasi.</p>
             </div>
         </div>
+
+        <div class="flex items-center gap-2.5 flex-wrap">
+            <!-- Export Dropdown -->
+            <div class="relative">
+                <select onchange="if(this.value) window.location = this.value"
+                    class="appearance-none bg-white border border-[#E2E8F0] rounded-xl pl-9 pr-8 py-2 text-xs font-bold text-[#0F172A] hover:bg-[#F8FAFC] transition shadow-sm cursor-pointer focus:outline-none focus:border-[#2563EB]">
+                    <option value="">Download Laporan</option>
+                    <option value="{{ route('laporan.export', 'pdf') }}">PDF</option>
+                    <option value="{{ route('laporan.export', 'excel') }}">Excel (XLSX)</option>
+                    <option value="{{ route('laporan.export', 'csv') }}">CSV</option>
+                </select>
+                <i data-lucide="download" class="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-[#64748B] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+
+            <!-- Import -->
+            <button type="button" onclick="openLaporanImportModal()"
+                class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-[#E2E8F0] rounded-xl text-xs font-bold text-[#0F172A] hover:bg-[#F8FAFC] transition shadow-sm">
+                <i data-lucide="upload" class="w-3.5 h-3.5 text-[#64748B]"></i>
+                <span>Import Kas Usaha</span>
+            </button>
+        </div>
     </div>
+
+    @if(session('success'))
+        <div class="mb-4 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="mb-4 px-4 py-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <!-- Top 3 Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -727,10 +760,60 @@
             renderTablePage();
             document.getElementById('search-input').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
+
+        function openLaporanImportModal() {
+            document.getElementById('laporanImportModal').classList.remove('hidden');
+        }
+
+        function closeLaporanImportModal() {
+            document.getElementById('laporanImportModal').classList.add('hidden');
+        }
     </script>
 @endsection
 
 @push('modals')
+    <!-- IMPORT LAPORAN MODAL -->
+    <div id="laporanImportModal" class="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/40 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h3 class="text-base font-extrabold text-[#0F172A]">Import Transaksi Kas Usaha</h3>
+                    <p class="text-xs text-[#64748B] mt-0.5">Format: tanggal, jenis_transaksi, keterangan, nominal.</p>
+                </div>
+                <button type="button" onclick="closeLaporanImportModal()" class="text-[#64748B] hover:text-[#0F172A] text-xl leading-none">×</button>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4 text-xs text-blue-700">
+                Jenis yang valid: <strong>PENERIMAAN</strong>, <strong>PENGELUARAN</strong>, <strong>MODAL</strong>.
+                Baris tidak valid akan dilewati otomatis.
+            </div>
+
+            <form action="{{ route('laporan.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">File Excel</label>
+                    <input type="file" name="file" required accept=".xlsx,.xls"
+                        class="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs text-[#0F172A] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#2563EB] file:text-white hover:file:bg-[#1D4ED8] cursor-pointer">
+                    <p class="text-[11px] text-[#64748B] mt-1.5">
+                        Belum punya formatnya?
+                        <a href="{{ route('laporan.template') }}" class="text-[#2563EB] font-bold hover:underline">Download template</a>
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3 justify-end">
+                    <button type="button" onclick="closeLaporanImportModal()"
+                        class="px-4 py-2 text-xs font-semibold text-[#64748B] hover:text-[#0F172A] bg-white border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-xl transition">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 text-xs font-bold text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-xl transition shadow-md shadow-blue-600/20">
+                        Import
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- DETAIL TRANSACTION MODAL (Simpanan & Kas Usaha) -->
     <div id="detailTransactionModal" class="fixed inset-0 flex items-center justify-center p-4 z-50 bg-slate-900/50 backdrop-blur-sm hidden">
         <div class="bg-white border border-[#E2E8F0] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-6">

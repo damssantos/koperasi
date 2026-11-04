@@ -15,6 +15,13 @@
             Menu Utama
         </div>
 
+        @if(auth()->user()->role === 'admin_pelunasan')
+            {{-- Menu terbatas khusus petugas pelunasan --}}
+            <a href="{{ route('pelunasan') }}" class="{{ request()->is('pelunasan*') ? 'active' : '' }}">
+                <i data-lucide="check-circle-2"></i>
+                <span>Pelunasan</span>
+            </a>
+        @else
         <!-- Dashboard -->
         <a href="{{ url('/dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
             <i data-lucide="layout-dashboard"></i>
@@ -37,6 +44,12 @@
         <a href="{{ url('/pinjaman') }}" class="{{ request()->is('pinjaman*') ? 'active' : '' }}">
             <i data-lucide="credit-card"></i>
             <span>Pinjaman</span>
+        </a>
+
+        <!-- Pelunasan -->
+        <a href="{{ route('pelunasan') }}" class="{{ request()->is('pelunasan*') ? 'active' : '' }}">
+            <i data-lucide="check-circle-2"></i>
+            <span>Pelunasan</span>
         </a>
 
         <!-- Kas Usaha -->
@@ -62,6 +75,7 @@
             <i data-lucide="history"></i>
             <span>Riwayat Transaksi</span>
         </a>
+        @endif
     </nav>
 
     <!-- SIDEBAR BOTTOM -->

@@ -193,6 +193,14 @@ Route::middleware('role:customer')->group(function () {
         'tenor.max' => 'Maksimal tenor adalah 60 bulan.',
     ]);
 
+    // Kustomisasi limit pinjaman per kategori (0 = tanpa limit).
+    $limit = App\Models\PengaturanBunga::limitUntuk('Pegawai');
+    if ($limit > 0 && (int) $data['nominal_pinjaman'] > $limit) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Nominal pinjaman melebihi limit. Maksimal Rp' . number_format($limit, 0, ',', '.') . ' untuk kategori Anda.');
+    }
+
     // 3. Simpan data sebelum perubahan untuk Activity Log
     $before = null;
 
@@ -271,6 +279,73 @@ Route::post('/register', [AuthController::class, 'register']);
 // 3. Proteksi semua halaman dashboard, anggota, DAN profile baru milik mereka
 
 Route::middleware('auth')->group(function () {
+
+    /*
+    |----------------------------------------------------------------------
+    | Role Admin Pelunasan (khusus pelunasan saja)
+    |----------------------------------------------------------------------
+    */
+
+    Route::get('/pelunasan', function () {
+        $pinjaman = App\Models\Pinjaman::with('anggota')
+            ->whereIn('status', ['Aktif', 'Menunggak'])
+            ->orderBy('tanggal_pengajuan', 'desc')
+            ->get();
+
+        return view('pelunasan', compact('pinjaman'));
+    })->middleware('role:admin,admin_pelunasan')->name('pelunasan');
+
+    Route::get('/pelunasan/{pinjaman}', function (App\Models\Pinjaman $pinjaman) {
+        return response()->json([
+            'id' => $pinjaman->id,
+            'name' => $pinjaman->anggota->nama ?? '-',
+            'memberId' => $pinjaman->anggota->id_anggota ?? '-',
+            'remaining' => (int) $pinjaman->sisa_pinjaman,
+            'denda' => (int) $pinjaman->denda,
+            'paid' => (int) $pinjaman->jumlah_cicilan_dibayar,
+            'tenor' => (int) $pinjaman->tenor,
+            'status' => $pinjaman->status,
+            'buktiTransfer' => $pinjaman->bukti_transfer ? asset('storage/' . $pinjaman->bukti_transfer) : null,
+        ]);
+    })->middleware('role:admin,admin_pelunasan')->name('pelunasan.show');
+
+    // Pelunasan penuh: tandai lunas (dipakai admin & admin_pelunasan).
+    Route::post('/pelunasan/{pinjaman}', function (Request $request, App\Models\Pinjaman $pinjaman) {
+        $data = $request->validate([
+            'bukti_transfer' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        if ($pinjaman->status === 'Lunas') {
+            return redirect()->back()->with('error', 'Pinjaman ini sudah lunas.');
+        }
+
+        $buktiPath = $request->hasFile('bukti_transfer')
+            ? $request->file('bukti_transfer')->store('bukti-pembayaran', 'public')
+            : $pinjaman->bukti_transfer;
+
+        $before = $pinjaman->toArray();
+
+        $pinjaman->update([
+            'jumlah_cicilan_dibayar' => $pinjaman->tenor,
+            'sisa_pinjaman' => 0,
+            'denda' => 0,
+            'status' => 'Lunas',
+            'tanggal_pelunasan' => now()->toDateString(),
+            'bukti_transfer' => $buktiPath,
+        ]);
+
+        AuditService::catat(
+            'pelunasan_pinjaman',
+            $pinjaman->fresh(),
+            $before,
+            $pinjaman->fresh()->toArray(),
+            auth()->user()->role === 'admin_pelunasan' ? 'Petugas pelunasan' : 'Admin'
+            . ' mencatat pelunasan pinjaman #' . $pinjaman->id . '.'
+        );
+
+        return redirect()->route('pelunasan')
+            ->with('success', 'Pelunasan pinjaman #' . $pinjaman->id . ' berhasil dicatat.');
+    })->middleware('role:admin,admin_pelunasan')->name('pelunasan.store');
 
     /*
     |----------------------------------------------------------------------
@@ -989,6 +1064,8 @@ Route::middleware('auth')->group(function () {
                     'status' => $loan->status,
                     'statusPersetujuan' => $loan->status_persetujuan,
                     'bukti_transfer' => $loan->bukti_transfer,
+                    'denda' => (int) $loan->denda,
+                    'bukti_potongan' => $loan->bukti_potongan,
                 ];
             });
 
@@ -1019,6 +1096,14 @@ Route::middleware('auth')->group(function () {
             'status' => 'nullable|in:Aktif,Menunggak,Lunas',
             'jumlah_cicilan_dibayar' => 'nullable|integer|min:0',
         ]);
+
+        // Kustomisasi limit pinjaman per kategori (0 = tanpa limit).
+        $limit = App\Models\PengaturanBunga::limitUntuk($data['kategori_debitur']);
+        if ($limit > 0 && (int) $data['nominal_pinjaman'] > $limit) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Nominal pinjaman melebihi limit Rp' . number_format($limit, 0, ',', '.') . " untuk kategori {$data['kategori_debitur']}.");
+        }
 
         $status = $data['status'] ?? 'Pengajuan';
         $status = $status === 'Pengajuan' ? 'Aktif' : $status;
@@ -1071,6 +1156,7 @@ Route::middleware('auth')->group(function () {
         $data = $request->validate([
             'persen_bunga' => ['required', 'numeric', 'min:0', 'max:100'],
             'potongan_admin' => ['nullable', 'integer', 'min:0'],
+            'bukti_potongan' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
         $tenor = (int) $pinjaman->tenor;
@@ -1086,10 +1172,15 @@ Route::middleware('auth')->group(function () {
 
         $before = $pinjaman->toArray();
 
+        $buktiPotongan = $request->hasFile('bukti_potongan')
+            ? $request->file('bukti_potongan')->store('bukti-potongan', 'public')
+            : $pinjaman->bukti_potongan;
+
         $pinjaman->update([
             'persentase_bunga' => $persen,
             'total_bunga' => $totalBunga,
             'potongan_admin' => $potongan,
+            'bukti_potongan' => $buktiPotongan,
             'sisa_pinjaman' => (int) $pinjaman->nominal_pinjaman + $totalBunga,
             'status' => 'Aktif',
             'status_persetujuan' => 'Disetujui',
@@ -1198,6 +1289,9 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:admin')->name('activity_logs.export');
 
     Route::get('/pinjaman/{pinjaman}', function (App\Models\Pinjaman $pinjaman) {
+        // Refresh denda otomatis setiap kali detail dibuka
+        $pinjaman->sinkronDenda();
+
         return response()->json([
             'id' => $pinjaman->id,
             'formattedId' => 'PJ-' . str_pad($pinjaman->id, 5, '0', STR_PAD_LEFT),
@@ -1208,6 +1302,9 @@ Route::middleware('auth')->group(function () {
             'tenor' => $pinjaman->tenor,
             'paid' => $pinjaman->jumlah_cicilan_dibayar,
             'remaining' => (int) $pinjaman->sisa_pinjaman,
+            'denda' => (int) $pinjaman->denda,
+            'potongan' => (int) $pinjaman->potongan_admin,
+            'buktiPotongan' => $pinjaman->bukti_potongan ? asset('storage/' . $pinjaman->bukti_potongan) : null,
             'status' => $pinjaman->status,
         ]);
     })->name('pinjaman.show');
@@ -1239,6 +1336,7 @@ Route::middleware('auth')->group(function () {
             $pinjaman->update([
                 'jumlah_cicilan_dibayar' => $pinjaman->tenor,
                 'sisa_pinjaman' => 0,
+                'denda' => 0,
                 'status' => 'Lunas',
                 'tanggal_pelunasan' => now()->toDateString(),
                 'bukti_transfer' => $buktiPath ?? $pinjaman->bukti_transfer,
@@ -1262,7 +1360,7 @@ Route::middleware('auth')->group(function () {
         }
 
         // Calculate nominal per installment
-        $nominalCicilan = round($pinjaman->sisa_pinjaman / $remainingMonths);
+        $nominalCicilan = round(($pinjaman->sisa_pinjaman - $pinjaman->denda) / $remainingMonths);
 
         // Update loan progress
         $newDibayar = $pinjaman->jumlah_cicilan_dibayar + 1;
@@ -1274,6 +1372,8 @@ Route::middleware('auth')->group(function () {
         $pinjaman->update([
             'jumlah_cicilan_dibayar' => $newDibayar,
             'sisa_pinjaman' => $newSisa,
+            // Denda direset dan dihitung ulang untuk jatuh tempo berikutnya
+            'denda' => 0,
             'status' => $newStatus,
             'tanggal_pelunasan' => $newStatus === 'Lunas' ? now()->toDateString() : $pinjaman->tanggal_pelunasan,
             'bukti_transfer' => $buktiPath ?? $pinjaman->bukti_transfer,
@@ -1350,6 +1450,7 @@ Route::middleware('auth')->group(function () {
             $pinjaman->update([
                 'jumlah_cicilan_dibayar' => $pinjaman->tenor,
                 'sisa_pinjaman' => 0,
+                'denda' => 0,
                 'status' => 'Lunas',
                 'tanggal_pelunasan' => now()->toDateString(),
                 'bukti_transfer' => $buktiPath,
@@ -1360,7 +1461,7 @@ Route::middleware('auth')->group(function () {
                 return redirect()->back()->with('error', 'Semua cicilan sudah dibayar.');
             }
 
-            $nominalCicilan = round($pinjaman->sisa_pinjaman / $remainingMonths);
+            $nominalCicilan = round(($pinjaman->sisa_pinjaman - $pinjaman->denda) / $remainingMonths);
             $newDibayar = $pinjaman->jumlah_cicilan_dibayar + 1;
             $newSisa = max(0, $pinjaman->sisa_pinjaman - $nominalCicilan);
             $newStatus = ($newDibayar >= $pinjaman->tenor || $newSisa <= 0) ? 'Lunas' : $pinjaman->status;
@@ -1368,6 +1469,7 @@ Route::middleware('auth')->group(function () {
             $pinjaman->update([
                 'jumlah_cicilan_dibayar' => $newDibayar,
                 'sisa_pinjaman' => $newSisa,
+                'denda' => 0,
                 'status' => $newStatus,
                 'tanggal_pelunasan' => $newStatus === 'Lunas' ? now()->toDateString() : $pinjaman->tanggal_pelunasan,
                 'bukti_transfer' => $buktiPath,
@@ -1401,26 +1503,37 @@ Route::middleware('auth')->group(function () {
     Route::put('/pengaturan-bunga/{pengaturan}', function (Request $request, App\Models\PengaturanBunga $pengaturan) {
         $data = $request->validate([
             'persen_bunga' => ['required', 'numeric', 'min:0', 'max:100'],
+            'limit_nominal' => ['nullable', 'integer', 'min:0'],
+            'denda_persen' => ['nullable', 'numeric', 'min:0', 'max:100'],
         ], [
             'persen_bunga.required' => 'Persentase bunga wajib diisi.',
             'persen_bunga.numeric' => 'Persentase bunga harus berupa angka.',
             'persen_bunga.min' => 'Persentase bunga tidak boleh negatif.',
             'persen_bunga.max' => 'Persentase bunga maksimal 100.',
+            'limit_nominal.integer' => 'Limit pinjaman harus berupa angka.',
+            'limit_nominal.min' => 'Limit pinjaman tidak boleh negatif.',
+            'denda_persen.numeric' => 'Denda harus berupa angka.',
+            'denda_persen.min' => 'Denda tidak boleh negatif.',
+            'denda_persen.max' => 'Denda maksimal 100.',
         ]);
 
         $before = $pengaturan->toArray();
-        $pengaturan->update($data);
+        $pengaturan->update([
+            'persen_bunga' => $data['persen_bunga'],
+            'limit_nominal' => (int) ($data['limit_nominal'] ?? 0),
+            'denda_persen' => (float) ($data['denda_persen'] ?? 0),
+        ]);
 
         AuditService::catat(
             'ubah_pengaturan_bunga',
             $pengaturan->fresh(),
             $before,
             $pengaturan->fresh()->toArray(),
-            'Admin mengubah persentase bunga kategori ' . $pengaturan->kategori . '.'
+            'Admin mengubah pengaturan (bunga/limit/denda) kategori ' . $pengaturan->kategori . '.'
         );
 
         return redirect()->route('pengaturan-bunga.index')
-            ->with('success', 'Persentase bunga kategori ' . $pengaturan->kategori . ' berhasil diperbarui.');
+            ->with('success', 'Pengaturan kategori ' . $pengaturan->kategori . ' berhasil diperbarui.');
     })->middleware('role:admin')->name('pengaturan-bunga.update');
 
     /*
@@ -1623,6 +1736,148 @@ Route::middleware('auth')->group(function () {
             'realPeriodTransaksiCount'
         ));
     })->middleware('role:admin')->name('laporan');
+
+    /*
+    |----------------------------------------------------------------------
+    | Export & Import Laporan
+    |----------------------------------------------------------------------
+    */
+
+    Route::get('/laporan/export/{format}', function (Request $request, string $format) {
+        abort_unless(in_array($format, ['pdf', 'excel', 'csv'], true), 404);
+
+        // Bangun ulang dataset gabungan yang sama dengan halaman laporan.
+        $rows = [];
+
+        foreach (App\Models\TransaksiSimpanan::with('anggota')->orderBy('tanggal_transaksi')->get() as $tx) {
+            $rows[] = [
+                $tx->tanggal_transaksi->format('Y-m-d'),
+                'SIMPANAN',
+                $tx->anggota->id_anggota ?? ('AGT-' . str_pad($tx->anggota_id, 3, '0', STR_PAD_LEFT)),
+                $tx->anggota->nama ?? '-',
+                $tx->keterangan,
+                ($tx->status === 'Lunas' ? 1 : -1) * (int) $tx->nominal,
+            ];
+        }
+
+        foreach (App\Models\Pinjaman::with('anggota')->orderBy('tanggal_pengajuan')->get() as $loan) {
+            $rows[] = [
+                $loan->tanggal_pengajuan->format('Y-m-d'),
+                'PINJAMAN',
+                $loan->anggota->id_anggota ?? ('AGT-' . str_pad($loan->anggota_id, 3, '0', STR_PAD_LEFT)),
+                $loan->anggota->nama ?? '-',
+                'Pencairan pinjaman #' . $loan->id . ' (' . $loan->status . ')',
+                -(int) $loan->nominal_pinjaman,
+            ];
+        }
+
+        foreach (App\Models\TransaksiKasUsaha::orderBy('tanggal')->get() as $tx) {
+            $rows[] = [
+                $tx->tanggal->format('Y-m-d'),
+                'KAS USAHA',
+                'N/A',
+                'Yayasan YPIK',
+                $tx->keterangan,
+                ($tx->jenis_transaksi === 'PENGELUARAN' ? -1 : 1) * (int) $tx->nominal,
+            ];
+        }
+
+        $name = 'laporan-keuangan-' . now()->format('Ymd');
+
+        if ($format === 'pdf') {
+            $pdfRows = array_map(fn ($r) => [$r[0], $r[1], $r[2], $r[3], $r[4], number_format($r[5], 0, ',', '.')], $rows);
+
+            return response(
+                App\Support\SimplePdf::table(
+                    'Laporan Keuangan',
+                    ['Tanggal', 'Jenis', 'ID Anggota', 'Nama', 'Keterangan', 'Nominal'],
+                    $pdfRows,
+                    ['Total Transaksi: ' . count($rows), 'Dicetak: ' . now()->format('d-m-Y H:i')]
+                ),
+                200,
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => "attachment; filename=\"$name.pdf\"",
+                ]
+            );
+        }
+
+        return App\Exports\LaporanExport::downloadAny($rows, $name, $format);
+    })->middleware('role:admin')->name('laporan.export');
+
+    Route::get('/laporan/template', function () {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Template Import');
+
+        $sheet->setCellValue('A1', 'tanggal');
+        $sheet->setCellValue('B1', 'jenis_transaksi');
+        $sheet->setCellValue('C1', 'keterangan');
+        $sheet->setCellValue('D1', 'nominal');
+
+        $sheet->setCellValue('A2', '2026-01-15');
+        $sheet->setCellValue('B2', 'PENERIMAAN');
+        $sheet->setCellValue('C2', 'Hasil penjualan warung');
+        $sheet->setCellValue('D2', 500000);
+
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setWidth(24);
+        }
+        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, 'template_import_laporan.xlsx', [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+    })->middleware('role:admin')->name('laporan.template');
+
+    Route::post('/laporan/import', function (Request $request) {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx,xls', 'max:5120'],
+        ]);
+
+        try {
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file('file')->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, true);
+
+            $imported = 0;
+
+            foreach (array_slice($rows, 1) as $row) {
+                $tanggal = trim((string) ($row['A'] ?? ''));
+                $jenis = strtoupper(trim((string) ($row['B'] ?? '')));
+                $keterangan = trim((string) ($row['C'] ?? ''));
+                $nominal = (int) preg_replace('/[^0-9]/', '', (string) ($row['D'] ?? ''));
+
+                if (!$tanggal || !in_array($jenis, ['PENERIMAAN', 'PENGELUARAN', 'MODAL'], true) || $nominal <= 0) {
+                    continue;
+                }
+
+                App\Models\TransaksiKasUsaha::create([
+                    'tanggal' => $tanggal,
+                    'jenis_transaksi' => $jenis,
+                    'keterangan' => $keterangan ?: 'Import laporan',
+                    'nominal' => $nominal,
+                ]);
+
+                $imported++;
+            }
+
+            if ($imported === 0) {
+                return redirect()->route('laporan')
+                    ->with('error', 'Tidak ada baris valid. Pastikan format: tanggal (YYYY-MM-DD), jenis (PENERIMAAN/PENGELUARAN/MODAL), keterangan, nominal.');
+            }
+
+            return redirect()->route('laporan')
+                ->with('success', "$imported transaksi kas usaha berhasil diimport.");
+        } catch (\Throwable $e) {
+            return redirect()->route('laporan')
+                ->with('error', 'Import gagal: ' . $e->getMessage());
+        }
+    })->middleware('role:admin')->name('laporan.import');
 
     /*
     |----------------------------------------------------------------------

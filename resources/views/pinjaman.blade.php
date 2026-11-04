@@ -445,6 +445,26 @@
                 <div id="detailKeterangan" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-xs text-[#0F172A] whitespace-pre-wrap break-words">-</div>
             </div>
 
+            <!-- DENDA -->
+            <div class="col-span-2">
+                <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">Denda Keterlambatan</label>
+                <span id="detailDenda" class="text-sm font-extrabold text-[#0F172A]">Rp 0</span>
+            </div>
+
+            <!-- BUKTI POTONGAN -->
+            <div class="col-span-2">
+                <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">Bukti Potongan Slip Gaji</label>
+                <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-3">
+                    <span id="detailPotonganText" class="text-xs text-[#64748B]">Belum ada bukti potongan</span>
+                    <div id="detailPotonganImageWrap" class="hidden mt-2">
+                        <a href="#" id="detailPotonganLink" target="_blank">
+                            <img id="detailPotonganImage" src="" alt="Bukti Potongan"
+                                class="max-h-64 w-auto rounded-lg border border-[#E2E8F0] cursor-zoom-in hover:opacity-90 transition" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- BUKTI -->
             <div class="col-span-2">
                 <label class="block text-[11px] font-bold text-[#64748B] mb-1.5 uppercase tracking-wider">Bukti Pembayaran</label>
@@ -609,7 +629,7 @@
             <div class="flex justify-between"><span class="text-[#64748B]">Kategori</span><strong id="accKategori" class="text-[#0F172A]">-</strong></div>
         </div>
 
-        <form id="accForm" method="POST" action="">
+        <form id="accForm" method="POST" action="" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <label class="block text-[11px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Bunga per Bulan (%)</label>
@@ -618,12 +638,20 @@
                 <p class="text-[10px] text-[#64748B] mt-1">Kosongkan penyesuaian & gunakan default kategori, atau ubah sesuai kebijakan.</p>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
                 <label class="block text-[11px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Potongan Admin (Rp)</label>
                 <input type="text" inputmode="numeric" id="accPotongan" name="potongan_admin"
                     class="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs font-semibold text-[#0F172A] focus:outline-none focus:border-[#2563EB]"
                     oninput="this.value = this.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.')">
                 <p class="text-[10px] text-[#64748B] mt-1">Dipotong langsung dari nominal sebelum pencairan. Kosongkan = tanpa potongan.</p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-[11px] font-bold text-[#64748B] mb-1 uppercase tracking-wider">Bukti Potongan Slip Gaji</label>
+                <input type="file" name="bukti_potongan" id="accBuktiPotongan"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    class="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs text-[#0F172A] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#2563EB] file:text-white hover:file:bg-[#1D4ED8] cursor-pointer">
+                <p class="text-[10px] text-[#64748B] mt-1">Upload slip gaji/bukti potongan (JPG, PNG, WEBP. Maks 2MB). Opsional.</p>
             </div>
 
             <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4 text-xs space-y-1">
@@ -1090,6 +1118,48 @@ function showDetail(id) {
     }
 
     if (elKet) elKet.textContent = loan.keterangan ?? '-';
+
+    // Denda
+    const elDenda = document.getElementById('detailDenda');
+    if (elDenda) {
+        const denda = Number(loan.denda ?? 0);
+        elDenda.textContent = denda > 0 ? formatRupiah(denda) : 'Rp 0';
+        elDenda.className = denda > 0
+            ? 'text-sm font-extrabold text-rose-600'
+            : 'text-sm font-extrabold text-[#0F172A]';
+    }
+
+    // Bukti potongan slip gaji
+    const potonganText = document.getElementById('detailPotonganText');
+    const potonganLink = document.getElementById('detailPotonganLink');
+    const potonganImage = document.getElementById('detailPotonganImage');
+    const potonganWrap = document.getElementById('detailPotonganImageWrap');
+    const buktiPotongan = loan.bukti_potongan ?? null;
+
+    if (buktiPotongan) {
+        let potUrl = String(buktiPotongan);
+        if (!potUrl.startsWith('http://') && !potUrl.startsWith('https://') && !potUrl.startsWith('/storage/')) {
+            potUrl = '/storage/' + potUrl.replace(/^\/+/, '');
+        }
+        if (potonganText) potonganText.classList.add('hidden');
+        if (potonganLink) {
+            potonganLink.href = potUrl;
+            potonganLink.classList.remove('hidden');
+        }
+        if (potonganImage) potonganImage.src = potUrl;
+        if (potonganWrap) potonganWrap.classList.remove('hidden');
+    } else {
+        if (potonganText) {
+            potonganText.textContent = 'Belum ada bukti potongan';
+            potonganText.classList.remove('hidden');
+        }
+        if (potonganLink) {
+            potonganLink.classList.add('hidden');
+            potonganLink.removeAttribute('href');
+        }
+        if (potonganImage) potonganImage.removeAttribute('src');
+        if (potonganWrap) potonganWrap.classList.add('hidden');
+    }
 
     const proofText = document.getElementById('detailProofText');
     const proofLink = document.getElementById('detailProofLink');
