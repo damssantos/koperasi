@@ -8,9 +8,9 @@ class PengaturanBunga extends Model
 {
     protected $table = 'pengaturan_bunga';
 
-    protected $fillable = ['kategori', 'persen_bunga'];
+    protected $fillable = ['kategori', 'persen_bunga', 'limit_nominal', 'denda_persen'];
 
-    protected $casts = ['persen_bunga' => 'float'];
+    protected $casts = ['persen_bunga' => 'float', 'denda_persen' => 'float'];
 
     public const KATEGORI = ['Pegawai', 'Umum'];
 
@@ -22,5 +22,17 @@ class PengaturanBunga extends Model
         $row = static::where('kategori', $kategori)->first();
 
         return $row ? (float) $row->persen_bunga : $default;
+    }
+
+    /** Limit pinjaman per kategori. 0 = tanpa limit. */
+    public static function limitUntuk(string $kategori): int
+    {
+        return (int) (static::where('kategori', $kategori)->value('limit_nominal') ?? 0);
+    }
+
+    /** Persen denda per bulan keterlambatan. */
+    public static function dendaPersenUntuk(string $kategori): float
+    {
+        return (float) (static::where('kategori', $kategori)->value('denda_persen') ?? 0);
     }
 }

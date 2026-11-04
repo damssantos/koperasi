@@ -1116,6 +1116,28 @@
                 @endif
 
 
+                {{-- BUKTI TRANSFER --}}
+
+                <div class="detail-item" style="grid-column: 1 / -1;">
+
+                    <span>
+                        Bukti Pembayaran Terakhir
+                    </span>
+
+                    @if($latestLoan->bukti_transfer)
+                        <a href="{{ asset('storage/' . $latestLoan->bukti_transfer) }}" target="_blank">
+                            <img src="{{ asset('storage/' . $latestLoan->bukti_transfer) }}" alt="Bukti Pembayaran"
+                                style="max-height:220px; width:auto; border-radius:12px; border:1px solid #E2E8F0; margin-top:6px; cursor:zoom-in;">
+                        </a>
+                    @else
+                        <strong style="color:#94A3B8;">
+                            Belum ada bukti pembayaran
+                        </strong>
+                    @endif
+
+                </div>
+
+
             </div>
 
         </div>
