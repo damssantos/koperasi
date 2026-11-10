@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'SOY YPIK PAM JAYA - Laporan Keuangan')
 
@@ -105,7 +105,6 @@
             <div class="relative min-w-[170px]">
                 <select id="select-periode-ringkasan" onchange="onPeriodChange(this.value)" class="w-full appearance-none bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-2 pr-8 text-xs font-semibold text-[#0F172A] focus:outline-none focus:border-[#2563EB] focus:bg-white transition duration-150 cursor-pointer">
                     <option value="all" selected>Semua Periode</option>
-                    <option value="okt_2024">Oktober 2024 (Mock)</option>
                 </select>
                 <i data-lucide="chevron-down" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] pointer-events-none"></i>
             </div>
@@ -261,114 +260,7 @@
             pengeluaran: "Rp {{ number_format($realPeriodPengeluaran, 0, ',', '.') }}",
             saldo: "Rp {{ number_format($realPeriodSaldo, 0, ',', '.') }}"
         };
-
-        // Complete Mock Data matching mockup design & numbers
-        const mockTotalSaldo = "1.450.000.000";
-        const mockTotalIn = "2.900.000.000";
-        const mockTotalOut = "1.450.000.000";
-        
-        const mockPeriodInfo = {
-            count: 128,
-            pemasukan: "Rp 320.000.000",
-            pengeluaran: "Rp 185.000.000",
-            saldo: "Rp 135.000.000"
-        };
-
-        // Generates remaining mock items up to 128 total transactions
-        const mockDataList = [
-            { tanggal: '24 Okt 2023, 14:20', raw_date: '2023-10-24', jenis: 'SIMPANAN', keterangan: 'Simpanan Pokok - Budi Santoso', nominal: 1000000, is_positive: true, tx_id: 'TX-10021', member_id: 'AGT-001', member_name: 'Budi Santoso', sub_jenis: 'Simpanan Pokok' },
-            { tanggal: '24 Okt 2023, 11:05', raw_date: '2023-10-24', jenis: 'PINJAMAN', keterangan: 'Pencairan Pinjaman - Siti Aminah', nominal: 5500000, is_positive: false, loan_id: 'PJ-20054', member_id: 'AGT-002', member_name: 'Siti Aminah', tenor: 12, paid: 6, remaining: 2750000, status: 'Aktif' },
-            { tanggal: '23 Okt 2023, 16:45', raw_date: '2023-10-23', jenis: 'KAS USAHA', keterangan: 'Pembelian ATK Kantor', nominal: 350000, is_positive: false, tx_id: 'TX-40011', member_id: 'N/A', member_name: 'Yayasan YPIK', sub_jenis: 'Kas Usaha' },
-            { tanggal: '23 Okt 2023, 10:15', raw_date: '2023-10-23', jenis: 'SIMPANAN', keterangan: 'Simpanan Wajib - Ahmad Fauzi', nominal: 200000, is_positive: true, tx_id: 'TX-10022', member_id: 'AGT-005', member_name: 'Ahmad Fauzi', sub_jenis: 'Simpanan Wajib' },
-            { tanggal: '22 Okt 2023, 15:30', raw_date: '2023-10-22', jenis: 'PINJAMAN', keterangan: 'Angsuran Pinjaman - Diana Putri', nominal: 1250000, is_positive: true, loan_id: 'PJ-20055', member_id: 'AGT-008', member_name: 'Diana Putri', tenor: 12, paid: 8, remaining: 5000000, status: 'Aktif' }
-        ];
-
-        // Seed realistic extra mockup transactions to complete 128 items
-        const firstNames = ['Rudi', 'Bambang', 'Sri', 'Agus', 'Herman', 'Mulyadi', 'Indah', 'Fitri', 'Eko', 'Slamet', 'Susilo', 'Dewi', 'Indra', 'Andi', 'Hendra'];
-        const lastNames = ['Hidayat', 'Saputra', 'Susanti', 'Pratama', 'Ningsih', 'Wijaya', 'Hartono', 'Gunawan', 'Kurniawan', 'Santoso', 'Rahayu'];
-        const types = ['SIMPANAN', 'PINJAMAN', 'KAS USAHA'];
-        const simpananTypes = ['Pokok', 'Wajib', 'Sukarela'];
-
-        let seedDate = new Date(2023, 9, 21); // Starts Oct 21, 2023 going backwards
-        for (let i = 0; i < 123; i++) {
-            seedDate.setHours(seedDate.getHours() - Math.floor(Math.random() * 8) - 1);
-            seedDate.setMinutes(Math.floor(Math.random() * 60));
-            
-            const randType = types[Math.floor(Math.random() * types.length)];
-            const randFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-            const randLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-            const name = `${randFirstName} ${randLastName}`;
-            
-            let description = '';
-            let isPositive = true;
-            let nominalVal = 0;
-
-            if (randType === 'SIMPANAN') {
-                const sType = simpananTypes[Math.floor(Math.random() * simpananTypes.length)];
-                description = `Simpanan ${sType} - ${name}`;
-                isPositive = true;
-                nominalVal = sType === 'Pokok' ? 1000000 : (sType === 'Wajib' ? 200000 : Math.floor(Math.random() * 20 + 1) * 50000);
-            } else if (randType === 'PINJAMAN') {
-                const isDisbursement = Math.random() > 0.5;
-                if (isDisbursement) {
-                    description = `Pencairan Pinjaman - ${name}`;
-                    isPositive = false;
-                    nominalVal = Math.floor(Math.random() * 6 + 2) * 1000000;
-                } else {
-                    description = `Angsuran Pinjaman - ${name}`;
-                    isPositive = true;
-                    nominalVal = Math.floor(Math.random() * 10 + 2) * 150000;
-                }
-            } else {
-                const officeExpenses = ['Pembelian ATK Kantor', 'Biaya Listrik & Internet', 'Pembelian Air Galon Kantor', 'Perawatan Pendingin Ruangan', 'Transportasi Dinas Pegawai', 'Konsumsi Rapat Pengurus'];
-                description = officeExpenses[Math.floor(Math.random() * officeExpenses.length)];
-                isPositive = false;
-                nominalVal = Math.floor(Math.random() * 10 + 1) * 75000;
-            }
-
-            const formattedDateStr = seedDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + `, ` + 
-                                     seedDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false }).replace('.', ':');
-            
-            const year = seedDate.getFullYear();
-            const month = String(seedDate.getMonth() + 1).padStart(2, '0');
-            const day = String(seedDate.getDate()).padStart(2, '0');
-            const isoDate = `${year}-${month}-${day}`;
-
-            const mockItem = {
-                tanggal: formattedDateStr,
-                raw_date: isoDate,
-                jenis: randType,
-                keterangan: description,
-                nominal: nominalVal,
-                is_positive: isPositive
-            };
-
-            if (randType === 'SIMPANAN') {
-                const sType = description.split(' - ')[0].replace('Simpanan ', '');
-                mockItem.tx_id = `TX-${10000 + i}`;
-                mockItem.member_id = `AGT-${String(1 + (i % 10)).padStart(3, '0')}`;
-                mockItem.member_name = name;
-                mockItem.sub_jenis = `Simpanan ${sType}`;
-            } else if (randType === 'PINJAMAN') {
-                mockItem.loan_id = `PJ-${20000 + i}`;
-                mockItem.member_id = `AGT-${String(1 + (i % 10)).padStart(3, '0')}`;
-                mockItem.member_name = name;
-                mockItem.tenor = 12;
-                mockItem.paid = Math.floor(Math.random() * 12);
-                mockItem.remaining = Math.round(nominalVal * ((12 - mockItem.paid) / 12));
-                mockItem.status = mockItem.paid === 12 ? 'Lunas' : (Math.random() > 0.85 ? 'Menunggak' : 'Aktif');
-            } else {
-                mockItem.tx_id = `TX-${40000 + i}`;
-                mockItem.member_id = 'N/A';
-                mockItem.member_name = 'Yayasan YPIK';
-                mockItem.sub_jenis = 'Kas Usaha';
-            }
-
-            mockDataList.push(mockItem);
-        }
-
-        let currentViewMode = 'live';
-        let filteredDataset = [];
+let filteredDataset = [];
         let currentPage = 1;
         const itemsPerPage = 10;
 
@@ -388,31 +280,10 @@
             const pOut = document.getElementById('period-pengeluaran');
             const pSaldo = document.getElementById('period-saldo');
 
-            if (currentViewMode === 'demo') {
-                if (period === 'okt_2024') {
-                    tCount.innerText = mockPeriodInfo.count;
-                    pIn.innerText = mockPeriodInfo.pemasukan;
-                    pOut.innerText = mockPeriodInfo.pengeluaran;
-                    pSaldo.innerText = mockPeriodInfo.saldo;
-                } else {
-                    tCount.innerText = '128';
-                    pIn.innerText = 'Rp 2.900.000.000';
-                    pOut.innerText = 'Rp 1.450.000.000';
-                    pSaldo.innerText = 'Rp 1.450.000.000';
-                }
-            } else {
-                if (period === 'okt_2024') {
-                    tCount.innerText = realPeriodInfo.count;
-                    pIn.innerText = realPeriodInfo.pemasukan;
-                    pOut.innerText = realPeriodInfo.pengeluaran;
-                    pSaldo.innerText = realPeriodInfo.saldo;
-                } else {
-                    tCount.innerText = realDataList.length;
-                    pIn.innerText = 'Rp ' + realTotalIn;
-                    pOut.innerText = 'Rp ' + realTotalOut;
-                    pSaldo.innerText = 'Rp ' + realTotalSaldo;
-                }
-            }
+            tCount.innerText = realDataList.length;
+            pIn.innerText = 'Rp ' + realTotalIn;
+            pOut.innerText = 'Rp ' + realTotalOut;
+            pSaldo.innerText = 'Rp ' + realTotalSaldo;
         }
 
         function onSearchChange(val) {
@@ -556,18 +427,11 @@
             const cardIn = document.getElementById('stat-total-pemasukan');
             const cardOut = document.getElementById('stat-total-pengeluaran');
 
-            if (currentViewMode === 'demo') {
-                cardSaldo.innerText = `Rp ` + mockTotalSaldo;
-                cardIn.innerText = `Rp ` + mockTotalIn;
-                cardOut.innerText = `Rp ` + mockTotalOut;
-            } else {
-                cardSaldo.innerText = `Rp ` + realTotalSaldo;
-                cardIn.innerText = `Rp ` + realTotalIn;
-                cardOut.innerText = `Rp ` + realTotalOut;
-            }
+            cardSaldo.innerText = `Rp ` + realTotalSaldo;
+            cardIn.innerText = `Rp ` + realTotalIn;
+            cardOut.innerText = `Rp ` + realTotalOut;
 
-            const dataSrc = currentViewMode === 'demo' ? mockDataList : realDataList;
-            renderPeriodFilterOptions(dataSrc);
+            renderPeriodFilterOptions(realDataList);
 
             const currentPeriodVal = document.getElementById('select-periode-ringkasan').value;
             onPeriodChange(currentPeriodVal);
@@ -576,7 +440,7 @@
         }
 
         function applyFilters() {
-            const dataSrc = currentViewMode === 'demo' ? mockDataList : realDataList;
+            const dataSrc = realDataList;
             
             filteredDataset = dataSrc.filter(item => {
                 const keterangan = (item.keterangan || '').toLowerCase();
@@ -780,7 +644,7 @@
                     <h3 class="text-base font-extrabold text-[#0F172A]">Import Transaksi Kas Usaha</h3>
                     <p class="text-xs text-[#64748B] mt-0.5">Format: tanggal, jenis_transaksi, keterangan, nominal.</p>
                 </div>
-                <button type="button" onclick="closeLaporanImportModal()" class="text-[#64748B] hover:text-[#0F172A] text-xl leading-none">×</button>
+                <button type="button" onclick="closeLaporanImportModal()" class="text-[#64748B] hover:text-[#0F172A] text-xl leading-none">Ã—</button>
             </div>
 
             <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4 text-xs text-blue-700">

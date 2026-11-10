@@ -157,23 +157,13 @@
 
                                         <td>
 
-                                            @if($item->tanggal)
-
-                                                            {{ \Carbon\Carbon::parse(
-                                                    $item->tanggal
-                                                )->format('d-m-Y') }}
-
-                                            @else
-
-                                                -
-
-                                            @endif
+                                            {{ $item->tanggal_transaksi?->format('d-m-Y') ?? '-' }}
 
                                         </td>
 
 
                                         <td>
-                                            {{ $item->jenis ?? '-' }}
+                                            {{ $item->jenis_simpanan ?? '-' }}
                                         </td>
 
 
@@ -191,8 +181,8 @@
 
                                         <td>
 
-                                            <span class="badge badge-success">
-                                                Berhasil
+                                            <span class="badge {{ $item->status === 'Lunas' ? 'badge-success' : 'badge-info' }}">
+                                                {{ $item->status ?? '-' }}
                                             </span>
 
                                         </td>

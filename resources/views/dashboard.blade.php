@@ -335,9 +335,9 @@
 @section('scripts')
     <script>
         // Set current date in card
-        const options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
         const today = new Date();
-        const formattedDate = today.toLocaleDateString('id-ID', options).replace(/\./g, '/').replace(',', '');
+        const pad = n => String(n).padStart(2, '0');
+        const formattedDate = `${pad(today.getDate())}/${pad(today.getMonth() + 1)}/${today.getFullYear()} ${pad(today.getHours())}:${pad(today.getMinutes())}:${pad(today.getSeconds())}`;
         const timeLabel = document.getElementById('current-time-label');
         if (timeLabel) {
             timeLabel.textContent = formattedDate;

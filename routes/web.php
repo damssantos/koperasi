@@ -750,7 +750,7 @@ Route::middleware('auth')->group(function () {
             'nominal' => $data['nominal'],
             'status' => $data['status'],
             'tanggal_transaksi' => $data['tanggal_transaksi'],
-            'keterangan' => $data['keterangan'],
+            'keterangan' => $data['keterangan'] ?? null,
         ]);
 
         return redirect()->route('simpanan')->with('success', 'Transaksi simpanan berhasil disimpan ke database.');
