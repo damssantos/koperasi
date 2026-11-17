@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
 
     // API TOKEN
-    Route::post('tokens', [ApiTokenController::class, 'store']);
+    Route::post('tokens', [ApiTokenController::class, 'store'])
+        ->middleware('throttle:api-token');
 
     /*
     |--------------------------------------------------------------------------

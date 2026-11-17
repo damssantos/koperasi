@@ -47,16 +47,18 @@ Route::middleware('guest')->group(function () {
 
     // ---- Login ----
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
     // ---- Forgot Password ----
     Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])
         ->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetOtp'])
+        ->middleware('throttle:otp')
         ->name('password.email');
     Route::get('/forgot-password/verify', [AuthController::class, 'showResetOtp'])
         ->name('password.verify');
     Route::post('/forgot-password/verify', [AuthController::class, 'verifyResetOtp'])
+        ->middleware('throttle:otp')
         ->name('password.verify.submit');
     Route::get('/forgot-password/reset', [AuthController::class, 'showResetPassword'])
         ->name('password.reset');
@@ -70,9 +72,11 @@ Route::middleware('guest')->group(function () {
     ->name('register.verify');
 
 Route::post('/register/verify', [AuthController::class, 'verifyRegisterOtp'])
+    ->middleware('throttle:otp')
     ->name('register.verify.submit');
 
 Route::post('/register/resend', [AuthController::class, 'resendRegisterOtp'])
+    ->middleware('throttle:otp')
     ->name('register.resend');
 
     // Captcha Image Route
@@ -254,6 +258,7 @@ Route::middleware('role:customer')->group(function () {
 */
 
 Route::post('/laporan-keuangan/kirim-email', [LaporanController::class, 'kirimEmail'])
+    ->middleware('throttle:email-relay')
     ->name('laporan-keuangan.kirim-email');
 
 /*
@@ -451,7 +456,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/anggota/export', function () {
         return Excel::download(new AnggotaExport, 'data_anggota.xlsx');
-    })->name('anggota.export');
+    })->middleware('role:admin')->name('anggota.export');
 
     Route::post('/anggota/import', function (Request $request) {
         $request->validate([
@@ -502,10 +507,10 @@ Route::middleware('auth')->group(function () {
         }, 'template_import_anggota.xlsx', [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
-    })->name('anggota.template');
+    })->middleware('role:admin')->name('anggota.template');
 
-    Route::post('/anggota', [AnggotaController::class, 'store'])->name('anggota.store');
-    Route::get('/anggota/print', [AnggotaController::class, 'print'])->name('anggota.print');
+    Route::post('/anggota', [AnggotaController::class, 'store'])->middleware('role:admin')->name('anggota.store');
+    Route::get('/anggota/print', [AnggotaController::class, 'print'])->middleware('role:admin')->name('anggota.print');
 
     Route::get('/anggota/download-pdf', function () {
         $anggota = App\Models\AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
@@ -530,11 +535,11 @@ Route::middleware('auth')->group(function () {
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="data-anggota-koperasi.pdf"',
         ]);
-    })->name('anggota.downloadPdf');
+    })->middleware('role:admin')->name('anggota.downloadPdf');
 
-    Route::get('/anggota/{anggota}', [AnggotaController::class, 'show'])->name('anggota.show');
-    Route::put('/anggota/{anggota}', [AnggotaController::class, 'update'])->name('anggota.update');
-    Route::delete('/anggota/{anggota}', [AnggotaController::class, 'destroy'])->name('anggota.destroy');
+    Route::get('/anggota/{anggota}', [AnggotaController::class, 'show'])->middleware('role:admin')->name('anggota.show');
+    Route::put('/anggota/{anggota}', [AnggotaController::class, 'update'])->middleware('role:admin')->name('anggota.update');
+    Route::delete('/anggota/{anggota}', [AnggotaController::class, 'destroy'])->middleware('role:admin')->name('anggota.destroy');
 
     /*
     |----------------------------------------------------------------------
@@ -754,7 +759,7 @@ Route::middleware('auth')->group(function () {
         ]);
 
         return redirect()->route('simpanan')->with('success', 'Transaksi simpanan berhasil disimpan ke database.');
-    })->name('simpanan.store');
+    })->middleware('role:admin')->name('simpanan.store');
 
 
     // Static export endpoints harus didaftarkan sebelum {transaction} di
@@ -870,7 +875,7 @@ Route::middleware('auth')->group(function () {
             'status' => $transaction->status,
             'keterangan' => $transaction->keterangan ?? '-',
         ]);
-    });
+    })->middleware('role:admin')->name('simpanan.show');
 
     /*
     |----------------------------------------------------------------------
@@ -990,7 +995,7 @@ Route::middleware('auth')->group(function () {
         ]);
 
         return redirect()->route('simpanan')->with('success', 'Transaksi simpanan berhasil diperbarui.');
-    })->name('simpanan.update');
+    })->middleware('role:admin')->name('simpanan.update');
 
 
     /*
@@ -1264,7 +1269,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pinjaman/export', function () {
         return Excel::download(new PinjamanExport, 'data_pinjaman.xlsx');
-    })->name('pinjaman.export');
+    })->middleware('role:admin')->name('pinjaman.export');
 
     Route::post('/pinjaman/import', function (Request $request) {
         $request->validate([
@@ -1280,7 +1285,7 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('pinjaman')
                 ->with('error', 'Import gagal: ' . $e->getMessage());
         }
-    })->name('pinjaman.import');
+    })->middleware('role:admin')->name('pinjaman.import');
 
     Route::get('/history', [ActivityLogController::class, 'index'])
         ->middleware('role:admin')->name('activity_logs.index');
@@ -1307,7 +1312,7 @@ Route::middleware('auth')->group(function () {
             'buktiPotongan' => $pinjaman->bukti_potongan ? asset('storage/' . $pinjaman->bukti_potongan) : null,
             'status' => $pinjaman->status,
         ]);
-    })->name('pinjaman.show');
+    })->middleware('role:admin')->name('pinjaman.show');
 
     Route::post('/pinjaman/{pinjaman}/bayar', function (Request $request, App\Models\Pinjaman $pinjaman) {
         $data = $request->validate([
@@ -1380,7 +1385,7 @@ Route::middleware('auth')->group(function () {
         ]);
 
         return redirect()->back()->with('success', 'Pembayaran cicilan berhasil dikonfirmasi.');
-    })->name('pinjaman.bayar');
+    })->middleware('role:admin')->name('pinjaman.bayar');
 
     // Admin mengirim notifikasi email pengingat pembayaran ke customer
     Route::post('/pinjaman/{pinjaman}/kirim-notifikasi', function (Request $request, App\Models\Pinjaman $pinjaman) {
@@ -1421,7 +1426,7 @@ Route::middleware('auth')->group(function () {
                 'message' => 'Gagal mengirim email: ' . $e->getMessage(),
             ], 500);
         }
-    })->name('pinjaman.kirimNotifikasi');
+    })->middleware('role:admin')->name('pinjaman.kirimNotifikasi');
 
     // Customer mencatat pembayaran cicilan sendiri untuk pinjamannya.
     Route::post('/customer/pinjaman/{pinjaman}/bayar', function (Request $request, App\Models\Pinjaman $pinjaman) {
@@ -1948,7 +1953,7 @@ Route::middleware('auth')->group(function () {
             'keterangan' => $transaction->keterangan,
             'nominal' => (int) $transaction->nominal,
         ]);
-    })->name('kas-usaha.show');
+    })->middleware('role:admin')->name('kas-usaha.show');
 
     Route::put('/kas-usaha/{transaction}', function (Request $request, App\Models\TransaksiKasUsaha $transaction) {
         $data = $request->validate([
@@ -1961,13 +1966,13 @@ Route::middleware('auth')->group(function () {
         $transaction->update($data);
 
         return redirect()->route('kas-usaha')->with('success', 'Transaksi kas usaha berhasil diperbarui.');
-    })->name('kas-usaha.update');
+    })->middleware('role:admin')->name('kas-usaha.update');
 
     Route::delete('/kas-usaha/{transaction}', function (App\Models\TransaksiKasUsaha $transaction) {
         $transaction->delete();
 
         return redirect()->route('kas-usaha')->with('success', 'Transaksi kas usaha berhasil dihapus.');
-    })->name('kas-usaha.destroy');
+    })->middleware('role:admin')->name('kas-usaha.destroy');
 
     /*
     |----------------------------------------------------------------------

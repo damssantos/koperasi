@@ -346,6 +346,15 @@ class AuthController extends Controller
                 ]);
         }
 
+        if ($verification->attempts >= 5) {
+            $verification->delete();
+
+            return back()
+                ->withErrors([
+                    'otp' => 'Terlalu banyak percobaan salah. Silakan kirim ulang OTP.',
+                ]);
+        }
+
         /*
         |--------------------------------------------------------------------------
         | CEK EXPIRED
@@ -584,11 +593,12 @@ if ($user->role === 'customer' && !$user->anggota) {
         $user = User::where('email', $email)->first();
 
         if (!$user) {
+            // Pesan generik: mencegah user enumeration.
             return back()
-                ->withErrors([
-                    'email' => 'Email tidak ditemukan dalam sistem.',
-                ])
-                ->withInput();
+                ->with(
+                    'success',
+                    'Jika email terdaftar, kode OTP telah dikirim ke email Anda.'
+                );
         }
 
         /*
@@ -730,6 +740,15 @@ if ($user->role === 'customer' && !$user->anggota) {
             return back()
                 ->withErrors([
                     'otp' => 'Kode OTP tidak ditemukan. Silakan kirim ulang OTP.',
+                ]);
+        }
+
+        if ($verification->attempts >= 5) {
+            $verification->delete();
+
+            return back()
+                ->withErrors([
+                    'otp' => 'Terlalu banyak percobaan salah. Silakan kirim ulang OTP.',
                 ]);
         }
 
