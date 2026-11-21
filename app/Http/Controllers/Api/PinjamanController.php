@@ -368,4 +368,33 @@ public function approval(Request $request, Pinjaman $pinjaman)
             'data' => $pinjaman->fresh()
         ]);
     }
+
+    /**
+     * Mengubah status pinjaman langsung.
+     * Route memakai role:admin, tapi tetap divalidasi di sini.
+     */
+    public function updateStatus(Request $request, Pinjaman $pinjaman)
+    {
+        $data = $request->validate([
+            'status' => [
+                'required',
+                'in:Pengajuan,Disetujui,Ditolak,Aktif,Menunggak,Lunas,Dibatalkan'
+            ],
+        ]);
+
+        $before = $pinjaman->toArray();
+
+        $pinjaman->update(['status' => $data['status']]);
+
+        AuditService::catat(
+            'ubah_status_pinjaman',
+            $pinjaman,
+            $before,
+            $pinjaman->fresh()->toArray()
+        );
+
+        return response()->json([
+            'data' => $pinjaman->fresh('anggota')
+        ]);
+    }
 }

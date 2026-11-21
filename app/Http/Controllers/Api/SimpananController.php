@@ -478,6 +478,15 @@ public function customerStore(Request $request)
             ],
         ]);
 
+        // Customer via API hanya boleh menarik simpanannya sendiri.
+        $actor = $request->user();
+        if ($actor && $actor->role === 'customer') {
+            $own = $actor->anggota;
+            if (!$own || (int) $data['anggota_id'] !== (int) $own->id) {
+                abort(403, 'Anda hanya dapat menarik simpanan Anda sendiri.');
+            }
+        }
+
         $member = AnggotaKoperasi::findOrFail(
             $data['anggota_id']
         );

@@ -255,11 +255,14 @@ Route::middleware('role:customer')->group(function () {
 |--------------------------------------------------------------------------
 | Laporan Keuangan (Public - tanpa middleware, sama seperti sebelumnya)
 |--------------------------------------------------------------------------
+| Dipakai JS lama untuk relay PDF via email. Endpoint ini TIDAK punya UI
+| lagi (tombol sudah dihapus), jadi dimatikan total untuk mencegah
+| penyalahgunaan sebagai email relay.
 */
 
-Route::post('/laporan-keuangan/kirim-email', [LaporanController::class, 'kirimEmail'])
-    ->middleware('throttle:email-relay')
-    ->name('laporan-keuangan.kirim-email');
+// Route::post('/laporan-keuangan/kirim-email', [LaporanController::class, 'kirimEmail'])
+//     ->middleware('throttle:email-relay')
+//     ->name('laporan-keuangan.kirim-email');
 
 /*
 |-------------------------------------------------------------------------- 
@@ -272,7 +275,7 @@ Route::post('/laporan-keuangan/kirim-email', [LaporanController::class, 'kirimEm
 */
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
 Route::get('/register', [AuthController::class, 'showRegister'])
     ->name('register');
@@ -472,7 +475,7 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('anggota.index')
                 ->with('error', 'Import gagal: ' . $e->getMessage());
         }
-    })->name('anggota.import');
+    })->middleware('role:admin')->name('anggota.import');
 
     Route::get('/anggota/template', function () {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -768,7 +771,7 @@ Route::middleware('auth')->group(function () {
         $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
 
         return view('exports.simpanan-pdf', compact('anggota'));
-    })->name('simpanan.print');
+    })->middleware('role:admin')->name('simpanan.print');
 
     Route::get('/simpanan/download-pdf', function () {
         $anggota = AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
@@ -796,17 +799,7 @@ Route::middleware('auth')->group(function () {
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="laporan-simpanan.pdf"',
         ]);
-    })->name('simpanan.downloadPdf');
-
-    // [DUPLICATE - dibiarkan sesuai aslinya, lihat catatan di akhir chat]
-    Route::get('/simpanan/print', function () {
-        // ...
-    })->name('simpanan.print');
-
-    // [DUPLICATE - dibiarkan sesuai aslinya, lihat catatan di akhir chat]
-    Route::get('/simpanan/download-pdf', function () {
-        // ...
-    })->name('simpanan.downloadPdf');
+    })->middleware('role:admin')->name('simpanan.downloadPdf');
 
     Route::get('/simpanan/template', function () {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -851,12 +844,6 @@ Route::middleware('auth')->group(function () {
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     })->middleware('role:admin')->name('simpanan.template');
-
-    // [DUPLICATE/STUB - didaftarkan SEBELUM versi asli di bawah, lihat catatan]
-    Route::get('/simpanan/{transaction}', function (App\Models\TransaksiSimpanan $transaction) {
-        // ...
-    });
-
 
     Route::get('/simpanan/{transaction}', function (App\Models\TransaksiSimpanan $transaction) {
         $dateNum = $transaction->tanggal_transaksi->format('Ymd');
@@ -1003,36 +990,6 @@ Route::middleware('auth')->group(function () {
     | Pinjaman
     |----------------------------------------------------------------------
     */
-
-    Route::get('/simpanan/print', function () {
-        $anggota = AnggotaKoperasi::orderBy('tanggal_join', 'desc')->orderBy('id', 'desc')->get();
-
-        return view('exports.simpanan-pdf', compact('anggota'));
-    })->name('simpanan.print');
-
-    Route::get('/simpanan/download-pdf', function () {
-        $anggota = AnggotaKoperasi::orderBy('id_anggota', 'asc')->get();
-        $rows = $anggota->map(fn ($item, $index) => [
-            $index + 1,
-            $item->id_anggota ?? 'AGT-' . str_pad($item->id, 5, '0', STR_PAD_LEFT),
-            $item->nama,
-            'Rp ' . number_format((int) $item->simpanan_pokok, 0, ',', '.'),
-            'Rp ' . number_format((int) $item->simpanan_wajib, 0, ',', '.'),
-            'Rp ' . number_format((int) $item->simpanan_sukarela, 0, ',', '.'),
-            'Rp ' . number_format((int) $item->total_saldo, 0, ',', '.'),
-        ])->all();
-
-        return response(SimplePdf::table('Laporan Simpanan', ['No', 'ID Anggota', 'Nama', 'Pokok', 'Wajib', 'Sukarela', 'Total'], $rows, [
-            'Total Simpanan: Rp ' . number_format((int) $anggota->sum('total_saldo'), 0, ',', '.'),
-            'Simpanan Pokok: Rp ' . number_format((int) $anggota->sum('simpanan_pokok'), 0, ',', '.'),
-            'Simpanan Wajib: Rp ' . number_format((int) $anggota->sum('simpanan_wajib'), 0, ',', '.'),
-            'Simpanan Sukarela: Rp ' . number_format((int) $anggota->sum('simpanan_sukarela'), 0, ',', '.'),
-        ]), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="laporan-simpanan.pdf"',
-        ]);
-    })->name('simpanan.downloadPdf');
-
 
     Route::get('/pinjaman', function () {
         $loans = App\Models\Pinjaman::with(['anggota.user'])

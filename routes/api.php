@@ -41,18 +41,20 @@ Route::prefix('v1')->group(function () {
         Route::get('pinjaman', [PinjamanController::class, 'index']);
 
         // Update data pinjaman
-        Route::put('pinjaman/{pinjaman}', [PinjamanController::class, 'update']);
+        Route::put('pinjaman/{pinjaman}', [PinjamanController::class, 'update'])
+            ->middleware('role:admin');
 
         // Ubah status pinjaman
         Route::patch(
             'pinjaman/{pinjaman}/status',
             [PinjamanController::class, 'updateStatus']
-        );
+        )->middleware('role:admin');
 
 
         Route::post('/pinjaman/{pinjaman}/approval', [PinjamanController::class, 'approval'])
-    ->name('pinjaman.approval');
-    
+            ->middleware('role:admin')
+            ->name('pinjaman.approval');
+
         // Upload bukti transfer
         Route::post(
             'pinjaman/{pinjaman}/bukti',
@@ -63,7 +65,7 @@ Route::prefix('v1')->group(function () {
         Route::patch(
             'pinjaman/{pinjaman}/batalkan',
             [PinjamanController::class, 'batalkan']
-        );
+        )->middleware('role:admin');
 
 
         // =========================
@@ -78,12 +80,12 @@ Route::prefix('v1')->group(function () {
         Route::post(
             'pinjaman/{pinjaman}/cicilan',
             [PembayaranCicilanController::class, 'store']
-        );
+        )->middleware('role:admin');
 
         Route::put(
             'cicilan/{pembayaran}',
             [PembayaranCicilanController::class, 'update']
-        );
+        )->middleware('role:admin');
 
 
         // =========================
